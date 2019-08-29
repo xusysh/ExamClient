@@ -46,12 +46,20 @@ export class LoginComponent implements OnInit {
         }
         else if (response.data.userType == "student") {
           this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
-          this.router.navigateByUrl("/student");
+          this.router.navigateByUrl("/student"),{
+            queryParms: {
+              user_name:'emm'
+            }
+          };
           this.is_checking=false;
         }
         else if (response.data.userType == "admin") {
-          this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
-          this.router.navigateByUrl("/admin");
+          this.message.create('success', "管理员用户 " + this.user_name + ' 登陆成功');
+          this.router.navigate(['/student']),{
+            queryParams: {
+                user_name:'emm'
+            }
+          };
           this.is_checking=false;
         }
 
