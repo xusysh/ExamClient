@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentComponent implements OnInit {
 
+  public user_name: string = 'undefined';
+
   constructor() { }
 
   ngOnInit() {
