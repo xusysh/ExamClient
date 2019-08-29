@@ -6,8 +6,7 @@
             <div class="form-group">
                 <form nz-form>
                     <nz-form-item>
-                        <nz-form-control (nzValidateStatus)="user_name?'':'error'"
-                            nzErrorTip="用户名不能为空">
+                        <nz-form-control [nzValidateStatus]="user_name==''? 'error':'validating'" nzErrorTip="用户名不能为空">
                             <nz-input-group [nzSuffix]="suffixTemplate_uname" [nzPrefix]="prefixTemplate_uname"
                                 nzSize="large">
                                 <input type="text" nz-input [(ngModel)]="user_name" name="uname" placeholder="请输入用户名" />
@@ -19,17 +18,23 @@
                         </nz-form-control>
                     </nz-form-item>
 
-                    <nz-input-group [nzSuffix]="suffixTemplate_pwd"
-                        [nzPrefix]="prefixTemplate_pwd" nzSize="large">
-                        <input type="text" nz-input [type]="passwordVisible ? 'text' : 'password'"
-                            [(ngModel)]="password" name="pwd" placeholder="请输入密码" />
-                    </nz-input-group>
-                    <ng-template #prefixTemplate_pwd><i nz-icon nzType="profile"></i></ng-template>
-                    <ng-template #suffixTemplate_pwd>
-                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                            (click)="passwordVisible = !passwordVisible"></i>
-                    </ng-template>
-                    <button nz-button class="login-btn" [nzType]="'primary'" (click)="LoginCheck">登陆</button>
+                    <nz-form-item>
+                        <nz-form-control [nzValidateStatus]="password==''? 'error':'validating'" nzErrorTip="密码不能为空">
+                            <nz-input-group [nzSuffix]="suffixTemplate_pwd" [nzPrefix]="prefixTemplate_pwd"
+                                nzSize="large">
+                                <input type="text" nz-input [type]="passwordVisible ? 'text' : 'password'"
+                                    [(ngModel)]="password" name="pwd" placeholder="请输入密码" />
+                            </nz-input-group>
+                            <ng-template #prefixTemplate_pwd><i nz-icon nzType="profile"></i></ng-template>
+                            <ng-template #suffixTemplate_pwd>
+                                <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                                    (click)="passwordVisible = !passwordVisible"></i>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <button nz-button class="login-btn" [nzType]="'primary'" (click)="LoginCheck()"
+                        [nzLoading]="is_checking">
+                        <i nz-icon nzType="login"></i>登陆</button>
                 </form>
             </div>
         </div>
