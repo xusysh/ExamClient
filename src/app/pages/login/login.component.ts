@@ -12,46 +12,37 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
 
-  validateForm: FormGroup;
+  public user_name: string = '';
+  public password: string = '';
 
-  constructor(private fb: FormBuilder, private router: Router, private message: NzMessageService,
+
+  constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string) {
   }
 
   ngOnInit() {
-    this.validateForm = this.fb.group({
-      userName: [null, [Validators.required]],
-      password: [null, [Validators.required]],
-      remember: [true]
-    });
   }
 
-  submitForm(): void {
-    var user_check_info: UserCheckInfo = {
-      id:1,
-      user_name: 'admin',
-      password: 'admin',
-      user_type: 'asd'
+  LoginCheck(): void {
+    let user_check_info: UserCheckInfo = {
+      username: this.user_name,
+      password: this.password,
     };
-    let a = null
     this.http_client.post<MyServerResponse>(this.base_url + '/userinfo/login', user_check_info).
       subscribe(response => {
         if (response.msg == "student") {
-          this.message.create('success', "考生用户 " +"user_name" + ' 登陆成功');
+          this.message.create('success', "考生用户 " + "user_name" + ' 登陆成功');
           this.router.navigateByUrl("/student");
         }
-        else if(response.msg == "admin"){
-          this.message.create('success', "考生用户 " +"user_name" + ' 登陆成功');
+        else if (response.msg == "admin") {
+          this.message.create('success', "考生用户 " + "user_name" + ' 登陆成功');
           this.router.navigateByUrl("/admin");
         }
         else {
           this.message.create('error', '登陆失败：用户名或密码错误');
         }
       }, error => this.message.create('error', '登陆失败：连接服务器失败'));
-
-
   }
-
 
 }
 
@@ -60,8 +51,6 @@ interface MyServerResponse {
 }
 
 interface UserCheckInfo {
-  id:number;
-  user_name: string;
+  username: string;
   password: string;
-  user_type: string;
 }

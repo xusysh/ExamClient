@@ -1,28 +1,37 @@
 <nz-layout class="login-layout">
 
-    <div style="width:100%;height: 100%;justify-content:center;align-items:center;display:-webkit-flex;">
+    <div class="login-bg">
         <div class="login-box">
-            <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
-                <nz-form-item>
-                    <nz-form-control nzErrorTip="Please input your username!">
-                        <nz-input-group nzPrefixIcon="user">
-                            <input type="text" nz-input formControlName="userName" placeholder="Username" autofocus nzSize="large"/>
-                        </nz-input-group>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-control nzErrorTip="Please input your Password!">
-                        <nz-input-group nzPrefixIcon="lock">
-                            <input type="password" nz-input formControlName="password" placeholder="Password" nzSize="large"/>
-                        </nz-input-group>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-control>
-                        <button nz-button class="login-form-button" nzType="primary">登陆</button>
-                    </nz-form-control>
-                </nz-form-item>
-            </form>
+            <h1 style="margin-top:30px;">在线考试系统 V0.1</h1>
+            <div class="form-group">
+                <form nz-form>
+                    <nz-form-item>
+                        <nz-form-control (nzValidateStatus)="user_name?'':'error'"
+                            nzErrorTip="用户名不能为空">
+                            <nz-input-group [nzSuffix]="suffixTemplate_uname" [nzPrefix]="prefixTemplate_uname"
+                                nzSize="large">
+                                <input type="text" nz-input [(ngModel)]="user_name" name="uname" placeholder="请输入用户名" />
+                            </nz-input-group>
+                            <ng-template #prefixTemplate_uname><i nz-icon nzType="user"></i></ng-template>
+                            <ng-template #suffixTemplate_uname><i nz-icon nz-tooltip nzTitle="用户由后台添加"
+                                    nzType="info-circle"></i>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-input-group [nzSuffix]="suffixTemplate_pwd"
+                        [nzPrefix]="prefixTemplate_pwd" nzSize="large">
+                        <input type="text" nz-input [type]="passwordVisible ? 'text' : 'password'"
+                            [(ngModel)]="password" name="pwd" placeholder="请输入密码" />
+                    </nz-input-group>
+                    <ng-template #prefixTemplate_pwd><i nz-icon nzType="profile"></i></ng-template>
+                    <ng-template #suffixTemplate_pwd>
+                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                            (click)="passwordVisible = !passwordVisible"></i>
+                    </ng-template>
+                    <button nz-button class="login-btn" [nzType]="'primary'" (click)="LoginCheck">登陆</button>
+                </form>
+            </div>
         </div>
     </div>
 </nz-layout>

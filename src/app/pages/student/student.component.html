@@ -4,7 +4,7 @@
     (mouseleave)="side_fix ? isCollapsed: isCollapsed = true">
     <div class="sidebar-logo">
       <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+        <nz-avatar nzIcon="user" nzSize="large" style="background-color:#7265e6;"></nz-avatar>
         <h1>学生用户&nbsp;</h1>
         <span>ljd</span>
       </a>
@@ -12,7 +12,7 @@
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-submenu nzOpen nzTitle="加入考试" nzIcon="dashboard">
         <ul>
-          <li nz-menu-item nzMatchRouter>
+          <li nz-menu-item nzMatchRouter routerLink="/student/check-exam">
             <a>考试列表</a>
           </li>
           <li nz-menu-item nzMatchRouter>
