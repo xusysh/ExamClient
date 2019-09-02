@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpClient } from '@angular/common/http';
+import { from } from 'rxjs';
 
 
 @Component({
@@ -45,21 +46,14 @@ export class LoginComponent implements OnInit {
           this.is_checking=false;
         }
         else if (response.data.userType == "student") {
+          sessionStorage.setItem('username', this.user_name);
           this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
-          this.router.navigateByUrl("/student"),{
-            queryParms: {
-              user_name:'emm'
-            }
-          };
+          this.router.navigateByUrl("/student");
           this.is_checking=false;
         }
         else if (response.data.userType == "admin") {
           this.message.create('success', "管理员用户 " + this.user_name + ' 登陆成功');
-          this.router.navigate(['/student']),{
-            queryParams: {
-                user_name:'emm'
-            }
-          };
+          this.router.navigate(['/admin']);
           this.is_checking=false;
         }
 

@@ -14,7 +14,11 @@ import { CommonModule } from '@angular/common';
   exports: [CheckExamComponent]
 })
 export class CheckExamModule {
+
+
   constructor(){
     
   }
+
  }
+

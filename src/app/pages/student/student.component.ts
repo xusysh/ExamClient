@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import{ActivatedRoute} from '@angular/router'
+import { Route, ActivatedRoute,Router } from '@angular/router';
 
 @Component({
   selector: 'app-student',
@@ -8,16 +8,23 @@ import{ActivatedRoute} from '@angular/router'
 })
 export class StudentComponent implements OnInit {
 
-  public user_name: string = 'undefined';
+  public user_name: string = null;
 
-  constructor(private activedRoute:ActivatedRoute) { }
+  constructor(private router:Router) { }
 
   ngOnInit() {
-    
-    this.activedRoute.queryParams.subscribe(params =>{
-      this.user_name = params.user_name;
-     
-  });
+
+    this.user_name=sessionStorage.getItem('username')
+    //判断是否已经登录，未登录则进行跳转
+    if (!this.user_name) {
+      alert("请登录");
+      this.router.navigateByUrl("/login");
+    }
+  }
+
+  Logout():void{
+    sessionStorage.clear();
+    this.router.navigateByUrl("/login");
   }
 
 }
