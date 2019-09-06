@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Route, ActivatedRoute,Router } from '@angular/router';
 
 @Component({
-  selector: 'app-student',
-  templateUrl: './student.component.html',
-  styleUrls: ['./student.component.css']
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
 })
-export class StudentComponent implements OnInit {
+export class AdminComponent implements OnInit {
 
   public user_name: string = null;
 

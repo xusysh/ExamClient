@@ -1,0 +1,10 @@
+{
+    "status": 200,
+    "msg": "查询成功",
+    "data": {
+        "id": 4,
+        "userName": "小埋酱",
+        "password": "admin",
+        "userType": "admin"
+    }
+}

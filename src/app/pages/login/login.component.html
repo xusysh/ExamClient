@@ -6,7 +6,7 @@
             <div class="form-group">
                 <form nz-form>
                     <nz-form-item>
-                        <nz-form-control [nzValidateStatus]="user_name==''? 'error':'validating'" nzErrorTip="用户名不能为空">
+                        <nz-form-control [nzValidateStatus]="user_name=='' ? 'error':'validating'" nzErrorTip="用户名不能为空">
                             <nz-input-group [nzSuffix]="suffixTemplate_uname" [nzPrefix]="prefixTemplate_uname"
                                 nzSize="large">
                                 <input type="text" nz-input [(ngModel)]="user_name" name="uname" placeholder="请输入用户名" />

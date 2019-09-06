@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { StudentComponent } from './student.component';
+import { CheckExamComponent } from './check-exam/check-exam.component';
 
 const routes: Routes = [
-  { path: '', component: StudentComponent },
-  { path: 'check-exam', loadChildren: () => import('./check-exam/check-exam.module').then(m => m.CheckExamModule) }
+  {
+    path: '', component: StudentComponent, children: [
+      {
+        path: 'check-exam', component: CheckExamComponent
+      },
+    ]
+  }
 ];
 
 @NgModule({

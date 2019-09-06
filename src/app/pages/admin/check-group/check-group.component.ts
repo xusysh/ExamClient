@@ -2,12 +2,12 @@ import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import { TableUpdateService } from '../../../tools/TableUpdateService.component'
 
 @Component({
-  selector: 'app-check-exam',
-  templateUrl: './check-exam.component.html',
-  styleUrls: ['./check-exam.component.css']
+  selector: 'app-check-group',
+  templateUrl: './check-group.component.html',
+  styleUrls: ['./check-group.component.css']
 })
 
-export class CheckExamComponent implements OnInit {
+export class CheckGroupComponent implements OnInit {
   pageIndex = 1;
   pageSize = 5;
   listOfData = [];

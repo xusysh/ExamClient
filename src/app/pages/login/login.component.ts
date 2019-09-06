@@ -17,9 +17,9 @@ export class LoginComponent implements OnInit {
   public password: string = null;
   public is_checking: boolean = false;
 
-
   constructor(private router: Router, private message: NzMessageService,
-    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string) {
+    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
+    @Inject('DBG_BASE_URL') private dbg_base_url:string) {
   }
 
   ngOnInit() {
@@ -39,7 +39,8 @@ export class LoginComponent implements OnInit {
       user_name: this.user_name,
       password: this.password,
     };
-    this.http_client.post<MyServerResponse>(this.base_url + '/userinfo/login', user_check_info).
+    let server_url = this.base_url + '/userinfo/login';
+    this.http_client.post<MyServerResponse>(server_url, user_check_info).
       subscribe(response => {
         if(response.status!=200) {
           this.message.create('error', '登陆失败:'+response.msg);
@@ -56,7 +57,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/admin']);
           this.is_checking=false;
         }
-
       }, error => {
         this.message.create('error', '登陆失败：连接服务器失败');
         this.is_checking=false;

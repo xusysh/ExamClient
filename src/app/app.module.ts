@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IconsProviderModule } from './icons-provider.module';
@@ -11,6 +10,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import {TableUpdateService} from './tools/TableUpdateService.component'
+
+import { LoginModule } from './pages/login/login.module';
+
 
 registerLocaleData(zh);
 
@@ -27,6 +29,7 @@ registerLocaleData(zh);
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    LoginModule
   ],
   providers: [
     { 
@@ -35,7 +38,11 @@ registerLocaleData(zh);
     },
     {
       provide: 'BASE_URL',
-      useValue: 'http://localhost:8080'
+      useValue: 'http://localhost:8080/'
+    },
+    {
+      provide:'DBG_BASE_URL',
+      useValue:'http://localhost:4200/src/dbg_data/'
     },
     TableUpdateService
   ],

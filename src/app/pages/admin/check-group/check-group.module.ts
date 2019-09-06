@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { CheckExamComponent } from './check-exam.component';
+import { CheckGroupComponent } from './check-group.component';
 
 import { NgZorroAntdModule} from 'ng-zorro-antd';
 import { CommonModule } from '@angular/common';
@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [NgZorroAntdModule,CommonModule],
-  declarations: [CheckExamComponent],
-  exports: [CheckExamComponent]
+  declarations: [CheckGroupComponent],
+  exports: [CheckGroupComponent]
 })
-export class CheckExamModule {
+export class CheckGroupModule {
 
 
   constructor(){
