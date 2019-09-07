@@ -1,34 +1,56 @@
 <div class="check-exam-page">
-  <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="listOfData" [nzLoading]="loading"
-    [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzPageSizeChange)="UpdateTableData()"
-    (nzPageSizeChange)="searchData(true)">
-    <thead (nzSortChange)="sort($event)" nzSingleSort>
-      <tr>
-        <th nzShowSort nzSortKey="name">用户名</th>
-        <th nzShowFilter [nzFilters]="filterGender" (nzFilterChange)="updateFilter($event)">密码</th>
-        <th nzShowSort nzSortKey="email">所在组</th>
-        <th nzShowSort nzSortKey="email">操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of ajaxTable.data">
-        <td>{{ data.name.first }} {{ data.name.last }}</td>
-        <td>{{ data.gender }}</td>
-        <td>{{ data.email }}</td>
-      </tr>
-    </tbody>
-  </nz-table>
-
-  <button nz-button nzType="primary" (click)="DrawerOpen()">Open</button>
-  <nz-drawer
-    [nzMaskClosable]="false"
-    [nzVisible]="drawer_visible"
-    nzPlacement="right"
-    nzTitle="详细信息"
-    (nzOnClose)="DrawerClose()"
-  >
-    <p>Some contents...</p>
-    <p>Some contents...</p>
+  <div class="student-table-div">
+    <div>
+      <div style="margin-bottom: 15px;margin-left: 15px">
+        <button style="margin-left: 10px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
+          (click)="UpdateTableData()">
+          <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
+        </button>
+        <button style="margin-left: 10px" nz-button nzType="primary" nzSize="default" nzShape="round">
+          <i nz-icon nzType="user-add"></i>添加考生
+        </button>
+        <button style="margin-left: 10px" nz-button nzType="primary" nzSize="default" nzShape="round"
+          (click)="dialog_visible=true">
+          <i nz-icon nzType="usergroup-add"></i>批量添加
+        </button>
+      </div>
+      <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="listOfData" [nzLoading]="loading"
+        [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzScroll]="{y:'300px'}">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+          <tr>
+            <th nzWidth="150px" nzShowSort nzSortKey="name">用户名</th>
+            <th nzWidth="300px">口令</th>
+            <th nzWidth="150px" nzShowFilter>所在组</th>
+            <th nzWidth="100px" style="align-content: center">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of ajaxTable.data">
+            <td>{{ data.name.first }} {{ data.name.last }}</td>
+            <td>{{ data.email }}</td>
+            <td>{{ data.gender }}</td>
+            <td>
+              <button nz-button nzSize="small" nzType="primary" (click)="EditStudentInfo()" nzShape="circle" nz-tooltip
+                nzTitle="编辑">
+                <i nz-icon nzType="edit"></i>
+              </button>
+              <nz-divider nzType="vertical"></nz-divider>
+              <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-tooltip nzTitle="删除">
+                <i nz-icon nzType="delete"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+  <nz-modal [(nzVisible)]="dialog_visible" nzTitle="Modal Title" (nzOnCancel)="DialogCancelHandle()"
+    (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
+    <p>Modal Content</p>
+  </nz-modal>
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息"
+    (nzOnClose)="DrawerClose()">
     <p>Some contents...</p>
   </nz-drawer>
+
 </div>

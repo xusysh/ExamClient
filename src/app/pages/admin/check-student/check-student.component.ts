@@ -17,8 +17,9 @@ export class CheckStudentComponent implements OnInit {
   filterGender = [{ text: 'male', value: 'male' }, { text: 'female', value: 'female' }];
   searchGenderList: string[] = [];
 
-  public drawer_visible:boolean=false;
-
+  public drawer_visible: boolean = false;
+  public dialog_visible: boolean = false;
+  public dialog_ok_loading: boolean = false;
 
 
   constructor(private table_update_service: TableUpdateService) { }
@@ -51,13 +52,25 @@ export class CheckStudentComponent implements OnInit {
     this.UpdateTableData(true);
   }
 
-  DrawerOpen():void{
+  EditStudentInfo():void{
     this.drawer_visible=true;
   }
 
-  DrawerClose():void{
-    this.drawer_visible=false;
+  DrawerClose(): void {
+    this.drawer_visible = false;
   }
 
+  DialogOKHandle(): void {
+    this.dialog_ok_loading = true;
+
+    setTimeout(() => {
+      this.dialog_visible = false;
+      this.dialog_ok_loading = false;
+    }, 3000);
+  }
+
+  DialogCancelHandle(): void {
+    this.dialog_visible = false;
+  }
 
 }
