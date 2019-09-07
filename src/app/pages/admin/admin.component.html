@@ -3,26 +3,35 @@
     [nzTrigger]="null" (mouseenter)="side_fix ? isCollapsed: isCollapsed = false"
     (mouseleave)="side_fix ? isCollapsed: isCollapsed = true">
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <nz-avatar nzIcon="user" nzSize="large" style="background-color:#7265e6;"></nz-avatar>
-        <h1>管理员用户&nbsp;</h1>
-        <span>{{user_name}}</span>
-      </a>
+      <nz-avatar nzIcon="user" nzSize="large" style="background-color:#7265e6;"></nz-avatar>
+      <h1>管理员用户&nbsp;</h1>
+      <span>{{user_name}}</span>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="加入考试" nzIcon="form">
+      <li nz-menu-item routerLink="/admin/check-student">
+        <i nz-icon nzType="team"></i>
+        <span>考生管理</span>
+      </li>
+      <li nz-submenu nzOpen nzTitle="试卷管理" nzIcon="form">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/student/check-exam">
-            <a>考试列表</a>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/3">
+            <a>题库管理</a>
           </li>
-          <li nz-menu-item nzMatchRouter routerLink="/student/join-exam">
-            <a>加入考试</a>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/4">
+            <a>试卷&组题</a>
           </li>
         </ul>
       </li>
-      <li nz-menu-item routerLink="/history">
-        <i nz-icon nzType="history"></i>
-        <span>历史成绩</span></li>
+      <li nz-submenu nzOpen nzTitle="考试管理" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/5">
+            <a>考试&阅卷</a>
+          </li>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/6">
+            <a>历史成绩</a>
+          </li>
+        </ul>
+      </li>
       <li nz-menu-item (click)="Logout()">
         <i nz-icon nzType="logout"></i>
         <span>退出登陆</span>

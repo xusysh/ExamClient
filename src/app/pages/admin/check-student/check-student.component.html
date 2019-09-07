@@ -1,0 +1,34 @@
+<div class="check-exam-page">
+  <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="listOfData" [nzLoading]="loading"
+    [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzPageSizeChange)="UpdateTableData()"
+    (nzPageSizeChange)="searchData(true)">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+      <tr>
+        <th nzShowSort nzSortKey="name">用户名</th>
+        <th nzShowFilter [nzFilters]="filterGender" (nzFilterChange)="updateFilter($event)">密码</th>
+        <th nzShowSort nzSortKey="email">所在组</th>
+        <th nzShowSort nzSortKey="email">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of ajaxTable.data">
+        <td>{{ data.name.first }} {{ data.name.last }}</td>
+        <td>{{ data.gender }}</td>
+        <td>{{ data.email }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <button nz-button nzType="primary" (click)="DrawerOpen()">Open</button>
+  <nz-drawer
+    [nzMaskClosable]="false"
+    [nzVisible]="drawer_visible"
+    nzPlacement="right"
+    nzTitle="详细信息"
+    (nzOnClose)="DrawerClose()"
+  >
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+  </nz-drawer>
+</div>
