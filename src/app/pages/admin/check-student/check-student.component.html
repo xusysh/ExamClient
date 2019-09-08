@@ -1,56 +1,118 @@
-<div class="check-exam-page">
-  <div class="student-table-div">
-    <div>
-      <div style="margin-bottom: 15px;margin-left: 15px">
-        <button style="margin-left: 10px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-          (click)="UpdateTableData()">
-          <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
-        </button>
-        <button style="margin-left: 10px" nz-button nzType="primary" nzSize="default" nzShape="round">
-          <i nz-icon nzType="user-add"></i>添加考生
-        </button>
-        <button style="margin-left: 10px" nz-button nzType="primary" nzSize="default" nzShape="round"
-          (click)="dialog_visible=true">
-          <i nz-icon nzType="usergroup-add"></i>批量添加
+<nz-page-header nzTitle="" class="check-student-page">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <i nz-icon nzType="home"></i>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>考生账户管理</a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-page-header-content>
+    <div class="student-table-div">
+      <div>
+        <div style="margin-bottom: 15px;margin-left: 15px">
+          <button style="margin-left: 5px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
+            (click)="UpdateTableData()">
+            <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
+          </button>
+          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round">
+            <i nz-icon nzType="user-add"></i>添加考生
+          </button>
+          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
+            (click)="dialog_visible=true">
+            <i nz-icon nzType="usergroup-add"></i>批量导入
+          </button>
+        </div>
+        <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="listOfData" [nzLoading]="loading"
+          [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzScroll]="{y:'350px'}">
+          <thead (nzSortChange)="sort($event)" nzSingleSort>
+            <tr>
+              <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+                (nzCheckedChange)="checkAll($event)"></th>
+              <th nzWidth="200px" nzCustomFilter>
+                <b>用户名
+                  <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                    [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                    nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                </b>
+              </th>
+              <th nzWidth="300px"><b>口令</b></th>
+              <th nzWidth="180px"><b>所在组</b></th>
+              <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of ajaxTable.data;let i = index">
+              <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+              <td>
+                <p nz-paragraph nzCopyable [(nzContent)]="data.name.last"></p>
+              </td>
+              <td>
+                <p nz-paragraph nzCopyable [(nzContent)]="data.email"></p>
+              </td>
+              <td>
+                <nz-badge [nzCount]="5">
+                  <span>{{data.gender}}</span>
+                  <span>&nbsp;&nbsp;&nbsp;</span>
+                </nz-badge>
+              </td>
+              <td>
+                <button nz-button nzSize="small" nzType="primary" (click)="EditStudentInfo(i)" nzShape="circle"
+                  nz-tooltip nzTitle="编辑">
+                  <i nz-icon nzType="edit"></i>
+                </button>
+                <nz-divider nzType="vertical"></nz-divider>
+                <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-tooltip nzTitle="删除">
+                  <i nz-icon nzType="delete"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+    <nz-modal [(nzVisible)]="dialog_visible" nzTitle="批量导入考生用户" (nzOnCancel)="DialogCancelHandle()"
+      (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
+      <nz-upload nzType="drag" nzAction="https://jsonplaceholder.typicode.com/posts/" (nzChange)="handleChange($event)">
+        <p class="ant-upload-drag-icon">
+          <i nz-icon nzType="cloud-upload"></i>
+        </p>
+        <p class="ant-upload-text">点击或拖动模板至此处</p>
+        <p class="ant-upload-hint">
+          批量导入考生用户模板从本系统下载
+        </p>
+      </nz-upload>
+      <div style="text-align: center;margin-top: 20px">
+        <button nz-button nzSize="large">
+          <i nz-icon nzType="cloud-download"></i>点击下载Excel模板
         </button>
       </div>
-      <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="listOfData" [nzLoading]="loading"
-        [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzScroll]="{y:'300px'}">
-        <thead (nzSortChange)="sort($event)" nzSingleSort>
-          <tr>
-            <th nzWidth="150px" nzShowSort nzSortKey="name">用户名</th>
-            <th nzWidth="300px">口令</th>
-            <th nzWidth="150px" nzShowFilter>所在组</th>
-            <th nzWidth="100px" style="align-content: center">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of ajaxTable.data">
-            <td>{{ data.name.first }} {{ data.name.last }}</td>
-            <td>{{ data.email }}</td>
-            <td>{{ data.gender }}</td>
-            <td>
-              <button nz-button nzSize="small" nzType="primary" (click)="EditStudentInfo()" nzShape="circle" nz-tooltip
-                nzTitle="编辑">
-                <i nz-icon nzType="edit"></i>
-              </button>
-              <nz-divider nzType="vertical"></nz-divider>
-              <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-tooltip nzTitle="删除">
-                <i nz-icon nzType="delete"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </div>
-  </div>
-  <nz-modal [(nzVisible)]="dialog_visible" nzTitle="Modal Title" (nzOnCancel)="DialogCancelHandle()"
-    (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
-    <p>Modal Content</p>
-  </nz-modal>
-  <nz-drawer [nzMaskClosable]="false" [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息"
-    (nzOnClose)="DrawerClose()">
-    <p>Some contents...</p>
-  </nz-drawer>
+    </nz-modal>
+    <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
+      [nzWidth]="500">
+      <form nz-form>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>用户名</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
+            <input nz-input nzSize="large" name="username" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>密码</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
+            <input nz-input nzSize="large" name="password" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">所在组</nz-form-label>
+        </nz-form-item>
 
-</div>
+      </form>
+      <div class="drawer-footer">
+        <button type="button" (click)="DrawerClose()" class="ant-btn"
+          style="margin-right: 15px;"><span>取消</span></button>
+        <button type="button" (click)="DrawerInfoSubmit()" class="ant-btn ant-btn-primary"><span>提交</span></button>
+      </div>
+    </nz-drawer>
+  </nz-page-header-content>
+</nz-page-header>

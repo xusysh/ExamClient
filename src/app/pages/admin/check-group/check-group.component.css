@@ -5,23 +5,37 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  .check-exam-page{
-    width:100%;
-    height: 100%;
-    justify-content:center;
-    align-items:center;
-    display:-webkit-flex;
+  nz-page-header {
+    border: 1px solid rgb(235, 237, 240);
   }
 
-  .check-exam-layout {
-    height: 100vh;
-    width: 100vh;
+  .wrap {
+    display: flex;
   }
 
-  .table-operations {
-    margin-bottom: 16px;
+  .content {
+    flex: 1;
   }
 
-  .table-operations > button {
+  .content p {
+    margin-bottom: 8px;
+  }
+
+  .content-link {
+    padding-top: 16px;
+  }
+
+  .content-link a {
+    display: inline-block;
+    vertical-align: text-top;
+    margin-right: 32px;
+  }
+
+  .content-link a img {
     margin-right: 8px;
+  }
+
+  .extra-content {
+    min-width: 240px;
+    text-align: right;
   }

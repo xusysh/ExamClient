@@ -8,10 +8,13 @@ import { TableUpdateService } from '../../../tools/TableUpdateService.component'
 })
 
 export class CheckStudentComponent implements OnInit {
-  pageIndex = 1;
-  pageSize = 5;
-  listOfData = [];
-  loading = true;
+
+  emm: string = "asd"
+
+  pageIndex: number = 1;
+  pageSize: number = 5;
+  listOfData: Array<object> = [];
+  loading: boolean = true;
   sortValue: string | null = null;
   sortKey: string | null = null;
   filterGender = [{ text: 'male', value: 'male' }, { text: 'female', value: 'female' }];
@@ -20,7 +23,11 @@ export class CheckStudentComponent implements OnInit {
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
   public dialog_ok_loading: boolean = false;
-
+  public isAllDisplayDataChecked = false;
+  public isIndeterminate = false;
+  public edit_user_name: string = '';
+  public edit_password: string = '';
+  public edit_group_list: Array<object> = [];
 
   constructor(private table_update_service: TableUpdateService) { }
 
@@ -52,8 +59,8 @@ export class CheckStudentComponent implements OnInit {
     this.UpdateTableData(true);
   }
 
-  EditStudentInfo():void{
-    this.drawer_visible=true;
+  EditStudentInfo(index: number): void {
+    this.drawer_visible = true;
   }
 
   DrawerClose(): void {
@@ -71,6 +78,9 @@ export class CheckStudentComponent implements OnInit {
 
   DialogCancelHandle(): void {
     this.dialog_visible = false;
+  }
+
+  refreshStatus(): void {
   }
 
 }

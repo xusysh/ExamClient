@@ -8,10 +8,13 @@ const routes: Routes = [
   {
     path: '', component: AdminComponent, children: [
       {
+        path: '', redirectTo: 'check-student', pathMatch: 'full'
+      },
+      {
         path: 'check-group', component: CheckGroupComponent
       },
       {
-        path:'check-student',component:CheckStudentComponent
+        path: 'check-student', component: CheckStudentComponent
       }
     ]
   }
