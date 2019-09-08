@@ -15,7 +15,8 @@
             (click)="UpdateTableData()">
             <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
           </button>
-          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round">
+          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
+            (click)="AddStudentInfo()">
             <i nz-icon nzType="user-add"></i>添加考生
           </button>
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
@@ -40,6 +41,15 @@
               <th nzWidth="180px"><b>所在组</b></th>
               <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
             </tr>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <div class="search-box">
+                  <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+                  <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+                    Search
+                  </button>
+                  <button nz-button nzSize="small" (click)="reset()">Reset</button>
+                </div>
+              </nz-dropdown-menu>
           </thead>
           <tbody>
             <tr *ngFor="let data of ajaxTable.data;let i = index">
@@ -50,9 +60,12 @@
               <td>
                 <p nz-paragraph nzCopyable [(nzContent)]="data.email"></p>
               </td>
-              <td>
-                <nz-badge [nzCount]="5">
-                  <span>{{data.gender}}</span>
+              <td nz-popover [nzTitle]="'所在组'" [nzContent]="popoverContentTemplate">
+                <ng-template #popoverContentTemplate>
+                  <div *ngFor="let group of users_group_list[i]">{{group}}</div>
+                </ng-template>
+                <nz-badge [nzCount]="users_group_list[i].length">
+                  <span>{{users_group_list[i][0]}}</span>
                   <span>&nbsp;&nbsp;&nbsp;</span>
                 </nz-badge>
               </td>
@@ -62,7 +75,8 @@
                   <i nz-icon nzType="edit"></i>
                 </button>
                 <nz-divider nzType="vertical"></nz-divider>
-                <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-tooltip nzTitle="删除">
+                <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
+                  nzPopconfirmTitle="是否删除？" (nzOnConfirm)="confirm()" (nzOnCancel)="cancel()" nz-tooltip nzTitle="删除">
                   <i nz-icon nzType="delete"></i>
                 </button>
               </td>
@@ -103,10 +117,16 @@
             <input nz-input nzSize="large" name="password" />
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">所在组</nz-form-label>
-        </nz-form-item>
-
+        <div>所在考生组:</div>
+        <nz-tag *ngFor="let tag of tags" nzMode="closeable" nzColor="blue"
+          (nzAfterClose)="handleClose(tag)" class="display-tag">
+          <span class="tag-content">{{ sliceTagName(tag) }}</span>
+        </nz-tag>
+        <nz-tag *ngIf="!inputVisible" class="editable-tag" (click)="showInput()" nzColor="blue" >
+          <div class="edit-tag-content"><i nz-icon nzType="plus"></i>添加</div>
+        </nz-tag>
+        <input #inputElement nz-input nzSize="defalut" *ngIf="inputVisible" type="text" [(ngModel)]="inputValue"
+          class="input-tag" (blur)="handleInputConfirm()" (keydown.enter)="handleInputConfirm()" name="tagInput"/>
       </form>
       <div class="drawer-footer">
         <button type="button" (click)="DrawerClose()" class="ant-btn"

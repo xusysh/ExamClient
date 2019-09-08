@@ -37,3 +37,50 @@
     left: 0px;
     background: #fff;
   }
+
+  .display-tag {
+    margin-top: 15px;
+    height:30px;
+    font-size: 120%;
+  }
+
+  .editable-tag {
+    background: rgb(255, 255, 255);
+    border-style: dashed;
+    margin-top: 15px;
+    height:30px;
+  }
+
+  .input-tag {
+    height: 25px;
+    width: 80px;
+    margin-top: 10px;
+  }
+
+  .tag-content{
+    line-height: 1.5;
+    font-weight: 700;
+  }
+
+  .edit-tag-content{
+    line-height: 1.8;
+    font-size: 120%;
+  }
+
+  .search-box {
+    padding: 8px;
+  }
+
+  .search-box input {
+    width: 188px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .search-box button {
+    width: 90px;
+  }
+
+  .search-button {
+    margin-right: 8px;
+  }

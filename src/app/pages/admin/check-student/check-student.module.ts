@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { CheckStudentComponent } from './check-student.component';
 
 import { NgZorroAntdModule} from 'ng-zorro-antd';
