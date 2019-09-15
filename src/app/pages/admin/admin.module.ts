@@ -6,13 +6,11 @@ import { AdminComponent } from './admin.component';
 
 import { NgZorroAntdModule} from 'ng-zorro-antd';
 
-import {CheckGroupModule} from './check-group/check-group.module'
-
 import { CheckStudentModule } from './check-student/check-student.module';
 
 
 @NgModule({
-  imports: [AdminRoutingModule,NgZorroAntdModule,CheckGroupModule,CheckStudentModule],
+  imports: [AdminRoutingModule,NgZorroAntdModule,CheckStudentModule],
   declarations: [AdminComponent],
   exports: [AdminComponent]
 })
