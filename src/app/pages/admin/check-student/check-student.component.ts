@@ -132,7 +132,7 @@ export class CheckStudentComponent implements OnInit {
           this.message.create('error', '用户删除失败:' + response.msg);
         }
         else {
-          this.message.create('success', '用户 ' + this.edit_user_name + ' 删除成功');
+          this.message.create('success', '用户 ' + this.student_info_list[this.current_select_user].userName + ' 删除成功');
           this.UpdateTableData();
         }
       }, error => {
@@ -155,11 +155,11 @@ export class CheckStudentComponent implements OnInit {
 
   DialogOKHandle(): void {
     this.dialog_ok_loading = true;
-
+    this.UpdateTableData();
     setTimeout(() => {
       this.dialog_visible = false;
       this.dialog_ok_loading = false;
-    }, 3000);
+    }, 2000);
   }
 
   DialogCancelHandle(): void {
