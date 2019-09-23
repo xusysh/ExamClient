@@ -13,8 +13,8 @@ import { forkJoin } from 'rxjs';
 
 export class CheckStudentComponent implements OnInit {
 
-  public pageIndex: number = 1;
-  public pageSize: number = 5;
+  public page_index: number = 1;
+  public page_size: number = 5;
   public listOfData: Array<object> = [];
   public loading: boolean = true;
   public sortValue: string | null = null;
@@ -28,6 +28,7 @@ export class CheckStudentComponent implements OnInit {
   public dialog_ok_loading: boolean = false;
   public is_allDisplay_data_checked = false;
   public is_indeterminate = false;
+  public edit_user_id: number = 0;
   public edit_user_name: string = '';
   public edit_password: string = '';
   public edit_group_list: Array<object> = [];
@@ -60,7 +61,7 @@ export class CheckStudentComponent implements OnInit {
 
   UpdateTableData(reset: boolean = false): void {
     if (reset) {
-      this.pageIndex = 1;
+      this.page_index = 1;
     }
     this.loading = true;
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
@@ -81,17 +82,18 @@ export class CheckStudentComponent implements OnInit {
   }
 
   CheckStudentInfo(index: number): void {
-    this.current_select_user = index;
+    this.current_select_user = (this.page_index - 1) * this.page_size + index;
     this.drawer_visible = true;
-    this.edit_user_name = this.student_info_list[index].userName;
-    this.edit_password = this.student_info_list[index].password;
-    this.edit_group_list = this.student_info_list[index].group_list;
+    this.edit_user_name = this.student_info_list[this.current_select_user].userName;
+    this.edit_password = this.student_info_list[this.current_select_user].password;
+    this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
   }
 
   EditUserInfo(): void {
     this.edit_user_info_loading = true;
+    this.edit_user_id = this.student_info_list[this.current_select_user].id;
     let user_edit_info: UserEditInfo = {
-      id: this.student_info_list[this.current_select_user].id,
+      id: this.edit_user_id,
       userName: this.edit_user_name,
       password: this.edit_password,
       userType: this.student_info_list[this.current_select_user].userType,
@@ -116,11 +118,12 @@ export class CheckStudentComponent implements OnInit {
 
   //删除单个用户
   DeleteUser(index: number): void {
+    this.current_select_user = (this.page_index - 1) * this.page_size + index;
     let user_delete_info = {
-      id: [this.student_info_list[index].id]
+      id: [this.student_info_list[this.current_select_user].id]
     }
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       body: user_delete_info
     };
     this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
@@ -140,7 +143,10 @@ export class CheckStudentComponent implements OnInit {
 
   AddStudentInfo(): void {
     this.drawer_visible = true;
-    
+    this.edit_user_id = 0;
+    this.edit_user_name = '';
+    this.edit_password = '';
+    this.edit_group_list = null;
   }
 
   DrawerClose(): void {

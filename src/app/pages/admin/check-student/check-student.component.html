@@ -25,7 +25,7 @@
           </button>
         </div>
         <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
-          [nzLoading]="loading" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzScroll]="{y:'350px'}">
+          [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'350px'}">
           <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>
               <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate"></th>
