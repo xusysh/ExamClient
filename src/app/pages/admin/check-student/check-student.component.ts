@@ -1,6 +1,6 @@
 import { Component, OnInit, Injectable, Inject, ViewChild, ElementRef } from '@angular/core';
 import { TableUpdateService } from '../../../tools/TableUpdateService.component'
-import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
@@ -35,8 +35,10 @@ export class CheckStudentComponent implements OnInit {
   public user_group_tags = [];
   public inputVisible = false;
   public inputValue = '';
+  public edit_user_info_loading = false;
 
   current_select_user: number = 0;
+
 
   //假数据
   public users_group_list = [['产品开发科', '招投标项目组', '考试系统小组'], ['需求分析科'], ['产品开发科', '人工智能小组'],
@@ -61,7 +63,7 @@ export class CheckStudentComponent implements OnInit {
       this.pageIndex = 1;
     }
     this.loading = true;
-    this.http_client.get<MyServerResponse>(this.base_url + '/upi/usergroup/all').subscribe(
+    this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
       response => {
         this.student_info_list = response.data;
         this.loading = false;
@@ -87,6 +89,7 @@ export class CheckStudentComponent implements OnInit {
   }
 
   EditUserInfo(): void {
+    this.edit_user_info_loading = true;
     let user_edit_info: UserEditInfo = {
       id: this.student_info_list[this.current_select_user].id,
       userName: this.edit_user_name,
@@ -107,6 +110,7 @@ export class CheckStudentComponent implements OnInit {
       }, error => {
         this.message.create('error', '用户编辑失败：连接服务器失败');
       });
+    this.edit_user_info_loading = false;
     this.drawer_visible = false;
   }
 
@@ -115,7 +119,11 @@ export class CheckStudentComponent implements OnInit {
     let user_delete_info = {
       id: [this.student_info_list[index].id]
     }
-    this.http_client.delete<MyServerResponse>(this.base_url + '/upi/usergroup/relation',user_delete_info).
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+      body: user_delete_info
+    };
+    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '用户删除失败:' + response.msg);
@@ -132,6 +140,7 @@ export class CheckStudentComponent implements OnInit {
 
   AddStudentInfo(): void {
     this.drawer_visible = true;
+    
   }
 
   DrawerClose(): void {
@@ -171,7 +180,7 @@ export class CheckStudentComponent implements OnInit {
 
   DownloadTemplate(): void {
     this.is_downloading_template = true;
-    this.http_client.post(this.base_url + '/upi/user/template', null, {
+    this.http_client.post(this.base_url + 'upi/user/template', null, {
       responseType: 'arraybuffer'
     }
     ).subscribe(response => this.DownloadFile(response, "application/ms-excel"),
@@ -203,7 +212,6 @@ export class CheckStudentComponent implements OnInit {
       (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress) {
           if (event.total! > 0) {
-            // tslint:disable-next-line:no-any
             (event as any).percent = (event.loaded / event.total!) * 100;
           }
           item.onProgress!(event, item.file!);
