@@ -1,7 +1,6 @@
 <nz-layout class="student-layout">
   <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null" (mouseenter)="side_fix ? isCollapsed: isCollapsed = false"
-    (mouseleave)="side_fix ? isCollapsed: isCollapsed = true">
+    [nzTrigger]="null" (mouseenter)="side_fix ? isCollapsed: isCollapsed = false">
     <div class="sidebar-logo">
       <nz-avatar nzIcon="user" nzSize="large" style="background-color:#7265e6;"></nz-avatar>
       <h1>管理员用户&nbsp;</h1>
@@ -41,13 +40,14 @@
   <nz-layout>
     <nz-header>
       <div class="app-header">
-        <!--span class="header-trigger" (click)="side_fix = !side_fix">
-          <i class="trigger" nz-icon nzType="layout" [nzTheme]="side_fix ? 'fill' : 'outline'"></i>
-        </span-->
+        <span class="header-trigger">
+          <i class="trigger" nz-icon nzType="layout" (click)="side_fix = !side_fix"
+            [nzTheme]="side_fix ? 'fill' : 'outline'" nz-tooltip [nzTitle]="side_fix ? '边框已固定': '边框未固定'"></i>
+        </span>
         <h1>在线考试系统V0.1</h1>
       </div>
     </nz-header>
-    <nz-content>
+    <nz-content (mouseenter)="side_fix ? isCollapsed: isCollapsed = true">
       <div class="inner-content">
         <router-outlet></router-outlet>
       </div>
