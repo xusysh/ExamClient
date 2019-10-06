@@ -36,14 +36,16 @@
             <tr>
               <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate"></th>
               <th nzWidth="200px" nzCustomFilter>
-                <b>用户名
+                <b>试题名
                   <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                     [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
                     nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                 </b>
               </th>
-              <th nzWidth="300px"><b>口令</b></th>
-              <th nzWidth="180px"><b>所在组</b></th>
+              <th nzWidth="300px"><b>试题类型</b></th>
+              <th nzWidth="180px"><b>题干</b></th>
+              <th nzWidth="180px"><b>选项</b></th>
+              <th nzWidth="180px"><b>参考答案</b></th>
               <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -92,7 +94,7 @@
     </div>
     <nz-modal [(nzVisible)]="dialog_visible" nzTitle="批量导入考生用户" (nzOnCancel)="DialogCancelHandle()"
       (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
-      <nz-upload nzType="drag" nzAction="http://localhost:8080/upi/user/batch/" [nzCustomRequest]="customReq">
+      <nz-upload nzType="drag" nzAction="http://localhost:8080/" [nzCustomRequest]="customReq">
         <p class="ant-upload-drag-icon">
           <i nz-icon nzType="cloud-upload"></i>
         </p>
@@ -107,5 +109,37 @@
         </button>
       </div>
     </nz-modal>
+    <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
+      [nzWidth]="500">
+      <form nz-form>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>用户名</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
+            <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>密码</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
+            <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
+          </nz-form-control>
+        </nz-form-item>
+        <div>所在考生组:</div>
+        <nz-tag *ngFor="let group of edit_group_list" nzMode="closeable" nzColor="blue" class="display-tag">
+          <span class="tag-content">{{ group.groupName }}</span>
+        </nz-tag>
+        <nz-tag *ngIf="!inputVisible" class="editable-tag" (click)="showInput()" nzColor="blue">
+          <div class="edit-tag-content"><i nz-icon nzType="plus"></i>添加</div>
+        </nz-tag>
+        <input #inputElement nz-input nzSize="defalut" *ngIf="inputVisible" type="text" [(ngModel)]="inputValue"
+          class="input-tag" (blur)="handleInputConfirm()" (keydown.enter)="handleInputConfirm()" name="tagInput" />
+      </form>
+      <div class="drawer-footer">
+        <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
+          style="margin-right: 15px;"><span>取消</span></button>
+        <button nz-button type="button" (click)="EditUserInfo()" class="ant-btn ant-btn-primary"
+          [nzLoading]="edit_user_info_loading"><span>提交</span></button>
+      </div>
+    </nz-drawer>
   </nz-page-header-content>
 </nz-page-header>
