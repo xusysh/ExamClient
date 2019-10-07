@@ -42,11 +42,11 @@
                     nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                 </b>
               </th>
-              <th nzWidth="300px"><b>试题类型</b></th>
-              <th nzWidth="180px"><b>题干</b></th>
-              <th nzWidth="180px"><b>选项</b></th>
-              <th nzWidth="180px"><b>参考答案</b></th>
-              <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
+              <th nzWidth="100px"><b>试题类型</b></th>
+              <th nzWidth="300px"><b>题干</b></th>
+              <th nzWidth="200px"><b>选项</b></th>
+              <th nzWidth="200px"><b>参考答案</b></th>
+              <th nzWidth="200px" style="align-content: center"><b>操作</b></th>
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
               <div class="search-box">
@@ -100,7 +100,7 @@
         </p>
         <p class="ant-upload-text">点击或拖动模板至此处</p>
         <p class="ant-upload-hint">
-          批量导入考生用户模板从本系统下载
+          批量导入试题模板从本系统下载
         </p>
       </nz-upload>
       <div style="text-align: center;margin-top: 20px">
@@ -113,18 +113,37 @@
       [nzWidth]="500">
       <form nz-form>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>用户名</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题名</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
             <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>密码</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题类型</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
+            <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>题干</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
             <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
           </nz-form-control>
         </nz-form-item>
-        <div>所在考生组:</div>
+        <!--todo:分割选项显示编辑-->
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
+            <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
+            <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
+          </nz-form-control>
+        </nz-form-item>
+        <div>知识点:</div>
         <nz-tag *ngFor="let group of edit_group_list" nzMode="closeable" nzColor="blue" class="display-tag">
           <span class="tag-content">{{ group.groupName }}</span>
         </nz-tag>

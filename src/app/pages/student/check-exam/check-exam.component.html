@@ -1,20 +1,88 @@
-<div class="check-exam-page">
-  <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="listOfData" [nzLoading]="loading"
-  [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzPageSizeChange)="UpdateTableData()"
-  (nzPageSizeChange)="searchData(true)">
-  <thead (nzSortChange)="sort($event)" nzSingleSort>
-    <tr>
-      <th nzShowSort nzSortKey="name">Name</th>
-      <th nzShowFilter [nzFilters]="filterGender" (nzFilterChange)="updateFilter($event)">Gender</th>
-      <th nzShowSort nzSortKey="email"><span>Email</span></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of ajaxTable.data">
-      <td>{{ data.name.first }} {{ data.name.last }}</td>
-      <td>{{ data.gender }}</td>
-      <td>{{ data.email }}</td>
-    </tr>
-  </tbody>
-</nz-table>
-</div>
+<nz-page-header nzTitle="" class="check-exam-page">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/admin">
+        <i nz-icon nzType="home">
+        </i>
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>在线考试</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>查看考试</a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-page-header-content>
+    <div class="exam-table-div">
+      <div>
+        <div style="margin-bottom: 15px;margin-left: 15px">
+          <button style="margin-left: 5px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
+            (click)="UpdateTableData()">
+            <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
+          </button>
+        </div>
+        <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
+          [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'350px'}">
+          <thead (nzSortChange)="sort($event)" nzSingleSort>
+            <tr>
+              <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate"></th>
+              <th nzWidth="200px" nzCustomFilter>
+                <b>考试名
+                  <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                    [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                    nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                </b>
+              </th>
+              <th nzWidth="200px"><b>试卷名</b></th>
+              <th nzWidth="200px"><b>开始时间</b></th>
+              <th nzWidth="200px"><b>结束时间</b></th>
+              <th nzWidth="100px"><b>结束时间</b></th>
+              <th nzWidth="200px" style="align-content: center"><b>操作</b></th>
+            </tr>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <div class="search-box">
+                <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+                <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+                  Search
+                </button>
+                <button nz-button nzSize="small" (click)="reset()">Reset</button>
+              </div>
+            </nz-dropdown-menu>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of ajaxTable.data;let i=index">
+              <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+              <td>
+                <p nz-paragraph nzCopyable [(nzContent)]="data.userName"></p>
+              </td>
+              <td>
+                <p nz-paragraph nzCopyable [(nzContent)]="data.password"></p>
+              </td>
+              <td nz-popover [nzTitle]="'所在组'" [nzContent]="popoverContentTemplate">
+                <ng-template #popoverContentTemplate>
+                  <div *ngFor="let group of data.group_list">{{group.groupName}}</div>
+                </ng-template>
+                <nz-badge [nzCount]="data.group_list.length">
+                  <span>{{data.group_list.length==0 ? '无':data.group_list[0].groupName}}</span>
+                  <span>&nbsp;&nbsp;&nbsp;</span>
+                </nz-badge>
+              </td>
+              <td>
+                <button nz-button nzSize="small" nzType="primary" (click)="CheckStudentInfo(i)" nzShape="circle"
+                  nz-tooltip nzTitle="编辑">
+                  <i nz-icon nzType="edit"></i>
+                </button>
+                <nz-divider nzType="vertical"></nz-divider>
+                <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
+                  nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeleteUser(i)" nz-tooltip nzTitle="删除">
+                  <i nz-icon nzType="delete"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+  </nz-page-header-content>
+</nz-page-header>

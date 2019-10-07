@@ -1,0 +1,28 @@
+<nz-page-header nzTitle="" class="examination-page">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/admin">
+        <i nz-icon nzType="home">
+        </i>
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>在线考试</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>参加考试</a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-page-header-content>
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="12">
+        <h2>考试名</h2>
+      </nz-col>
+      <nz-col [nzSpan]="8">
+      </nz-col>
+      <nz-col [nzSpan]="4">
+        <nz-countdown [nzValue]="deadline" ></nz-countdown>
+      </nz-col>
+    </nz-row>
+  </nz-page-header-content>
+</nz-page-header>

@@ -7,10 +7,11 @@ import { StudentComponent } from './student.component';
 import { NgZorroAntdModule} from 'ng-zorro-antd';
 
 import {CheckExamModule} from './check-exam/check-exam.module'
+import { ExaminationModule } from './examination/examination.module';
 
 
 @NgModule({
-  imports: [StudentRoutingModule,NgZorroAntdModule,CheckExamModule],
+  imports: [StudentRoutingModule,NgZorroAntdModule,CheckExamModule,ExaminationModule],
   declarations: [StudentComponent],
   exports: [StudentComponent]
 })
