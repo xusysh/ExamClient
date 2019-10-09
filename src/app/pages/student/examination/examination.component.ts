@@ -8,6 +8,12 @@ import { Component, OnInit, Injectable, Inject } from '@angular/core';
 
 export class ExaminationComponent implements OnInit {
 
+  //题目列表
+  public questions:Array<object> = new Array<object>(50);
+  //当前页
+  public page_index_char:string = '';
+  //考试名
+  public exam_name:string = "2019年10月金融科技部考试";
   //考试截止时间（毫秒）
   public deadline: number = Date.now() + 1000 * 60 * 40;
   //大题列表
@@ -25,7 +31,7 @@ export class ExaminationComponent implements OnInit {
   public radio_value:string = String.fromCharCode(0x41);
   //控制选择框不同状态的背景色
   public option_bgcolor:Array<string> = new Array<string>(this.options.length);
-  public option_default_bgcolor:string = 'white';
+  public option_default_bgcolor:string = '#FFFFFF';
   //选项颜色
   public option_bdcolor:Array<string> = new Array<string>(this.options.length);
   public option_default_bdcolor:string = '#d4d4d4';
@@ -42,10 +48,14 @@ export class ExaminationComponent implements OnInit {
     return String.fromCharCode(0x41+i);
   }
 
+  getPageValue(i:number):string{
+    return String.fromCharCode(i);
+  }
+
   updateRadioStatus(){
     for(let i=0;i<this.options.length;i++){
       if(this.radio_value.charCodeAt(0) == 0x41+i) {
-        this.option_bdcolor[i] = 'blue';
+        this.option_bdcolor[i] = '#0099FF';
         this.option_bgcolor[i] = this.option_default_bgcolor;
       }
       else {
