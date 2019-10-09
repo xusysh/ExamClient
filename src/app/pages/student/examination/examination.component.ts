@@ -36,6 +36,8 @@ export class ExaminationComponent implements OnInit {
   public option_bdcolor:Array<string> = new Array<string>(this.options.length);
   public option_default_bdcolor:string = '#d4d4d4';
 
+  emm:boolean=false;
+
   constructor() {
     this.updateRadioStatus();
   }
@@ -61,6 +63,21 @@ export class ExaminationComponent implements OnInit {
       else {
         this.option_bgcolor[i] = this.option_default_bgcolor;
         this.option_bdcolor[i] = this.option_default_bdcolor;
+      }
+    }
+  }
+
+    openMap: { [name: string]: boolean } = {
+    sub1: true,
+    sub2: false,
+    sub3: false,
+    sub4:false
+  };
+
+  openHandler(value: string): void {
+    for (const key in this.openMap) {
+      if (key !== value) {
+        this.openMap[key] = false;
       }
     }
   }
