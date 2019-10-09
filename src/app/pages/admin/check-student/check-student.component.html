@@ -117,6 +117,10 @@
           </nz-form-control>
         </nz-form-item>
         <div>所在考生组:</div>
+        <!--todo-->
+        <nz-select style="width: 100%" [(ngModel)]="edit_group_name_list" [nzSize]="large" nzMode="tags" nzPlaceHolder="未在考生组中">
+            <nz-option *ngFor="let group of edit_group_list" [nzLabel]="group.groupName" [nzValue]="group.groupName"></nz-option>
+        </nz-select>
         <nz-tag *ngFor="let group of edit_group_list" nzMode="closeable" nzColor="blue" class="display-tag">
           <span class="tag-content">{{ group.groupName }}</span>
         </nz-tag>

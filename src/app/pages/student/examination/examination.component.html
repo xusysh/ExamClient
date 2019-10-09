@@ -14,15 +14,33 @@
     </nz-breadcrumb-item>
   </nz-breadcrumb>
   <nz-page-header-content>
-    <nz-row [nzGutter]="16">
-      <nz-col [nzSpan]="12">
+    <nz-row>
+      <nz-col [nzSpan]="6">
+      </nz-col>
+      <nz-col [nzSpan]="10">
         <h2>考试名</h2>
       </nz-col>
-      <nz-col [nzSpan]="8">
+      <nz-col [nzSpan]="4">
+        <nz-countdown [nzValue]="deadline"></nz-countdown>
       </nz-col>
       <nz-col [nzSpan]="4">
-        <nz-countdown [nzValue]="deadline" ></nz-countdown>
       </nz-col>
     </nz-row>
+    <nz-steps nzType="navigation" nzSize="small" [nzCurrent]="current_category">
+      <nz-step *ngFor="let category of categorys;let i = index" [nzTitle]="category"
+        [nzStatus]="current_category > i ? 'finish':(current_category == i?'process':'wait')"></nz-step>
+    </nz-steps>
+    <nz-divider></nz-divider>
+    <div>
+      <pre><span style="font-weight:bold;font-size: 120%">{{question_desc}}</span></pre>
+      <nz-radio-group [(ngModel)]="radio_value" (ngModelChange)="updateRadioStatus()">
+        <label *ngFor="let option of options;let i = index" nz-radio class="option-radio"
+          (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'" 
+          (mouseleave)="updateRadioStatus()"
+          [nzValue]="getValue(i)" [ngStyle]="{'background-color': option_bgcolor[i],'border-color':option_bdcolor[i]}">{{option}}</label>
+      </nz-radio-group>
+    </div>
+    <nz-divider></nz-divider>
+
   </nz-page-header-content>
 </nz-page-header>
