@@ -9,9 +9,10 @@ import { NgZorroAntdModule} from 'ng-zorro-antd';
 import { CheckStudentModule } from './check-student/check-student.module';
 
 import {CheckQuestionModule} from './check-question/check-question.module';
+import { GeneratePaperModule } from './generate-paper/generate-paper.module';
 
 @NgModule({
-  imports: [AdminRoutingModule,NgZorroAntdModule,CheckStudentModule,CheckQuestionModule],
+  imports: [AdminRoutingModule,NgZorroAntdModule,CheckStudentModule,CheckQuestionModule,GeneratePaperModule],
   declarations: [AdminComponent],
   exports: [AdminComponent]
 })

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { CheckStudentComponent } from './check-student/check-student.component';
 import { CheckQuestionComponent } from './check-question/check-question.component';
+import { GeneratePaperComponent } from './generate-paper/generate-paper.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,9 @@ const routes: Routes = [
       },
       {
         path: 'check-question', component: CheckQuestionComponent
+      },
+      {
+        path: 'generate-paper', component: GeneratePaperComponent
       }
     ]
   }
