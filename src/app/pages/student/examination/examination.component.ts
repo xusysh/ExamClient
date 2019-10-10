@@ -1,4 +1,4 @@
-import { Component, OnInit, Injectable, Inject } from '@angular/core';
+import { Component, OnInit, Injectable, Inject, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-examination',
@@ -36,10 +36,17 @@ export class ExaminationComponent implements OnInit {
   public option_bdcolor:Array<string> = new Array<string>(this.options.length);
   public option_default_bdcolor:string = '#d4d4d4';
 
-  emm:boolean=false;
+  @ViewChild('content_canvas',{  static: false }) content_canvas_element_view: ElementRef;
+  public canvas_height:number=0;
+  public elem_height_str: string = '500px';
 
   constructor() {
     this.updateRadioStatus();
+  }
+
+  ngAfterViewInit(): void {
+    this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
+    this.elem_height_str = Math.ceil(this.canvas_height*0.85).toString() + 'px';
   }
 
   ngOnInit(): void {

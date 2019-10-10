@@ -2,7 +2,7 @@ import { Component, OnInit, Injectable, Inject, ViewChild, ElementRef } from '@a
 import { TableUpdateService } from '../../../tools/TableUpdateService.component'
 import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { UploadXHRArgs } from 'ng-zorro-antd';
+import { UploadXHRArgs, NzFormatEmitEvent } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -13,288 +13,64 @@ import { forkJoin } from 'rxjs';
 
 export class GeneratePaperComponent implements OnInit {
 
-  public page_index: number = 1;
-  public page_size: number = 5;
-  public listOfData: Array<object> = [];
-  public loading: boolean = true;
-  public sortValue: string | null = null;
-  public sortKey: string | null = null;
-  public searchGenderList: string[] = [];
-  public is_downloading_template = false;
-  public student_info_list: Array<UserInfo> = [];
+  searchValue = '';
 
-  public drawer_visible: boolean = false;
-  public dialog_visible: boolean = false;
-  public dialog_ok_loading: boolean = false;
-  public is_allDisplay_data_checked = false;
-  public is_indeterminate = false;
-  public edit_user_id: number = 0;
-  public edit_user_name: string = '';
-  public edit_password: string = '';
-  public edit_group_list: Array<object> = [];
+  nodes = [
+    {
+      title: '0-0',
+      key: '0-0',
+      children: [
+        {
+          title: '0-0-0',
+          key: '0-0-0',
+          children: [
+            { title: '0-0-0-0', key: '0-0-0-0', isLeaf: true },
+            { title: '0-0-0-1', key: '0-0-0-1', isLeaf: true },
+            { title: '0-0-0-2', key: '0-0-0-2', isLeaf: true }
+          ]
+        },
+        {
+          title: '0-0-1',
+          key: '0-0-1',
+          children: [
+            { title: '0-0-1-0', key: '0-0-1-0', isLeaf: true },
+            { title: '0-0-1-1', key: '0-0-1-1', isLeaf: true },
+            { title: '0-0-1-2', key: '0-0-1-2', isLeaf: true }
+          ]
+        },
+        {
+          title: '0-0-2',
+          key: '0-0-2',
+          isLeaf: true
+        }
+      ]
+    },
+    {
+      title: '0-1',
+      key: '0-1',
+      children: [
+        { title: '0-1-0-0', key: '0-1-0-0', isLeaf: true },
+        { title: '0-1-0-1', key: '0-1-0-1', isLeaf: true },
+        { title: '0-1-0-2', key: '0-1-0-2', isLeaf: true }
+      ]
+    },
+    {
+      title: '0-2',
+      key: '0-2',
+      isLeaf: true
+    }
+  ];
 
-  public user_group_tags = [];
-  public inputVisible = false;
-  public inputValue = '';
-  public edit_user_info_loading = false;
+  nzEvent(event: NzFormatEmitEvent): void {
+  //  console.log(event);
+  }
 
-  current_select_user: number = 0;
+  constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
+    private message: NzMessageService) {
 
-
-  //假数据
-  public users_group_list = [['产品开发科', '招投标项目组', '考试系统小组'], ['需求分析科'], ['产品开发科', '人工智能小组'],
-  ['鑫源融信公司', '招投标项目组'], ['运营支持科', '考试系统小组', '微服务小组']];
-
-  @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
-  constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) { }
+  }
 
   ngOnInit(): void {
-    this.UpdateTableData();
   }
 
-  sort(sort: { key: string; value: string }): void {
-    this.sortKey = sort.key;
-    this.sortValue = sort.value;
-    this.UpdateTableData();
-  }
-
-  UpdateTableData(reset: boolean = false): void {
-    if (reset) {
-      this.page_index = 1;
-    }
-    this.loading = true;
-    this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
-      response => {
-        this.student_info_list = response.data;
-        this.loading = false;
-      },
-      error => {
-        this.message.create('error', '用户信息获取失败：连接服务器失败');
-        this.loading = false;
-      });
-
-  }
-
-  updateFilter(value: string[]): void {
-    this.searchGenderList = value;
-    this.UpdateTableData(true);
-  }
-
-  CheckStudentInfo(index: number): void {
-    this.current_select_user = (this.page_index - 1) * this.page_size + index;
-    this.drawer_visible = true;
-    this.edit_user_name = this.student_info_list[this.current_select_user].userName;
-    this.edit_password = this.student_info_list[this.current_select_user].password;
-    this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
-  }
-
-  EditUserInfo(): void {
-    this.edit_user_info_loading = true;
-    this.edit_user_id = this.student_info_list[this.current_select_user].id;
-    let user_edit_info: UserEditInfo = {
-      id: this.edit_user_id,
-      userName: this.edit_user_name,
-      password: this.edit_password,
-      userType: this.student_info_list[this.current_select_user].userType,
-      group_add: [],
-      group_del: []
-    }
-    this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', user_edit_info).
-      subscribe(response => {
-        if (response.status != 200) {
-          this.message.create('error', '用户编辑失败:' + response.msg);
-        }
-        else {
-          this.message.create('success', '用户 ' + this.edit_user_name + ' 编辑成功');
-          this.UpdateTableData();
-        }
-      }, error => {
-        this.message.create('error', '用户编辑失败：连接服务器失败');
-      });
-    this.edit_user_info_loading = false;
-    this.drawer_visible = false;
-  }
-
-  //删除单个用户
-  DeleteUser(index: number): void {
-    this.current_select_user = (this.page_index - 1) * this.page_size + index;
-    let user_delete_info = {
-      id: [this.student_info_list[this.current_select_user].id]
-    }
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      body: user_delete_info
-    };
-    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
-      subscribe(response => {
-        if (response.status != 200) {
-          this.message.create('error', '用户删除失败:' + response.msg);
-        }
-        else {
-          this.message.create('success', '用户 ' + this.student_info_list[this.current_select_user].userName + ' 删除成功');
-          this.UpdateTableData();
-        }
-      }, error => {
-        this.message.create('error', '用户删除失败：连接服务器失败');
-      });
-    this.drawer_visible = false;
-  }
-
-  AddStudentInfo(): void {
-    this.drawer_visible = true;
-    this.edit_user_id = 0;
-    this.edit_user_name = '';
-    this.edit_password = '';
-    this.edit_group_list = null;
-  }
-
-  DrawerClose(): void {
-    this.drawer_visible = false;
-  }
-
-  DialogOKHandle(): void {
-    this.dialog_ok_loading = true;
-    this.UpdateTableData();
-    setTimeout(() => {
-      this.dialog_visible = false;
-      this.dialog_ok_loading = false;
-    }, 2000);
-  }
-
-  DialogCancelHandle(): void {
-    this.dialog_visible = false;
-  }
-
-  refreshStatus(): void {
-  }
-
-  showInput(): void {
-    this.inputVisible = true;
-    setTimeout(() => {
-      this.inputElement.nativeElement.focus();
-    }, 10);
-  }
-
-  handleInputConfirm(): void {
-    if (this.inputValue && this.user_group_tags.indexOf(this.inputValue) === -1) {
-      this.user_group_tags = [...this.user_group_tags, this.inputValue];
-    }
-    this.inputValue = '';
-    this.inputVisible = false;
-  }
-
-  DownloadTemplate(): void {
-    this.is_downloading_template = true;
-    this.http_client.post(this.base_url + 'upi/user/template', null, {
-      responseType: 'arraybuffer'
-    }
-    ).subscribe(response => this.DownloadFile(response, "application/ms-excel"),
-      error => {
-        this.message.create('error', '文件下载失败：连接服务器失败');
-        this.is_downloading_template = false;
-      });
-  }
-
-  DownloadFile(data: any, type: string) {
-    let blob = new Blob([data], { type: type });
-    let url = window.URL.createObjectURL(blob);
-    var anchor = document.createElement("a");
-    anchor.download = "导入模板.xls";
-    anchor.href = url;
-    anchor.click();
-    this.message.create('success', '文件下载成功');
-    this.is_downloading_template = false;
-  }
-
-  customReq = (item: UploadXHRArgs) => {
-    const formData = new FormData();
-    formData.set('files[]', item.file as any, 'files[]');
-    const req = new HttpRequest('POST', item.action!, formData, {
-      reportProgress: true,
-      withCredentials: true
-    });
-    return this.http_client.request(req).subscribe(
-      (event: HttpEvent<any>) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          if (event.total! > 0) {
-            (event as any).percent = (event.loaded / event.total!) * 100;
-          }
-          item.onProgress!(event, item.file!);
-        } else if (event instanceof HttpResponse) {
-          item.onSuccess!(event.body, item.file!, event);
-        }
-      },
-      err => {
-        item.onError!(err, item.file!);
-      }
-    );
-  };
-
-  customBigReq = (item: UploadXHRArgs) => {
-    const size = item.file.size;
-    const chunkSize = parseInt(size / 3 + '', 10);
-    const maxChunk = Math.ceil(size / chunkSize);
-    const reqs = Array(maxChunk)
-      .fill(0)
-      .map((_: {}, index: number) => {
-        const start = index * chunkSize;
-        let end = start + chunkSize;
-        if (size - end < 0) {
-          end = size;
-        }
-        const formData = new FormData();
-        formData.append('file', item.file.slice(start, end));
-        formData.append('start', start.toString());
-        formData.append('end', end.toString());
-        formData.append('index', index.toString());
-        const req = new HttpRequest('POST', item.action!, formData, {
-          withCredentials: true
-        });
-        return this.http_client.request(req);
-      });
-    return forkJoin(...reqs).subscribe(
-      () => {
-        item.onSuccess!({}, item.file!, event);
-      },
-      err => {
-        item.onError!(err, item.file!);
-      }
-    );
-  };
-
-}
-
-interface MyServerResponse {
-  status: number;
-  msg: string;
-  data: any
-}
-
-interface UserInfo {
-  id: number,
-  userName: string,
-  password: string,
-  userType: string,
-  group_list: Array<UserGroupInfo>
-}
-
-interface UserGroupInfo {
-  id: number,
-  groupName: string
-}
-
-interface UploadResp {
-  status: number,
-  msg: string,
-  data: any
-}
-
-interface UserEditInfo {
-  id: number,
-  userName: string,
-  password: string,
-  userType: string,
-  group_add: Array<number>,
-  group_del: Array<number>
 }
