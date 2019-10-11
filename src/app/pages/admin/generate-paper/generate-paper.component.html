@@ -48,7 +48,7 @@
                           <i nz-icon nzType="edit"></i>
                         </section>
                         <section class="code-box-description">
-                          A, B
+                          {{question.answer}}
                         </section>
                         <section class="code-box-actions">
                           知识点：C语言、计算机组成原理
@@ -62,7 +62,19 @@
             </nz-collapse-panel>
           </nz-collapse>
         </nz-content>
+        <span style="background-color: #FFFFFF">
+          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed"
+          style="font-size: 25px;margin-left: 10px;"
+            [nzType]="isCollapsed ? 'menu-fold' : 'menu-unfold'"></i>
+        </span>
+        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed"  [nzCollapsedWidth]="0" [nzTrigger]="null"
+          nzTheme="light">
+          <div style="text-align: center">
+              <h2>已选题目</h2>
+          </div>
+        </nz-sider>
       </nz-layout>
     </nz-page-header-content>
   </nz-page-header>
+
 </div>
