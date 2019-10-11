@@ -1,0 +1,32 @@
+<section class="code-box" [ngClass]="{ expand: nzExpanded }" [attr.id]="nzId">
+        <section class="code-box-demo">
+          <div
+            *ngIf="!showIframe"
+            [class.simulate-iframe]="simulateIFrame"
+            [class.browser-mockup]="simulateIFrame"
+            [class.with-url]="simulateIFrame"
+            [style.height.px]="simulateIFrame && nzIframeHeight"
+          >
+            <ng-content select="[demo]"></ng-content>
+          </div>
+          <div class="browser-mockup with-url" *ngIf="showIframe">
+            <iframe [src]="iframe" [height]="nzIframeHeight" title="demo"></iframe>
+          </div>
+        </section>
+        <section class="code-box-meta markdown">
+          <div class="code-box-title">
+            <a (click)="navigateToFragment()"
+            >{{ nzTitle }}
+              <a class="edit-button" [attr.href]="nzHref" target="_blank" rel="noopener noreferrer">
+                <i nz-icon type="edit"></i>
+              </a>
+            </a>
+          </div>
+          <div class="code-box-description">
+            <ng-content select="[intro]"></ng-content>
+          </div>
+          <div class="code-box-actions">
+              <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+          </div>
+        </section>
+      </section>

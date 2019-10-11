@@ -86,7 +86,8 @@
           </nz-steps>
           <nz-divider></nz-divider>
           <div>
-            <pre><span style="font-weight:bold;font-size: 120%">{{question_desc}}</span></pre>
+            <p style="font-weight:bold;font-size: 125%">{{question_content}}</p>
+            <pre *ngIf="question_desc!=''"><span style="font-weight:bold;font-size: 120%">{{question_desc}}</span></pre>
             <nz-radio-group [(ngModel)]="radio_value" (ngModelChange)="updateRadioStatus()">
               <label *ngFor="let option of options;let i = index" nz-radio class="option-radio"
                 (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'" (mouseleave)="updateRadioStatus()"

@@ -21,7 +21,8 @@ export class ExaminationComponent implements OnInit {
   //当前所在的大题
   public current_category: number = 1;
   //题目
-  public question_desc:string = "对于 int *pa[5]; 的描述，正确的是（    ）";
+  public question_content:string = "对于 int *pa[5]; 的描述，正确的是（    ）";
+  public question_desc:string = "";
   //选项
   public options:Array<string> = ["pa是一个指向数组的指针，所指向的数组是5个int型元素",
   "pa是一个指向某个数组第5个元素的指针，该元素是int型变量",
