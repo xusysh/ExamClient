@@ -14,7 +14,7 @@ import { forkJoin } from 'rxjs';
 export class GeneratePaperComponent implements OnInit {
 
   search_value = '';
-
+  selectedValue = null;
   nodes = [
     {
       title: '计算机专业核心',

@@ -10,7 +10,7 @@
         <a>试卷管理</a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item>
-        <a>编写试卷&组题</a>
+        <a>生成试卷</a>
       </nz-breadcrumb-item>
     </nz-breadcrumb>
     <nz-page-header-content style="height: 100%;">
@@ -34,13 +34,15 @@
               <nz-collapse>
                 <nz-collapse-panel *ngFor="let question of questions" [nzHeader]="question.content" [nzActive]="true"
                   [nzShowArrow]="true">
-                  <nz-list nzSize="large">
+                  <nz-card [nzActions]="[actionSetting, actionEdit]">
                     <section class="code-box">
                       <section class="code-box-demo">
-                        <nz-list-item *ngIf="question.description != ''">
-                          <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
-                        </nz-list-item>
-                        <nz-list-item *ngFor="let option of question.options" [nzContent]="option"></nz-list-item>
+                        <nz-list nzSize="large">
+                          <nz-list-item *ngIf="question.description != ''">
+                            <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
+                          </nz-list-item>
+                          <nz-list-item *ngFor="let option of question.options" [nzContent]="option"></nz-list-item>
+                        </nz-list>
                       </section>
                       <section class="code-box-meta markdown">
                         <section class="code-box-title">
@@ -55,22 +57,37 @@
                         </section>
                       </section>
                     </section>
-                  </nz-list>
+                  </nz-card>
 
+                  <ng-template #actionSetting>
+                    <i nz-icon nzType="setting"></i>
+                    设置分数
+                    <input nz-input style="width: 50px;margin-left: 10px" />
+                  </ng-template>
+                  <ng-template #actionEdit>
+                    <i nz-icon nzType="edit"></i>
+                    <span>添加至大题</span>
+                    <nz-select style="width: 200px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
+                      [(ngModel)]="selectedValue">
+                      <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
+                      <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
+                      <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
+                    </nz-select>
+                  </ng-template>
                 </nz-collapse-panel>
               </nz-collapse>
             </nz-collapse-panel>
           </nz-collapse>
         </nz-content>
         <span style="background-color: #FFFFFF">
-          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed"
-          style="font-size: 25px;margin-left: 10px;"
+          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed" style="font-size: 25px;margin-left: 10px;"
             [nzType]="isCollapsed ? 'menu-fold' : 'menu-unfold'"></i>
         </span>
-        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed"  [nzCollapsedWidth]="0" [nzTrigger]="null"
-          nzTheme="light">
+        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null" nzTheme="light">
           <div style="text-align: center">
-              <h2>已选题目</h2>
+            <h2>已选题目</h2>
+            <input type="text" nz-input style="width: 150px;margin-right: 10px" placeholder="输入大题" />
+            <button nz-button nzType="default" nzShape="circle"><i nz-icon nzType="plus"></i></button>
           </div>
         </nz-sider>
       </nz-layout>
