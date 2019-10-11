@@ -1,34 +1,36 @@
-<nz-page-header nzTitle="" class="generate-paper-page">
-  <nz-breadcrumb nz-page-header-breadcrumb>
-    <nz-breadcrumb-item>
-      <a routerLink="/admin">
-        <i nz-icon nzType="home">
-        </i>
-      </a>
-    </nz-breadcrumb-item>
-    <nz-breadcrumb-item>
-      <a>试卷管理</a>
-    </nz-breadcrumb-item>
-    <nz-breadcrumb-item>
-      <a>编写试卷&组题</a>
-    </nz-breadcrumb-item>
-  </nz-breadcrumb>
-  <nz-page-header-content style="height: 100%;">
-    <nz-layout>
-      <nz-sider style="background-color: #FFFFFF;overflow-y: scroll">
-        <nz-input-group [nzSuffix]="suffixIcon">
-          <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
-        </nz-input-group>
-        <ng-template #suffixIcon>
-          <i nz-icon nzType="search"></i>
-        </ng-template>
-        <nz-tree [nzData]="nodes" [nzSearchValue]="searchValue" (nzClick)="nzEvent($event)"
-          (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
-        </nz-tree>
-      </nz-sider>
-      <nz-content style="background-color: #FFFFFF">
-        
-      </nz-content>
-    </nz-layout>
-  </nz-page-header-content>
-</nz-page-header>
+<div #content_canvas style="height: 100%;width: 100%;">
+  <nz-page-header nzTitle="" class="generate-paper-page">
+    <nz-breadcrumb nz-page-header-breadcrumb>
+      <nz-breadcrumb-item>
+        <a routerLink="/admin">
+          <i nz-icon nzType="home">
+          </i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a>试卷管理</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a>编写试卷&组题</a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+    <nz-page-header-content style="height: 100%;">
+      <nz-layout>
+        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
+          <nz-input-group [nzSuffix]="suffixIcon">
+            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+          <nz-tree [nzData]="nodes" [nzSearchValue]="searchValue" (nzClick)="nzEvent($event)"
+            (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
+          </nz-tree>
+        </nz-sider>
+        <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
+          
+        </nz-content>
+      </nz-layout>
+    </nz-page-header-content>
+  </nz-page-header>
+</div>

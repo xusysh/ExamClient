@@ -1,4 +1,4 @@
-<div #content_canvas style="height: 100%">
+<div #content_canvas style="height: 100%;width: 100%">
 
   <nz-page-header nzTitle="" class="examination-page">
     <nz-breadcrumb nz-page-header-breadcrumb>
@@ -17,7 +17,8 @@
     </nz-breadcrumb>
     <nz-page-header-content>
       <nz-layout>
-        <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
+        <nz-content
+          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
           <nz-layout>
             <nz-content style="background-color:#FFFFFF">
               <h1 style="text-align: center">{{exam_name}}</h1>
@@ -99,24 +100,26 @@
                   nzType="pushpin"></i>标记本题</button>
             </nz-content>
             <nz-sider style="background-color:#FFFFFF;">
-              <button nz-button nzType="danger">交卷</button>
-              <button nz-button nzType="primary" style="margin-left: 10px">下一题<i nz-icon nzType="right"></i></button>
+              <button nz-button nzType="danger" style="float: right;margin-right: 20px">交卷</button>
+            </nz-sider>
+            <nz-sider style="background-color:#FFFFFF;">
+              <nz-button-group>
+                <button nz-button nzType="primary"><i nz-icon nzType="left"></i>上一题</button>
+                <button nz-button nzType="primary">下一题<i nz-icon nzType="right"></i></button>
+              </nz-button-group>
             </nz-sider>
           </nz-layout>
         </nz-content>
-        <nz-sider 
-        [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
+        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
           <ul nz-menu nzMode="inline">
             <li nz-submenu nzOpen nzTitle="答题卡" nzIcon="reconciliation">
               <ul>
-
                 <li nz-submenu nzOpen [(nzOpen)]="openMap.sub1" (nzOpenChange)="openHandler('sub1')" nzTitle="数据结构">
                   <ul>
                     <li nz-menu-item>第1小题</li>
                     <li nz-menu-item>第2小题</li>
                   </ul>
                 </li>
-
                 <li nz-submenu [(nzOpen)]="openMap.sub2" (nzOpenChange)="openHandler('sub2')" nzTitle="计算机组成原理">
                   <ul>
                     <li nz-menu-item>第1小题</li>

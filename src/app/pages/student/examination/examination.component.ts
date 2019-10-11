@@ -40,13 +40,13 @@ export class ExaminationComponent implements OnInit {
   public canvas_height:number=0;
   public elem_height_str: string = '500px';
 
-  constructor() {
-    this.updateRadioStatus();
-  }
-
   ngAfterViewInit(): void {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
     this.elem_height_str = Math.ceil(this.canvas_height*0.85).toString() + 'px';
+  }
+
+  constructor() {
+    this.updateRadioStatus();
   }
 
   ngOnInit(): void {
