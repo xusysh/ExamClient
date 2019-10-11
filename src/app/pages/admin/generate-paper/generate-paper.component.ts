@@ -13,12 +13,12 @@ import { forkJoin } from 'rxjs';
 
 export class GeneratePaperComponent implements OnInit {
 
-  searchValue = '';
+  search_value = '';
 
   nodes = [
     {
-      title: '专业核心',
-      key: '专业核心',
+      title: '计算机专业核心',
+      key: '计算机专业核心',
       children: [
         {
           title: '数据结构',
@@ -35,18 +35,30 @@ export class GeneratePaperComponent implements OnInit {
           children: [
             { title: '数据的编码和存储', key: '数据的编码和存储', isLeaf: true },
             { title: '程序的机器级表示', key: '程序的机器级表示', isLeaf: true },
-            { title: '程序的执行和存储访问', key: '程序的执行和存储访问', isLeaf: true }
+            { title: '程序的执行', key: '程序的执行', isLeaf: true }
           ]
         },
         {
           title: '计算机网络',
           key: '计算机网络',
           children: [
-            { title: '物理层（通信基础）', key: '物理层（通信基础）', isLeaf: true },
-            { title: '链路层', key: '链路层', isLeaf: true },
-            { title: '网络层', key: '网络层', isLeaf: true },
-            { title: '传输层', key: '传输层', isLeaf: true },
-            { title: '应用层', key: '应用层', isLeaf: true }
+            { title: '通信基础', key: '通信基础', isLeaf: true },
+            { title: '网桥&路由', key: '网桥&路由', isLeaf: true },
+            { title: '以太网', key: '以太网', isLeaf: true },
+            { title: 'IP网络', key: 'IP网络', isLeaf: true },
+            { title: 'TCP&UDP', key: 'TCP&UDP', isLeaf: true },
+            { title: '应用层协议', key: '应用层协议', isLeaf: true }
+          ]
+        },
+        {
+          title: '操作系统',
+          key: '操作系统',
+          children: [
+            { title: '进程同步', key: '进程同步', isLeaf: true },
+            { title: '进程调度与死锁', key: '进程调度与死锁', isLeaf: true },
+            { title: '输入输出与中断', key: '输入输出与中断', isLeaf: true },
+            { title: '存储管理', key: '存储管理', isLeaf: true },
+            { title: '文件管理', key: '文件管理', isLeaf: true },
           ]
         },
         {
@@ -61,8 +73,8 @@ export class GeneratePaperComponent implements OnInit {
       ]
     },
     {
-      title: '专业基础',
-      key: '专业基础',
+      title: '计算机专业基础',
+      key: '计算机专业基础',
       children: [
         { title: '高等数学', key: '高等数学', isLeaf: true },
         { title: '线性代数', key: '线性代数', isLeaf: true },

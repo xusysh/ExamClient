@@ -3,8 +3,7 @@
     <nz-breadcrumb nz-page-header-breadcrumb>
       <nz-breadcrumb-item>
         <a routerLink="/admin">
-          <i nz-icon nzType="home">
-          </i>
+          <i nz-icon nzType="home"></i>
         </a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item>
@@ -16,9 +15,10 @@
     </nz-breadcrumb>
     <nz-page-header-content style="height: 100%;">
       <nz-layout>
-        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
+        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,width:'200px',
+            'overflow-y':'auto','overflow-x':'auto','padding-right':'20px'}">
           <nz-input-group [nzSuffix]="suffixIcon">
-            <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
+            <input type="text" nz-input placeholder="搜索知识点" [(ngModel)]="search_value" />
           </nz-input-group>
           <ng-template #suffixIcon>
             <i nz-icon nzType="search"></i>
@@ -27,8 +27,17 @@
             (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
           </nz-tree>
         </nz-sider>
-        <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
-          
+        <nz-content
+          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
+          <nz-collapse>
+            <nz-collapse-panel nzHeader="题目列表" nzActive="true">
+              <p style="margin:0;">
+                A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                welcome
+                guest in many households across the world.
+              </p>
+            </nz-collapse-panel>
+          </nz-collapse>
         </nz-content>
       </nz-layout>
     </nz-page-header-content>
