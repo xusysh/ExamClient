@@ -23,12 +23,13 @@
           <ng-template #suffixIcon>
             <i nz-icon nzType="search"></i>
           </ng-template>
-          <nz-tree [nzData]="nodes" [nzSearchValue]="searchValue" (nzClick)="nzEvent($event)"
+          <nz-tree [nzData]="nodes" [nzSearchValue]="search_value" (nzClick)="nzEvent($event)"
             (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
           </nz-tree>
         </nz-sider>
         <nz-content
-          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','padding-right':'20px'}">
+          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,
+          'overflow-y':'auto','padding-left':'20px'}">
           <nz-collapse>
             <nz-collapse-panel nzHeader="题目列表" nzActive="true">
               <p style="margin:0;">
