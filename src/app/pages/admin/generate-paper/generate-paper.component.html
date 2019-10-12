@@ -67,11 +67,10 @@
                   <ng-template #actionEdit>
                     <i nz-icon nzType="edit"></i>
                     <span>添加至大题</span>
-                    <nz-select style="width: 200px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
-                      [(ngModel)]="selectedValue">
-                      <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-                      <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-                      <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
+                    <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
+                      [(ngModel)]="selected_value">
+                      <nz-option *ngFor="let catgory of selected_questions" [nzLabel]="catgory.field_name"
+                        [nzValue]="catgory.field_name"></nz-option>
                     </nz-select>
                   </ng-template>
                 </nz-collapse-panel>
@@ -83,14 +82,32 @@
           <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed" style="font-size: 25px;margin-left: 10px;"
             [nzType]="isCollapsed ? 'menu-fold' : 'menu-unfold'"></i>
         </span>
-        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null" nzTheme="light">
-          <div style="text-align: center">
-            <h2>已选题目</h2>
-            <input type="text" nz-input style="width: 150px;margin-right: 10px" placeholder="输入大题" />
-            <button nz-button nzType="default" nzShape="circle"><i nz-icon nzType="plus"></i></button>
+        <nz-sider [nzWidth]="300" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null"
+          nzTheme="light"
+          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','overflow-x':'auto'}">
+          <h2 style="text-align: center;">已选题目</h2>
+          <div>
+            <input type="text" nz-input style="width:80%;margin-left: 2px;margin-right: 10px;margin-bottom: 15px;"
+              placeholder="输入大题" />
+            <button nz-button nzType="small" nzShape="circle"><i nz-icon nzType="plus"></i></button>
           </div>
+          <nz-card *ngFor="let catgory of selected_questions" style="margin-right: 15px;" nzType="inner"
+            [nzTitle]="catgory.field_name" [nzExtra]="extraTemplate">
+            <nz-tag *ngFor="let question of catgory.questions"
+              style="width: 100%;margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
+              <div
+                [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'pre-wrap':'unset','overflow':'hidden'}">
+                {{question.content}}
+              </div>
+            </nz-tag>
+          </nz-card>
+          <ng-template #extraTemplate>
+            <i nz-icon style="cursor: pointer;" (click)="linefeed=!linefeed" [nzType]="linefeed?'zoom-out':'zoom-in'"></i>
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"></i>
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="plus"></i>
+          </ng-template>
         </nz-sider>
-      </nz-layout> 
+      </nz-layout>
     </nz-page-header-content>
   </nz-page-header>
 
