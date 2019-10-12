@@ -12,6 +12,7 @@ import zh from '@angular/common/locales/zh';
 import {TableUpdateService} from './tools/TableUpdateService.component'
 
 import { LoginModule } from './pages/login/login.module';
+import { TestModule } from './pages/test/test.module';
 
 
 registerLocaleData(zh);
@@ -29,7 +30,8 @@ registerLocaleData(zh);
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    LoginModule
+    LoginModule,
+    TestModule
   ],
   providers: [
     { 

@@ -1,0 +1,41 @@
+:host {
+    display: flex;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;     
+  }
+  
+  .login-layout {
+    height: 100vh;
+    width: 100vh;
+  }
+
+  .login-bg{
+    background-image:url('../../../assets/imgs/login_bg.jpg'); 
+    width:100%;
+    height: 100%;
+    justify-content:center;
+    align-items:center;
+    display:-webkit-flex;
+  }
+
+  .login-box{
+    text-align: center;
+    width: 500px;
+    min-height:200px;
+    border-radius:10px;  /*圆角边框*/
+    background: rgba(255, 255, 255, 0.8);  /*半透明*/
+    box-shadow:2px 2px 6px #000000;  /*内外渐变阴影*/
+  }
+
+  .form-group{
+    width: 70%;
+    margin-left:15%;
+  }
+
+  .login-btn{
+    margin-top:10px;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 30px;
+  }
