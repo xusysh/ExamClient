@@ -1,9 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpClient } from '@angular/common/http';
-import { from } from 'rxjs';
 
 
 @Component({
@@ -11,6 +9,8 @@ import { from } from 'rxjs';
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.css']
 })
+
+
 export class TestComponent implements OnInit {
 
   public code:string='';
