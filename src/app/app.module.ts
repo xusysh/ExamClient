@@ -13,6 +13,7 @@ import {TableUpdateService} from './tools/TableUpdateService.component'
 
 import { LoginModule } from './pages/login/login.module';
 import { TestModule } from './pages/test/test.module';
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 
 
 registerLocaleData(zh);

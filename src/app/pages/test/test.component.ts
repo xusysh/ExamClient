@@ -13,7 +13,9 @@ import { HttpClient } from '@angular/common/http';
 
 export class TestComponent implements OnInit {
 
-  public code:string='';
+  editor_language:string='typescript';
+  editorOptions:object = {theme: 'vs-dark', language: this.editor_language};
+  code: string = '';
 
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
@@ -21,6 +23,7 @@ export class TestComponent implements OnInit {
   }
 
   ngOnInit() {
+    
   }
 
 }
