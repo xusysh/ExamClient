@@ -7,4 +7,4 @@ uses [TypeScript](https://www.tslang.cn/), [Angular](https://github.com/angular/
 * clone the code to your local repo
 * enter the project root dir and run `npm install`
 * run `ng serve` to start debug server
-* open `http://localhost:4200`
+* open `http://localhost:4200` in Chrome
