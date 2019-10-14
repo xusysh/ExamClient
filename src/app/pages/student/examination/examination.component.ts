@@ -1,5 +1,8 @@
 import { Component, OnInit, Injectable, Inject, ViewChild, ElementRef } from '@angular/core';
 
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+
 @Component({
   selector: 'app-examination',
   templateUrl: './examination.component.html',
@@ -143,6 +146,9 @@ export class ExaminationComponent implements OnInit {
   //选项颜色
   public option_bdcolor: Array<string> = new Array<string>(this.questions[this.current_category].questions[this.current_question].options.length);
   public option_default_bdcolor: string = '#d4d4d4';
+  //简答题编辑器和内容
+  public editor = ClassicEditor;
+  public editor_data='';
 
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
