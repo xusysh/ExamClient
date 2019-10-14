@@ -119,7 +119,7 @@
               </label>
             </div>
             <!--简答题-->
-            <div>
+            <div *ngIf="questions[current_category].questions[current_question].type=='subjective'" style="width: 100%;">
                 <ckeditor [editor]="editor" [(data)]="editor_data">
                 </ckeditor>
             </div>

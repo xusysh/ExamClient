@@ -22,7 +22,7 @@ export class ExaminationComponent implements OnInit {
   //当前所在的大题
   public current_category: number = 1;
   //当前选择的题目
-  public current_question: number = 2;
+  public current_question: number = 3;
   //题目
   questions = [
     {
