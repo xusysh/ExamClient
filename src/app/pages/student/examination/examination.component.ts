@@ -33,29 +33,32 @@ export class ExaminationComponent implements OnInit {
           'options': ['A.快速排序', 'B.堆排序', 'C.冒泡排序', 'D.折半插入排序']
         },
         {
-          'type': 'multi',
-          'answer': ['B', 'C'],
+          'type': 'single',
+          'answer': ['A'],
           'content': '若入栈序列为A B C D E F，且进栈和出栈可以穿插进行，则不可能的输出序列为',
           'description': '',
-          'options': ['']
+          'options': [
+            'A.BCEAFD',
+            'B.DCBAEF',
+            'C.CBDAFE',
+            'D.BDCAEF'
+          ]
         },
         {
           'type': 'single',
-          'answer': ['B'],
+          'answer': ['D'],
           'content': '若某表最常用的操作是在最后一个结点之后插入一个节点或删除最后一二个结点，则采用（）省运算时间。',
           'description': '',
-          'options': ['']
-        },
-        {
-          'type': 'multi',
-          'answer': ['A', 'B'],
-          'content': '时间复杂度为O(nlog2n)的排序算法有（          ）',
-          'description': '',
-          'options': ['A.快速排序', 'B.堆排序', 'C.冒泡排序', 'D.折半插入排序']
+          'options': [
+            'A.单链表',
+            'B.双链表',
+            'C.单循环链表',
+            'D.带头结点的双循环链表'
+          ]
         },
         {
           'type': 'single',
-          'answer': ['C'],
+          'answer': ['D'],
           'content': '对于int *pa[5] ;的描述，正确的是（    ）',
           'description': '',
           'options': [
@@ -104,17 +107,22 @@ export class ExaminationComponent implements OnInit {
       ]
     },
     {
-      'field_name': '操作系统'
+      'field_name': '操作系统',
+      'questions': []
     },
     {
-      'field_name': '计算机网络'
+      'field_name': '计算机网络',
+      'questions': []
     },
     {
-      'field_name': '数据库原理'
+      'field_name': '数据库原理',
+      'questions': []
     }
   ]
   //当前选中的单选项
   public radio_value: string = String.fromCharCode(0x41);
+  //当前选中的多选项
+  public checkbox_values=new Array<boolean>(this.questions[this.current_category].questions[this.current_question].options.length);
   //控制选择框不同状态的背景色
   public option_bgcolor: Array<string> = new Array<string>(this.questions[this.current_category].questions[this.current_question].options.length);
   public option_default_bgcolor: string = '#FFFFFF';
@@ -141,6 +149,17 @@ export class ExaminationComponent implements OnInit {
 
   getValue(i: number): string {
     return String.fromCharCode(0x41 + i);
+  }
+
+  getTypeStr(): string {
+    let type = this.questions[this.current_category].questions[this.current_question].type;
+    switch (type) {
+      case 'single': return '单选题';
+      case 'multi': return '不定项选择题';
+      case 'judge': return '判断题';
+      case 'subjective': return '简答题';
+      default: break;
+    }
   }
 
   getPageValue(i: number): string {
