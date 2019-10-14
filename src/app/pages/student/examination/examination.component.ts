@@ -22,7 +22,7 @@ export class ExaminationComponent implements OnInit {
   //当前所在的大题
   public current_category: number = 1;
   //当前选择的题目
-  public current_question: number = 3;
+  public current_question: number = 2;
   //题目
   questions = [
     {
@@ -149,6 +149,12 @@ export class ExaminationComponent implements OnInit {
   //简答题编辑器和内容
   public editor = ClassicEditor;
   public editor_data='';
+  public editor_config = {
+    // 配置语言
+    language: 'zh-cn',
+    // 工具栏
+    toolbar: ['heading', '|', 'bold','italic','link','bulletedList','numberedList','blockQuote','insertTable','undo','redo']
+  };
 
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
@@ -228,6 +234,10 @@ export class ExaminationComponent implements OnInit {
         this.openMap[key] = false;
       }
     }
+  }
+
+  test(){
+//    console.log(this.editor_data)
   }
 
 }

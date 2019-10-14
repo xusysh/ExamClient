@@ -120,7 +120,7 @@
             </div>
             <!--简答题-->
             <div *ngIf="questions[current_category].questions[current_question].type=='subjective'" style="width: 100%;">
-                <ckeditor [editor]="editor" [(data)]="editor_data">
+                <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="editor_data">
                 </ckeditor>
             </div>
           </div>
@@ -142,7 +142,7 @@
             </nz-sider>
           </nz-layout>
         </nz-content>
-        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
+        <nz-sider (click)="test()" [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
           <ul nz-menu nzMode="inline">
             <li nz-submenu nzOpen nzTitle="答题卡" nzIcon="reconciliation">
               <ul>
