@@ -23,6 +23,7 @@
     "@ckeditor/ckeditor5-build-classic": "^12.4.0",
     "@ckeditor/ckeditor5-ui": "^14.0.0",
     "@materia-ui/ngx-monaco-editor": "^2.0.7",
+    "ckeditor-wordcount-plugin": "^1.17.2",
     "monaco-editor": "^0.18.1",
     "ng-zorro-antd": "^8.1.2",
     "ngx-monaco-editor": "^8.1.0",

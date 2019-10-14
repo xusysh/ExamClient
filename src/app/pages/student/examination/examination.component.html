@@ -120,7 +120,7 @@
             </div>
             <!--简答题-->
             <div *ngIf="questions[current_category].questions[current_question].type=='subjective'" style="width: 100%;">
-                <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="editor_data">
+                <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="editor_data" (ngModelChange)="limit()">
                 </ckeditor>
             </div>
           </div>

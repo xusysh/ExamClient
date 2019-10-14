@@ -153,7 +153,7 @@ export class ExaminationComponent implements OnInit {
     // 配置语言
     language: 'zh-cn',
     // 工具栏
-    toolbar: ['heading', '|', 'bold','italic','link','bulletedList','numberedList','blockQuote','insertTable','undo','redo']
+    toolbar: ['heading', '|', 'bold','italic','link','bulletedList','numberedList','blockQuote','insertTable','undo','redo'],
   };
 
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
@@ -236,8 +236,8 @@ export class ExaminationComponent implements OnInit {
     }
   }
 
-  test(){
-//    console.log(this.editor_data)
+  limit(){
+    if(this.editor_data.length>20000) this.editor_data = this.editor_data.substring(0,20000);
   }
 
 }
