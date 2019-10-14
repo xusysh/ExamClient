@@ -17,9 +17,9 @@ export class ExaminationComponent implements OnInit {
   //大题列表
   public categorys: Array<string> = ["数据结构", "计算机组成原理", "计算机网络", "数据库原理"];
   //当前所在的大题
-  public current_category: number = 0;
+  public current_category: number = 1;
   //当前选择的题目
-  public current_question: number = 0;
+  public current_question: number = 2;
   //题目
   questions = [
     {
@@ -103,6 +103,20 @@ export class ExaminationComponent implements OnInit {
             'B.f是float型数据直接做相等判断有风险',
             'C.f[++i]应该是f[i++]',
             'D.没有缺陷']
+        },
+        {
+          'type': 'subjective',
+          'answer': [''],
+          'content': '请简述操作系统中进程之间的通信方式',
+          'description': '',
+          'options': ['']
+        },
+        {
+          'type': 'judge',
+          'answer': ['A'],
+          'content': '判断下面的描述是否正确（）',
+          'description': '继承抽象类的派生类可以被声明对像，不需要实现基类中全部纯虚函数，只需要实现在派生类中用到的纯虚函数',
+          'options': ['A.正确','B.错误']
         }
       ]
     },
@@ -141,6 +155,7 @@ export class ExaminationComponent implements OnInit {
 
   constructor() {
     this.updateRadioStatus();
+    this.updateCheckboxStatus();
   }
 
   ngOnInit(): void {
@@ -170,6 +185,20 @@ export class ExaminationComponent implements OnInit {
     let options = this.questions[this.current_category].questions[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
       if (this.radio_value.charCodeAt(0) == 0x41 + i) {
+        this.option_bdcolor[i] = '#0099FF';
+        this.option_bgcolor[i] = this.option_default_bgcolor;
+      }
+      else {
+        this.option_bgcolor[i] = this.option_default_bgcolor;
+        this.option_bdcolor[i] = this.option_default_bdcolor;
+      }
+    }
+  }
+
+  updateCheckboxStatus() {
+    let options = this.questions[this.current_category].questions[this.current_question].options;
+    for (let i = 0; i < options.length; i++) {
+      if (this.checkbox_values[i] == true) {
         this.option_bdcolor[i] = '#0099FF';
         this.option_bgcolor[i] = this.option_default_bgcolor;
       }

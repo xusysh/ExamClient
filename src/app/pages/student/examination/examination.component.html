@@ -109,14 +109,18 @@
             </nz-radio-group>
             <!--多选题，checkbox-gruop无法修改单个选项的样式，所以只能手动统计checkbox-->
             <div *ngIf="questions[current_category].questions[current_question].type=='multi'" style="width: 100%;">
-              <label nz-checkbox 
-              *ngFor="let option of questions[current_category].questions[current_question].options;let i = index" 
-              [(ngModel)]="checkbox_values[i]"
-                class="option-radio" (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'"
-                (mouseleave)="updateRadioStatus()"
+              <label nz-checkbox
+                *ngFor="let option of questions[current_category].questions[current_question].options;let i = index"
+                [(ngModel)]="checkbox_values[i]" class="option-checkbox"
+                (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'"
+                (mouseleave)="updateCheckboxStatus()"
                 [ngStyle]="{'background-color': option_bgcolor[i],'border-color':option_bdcolor[i]}">
                 {{option}}
               </label>
+            </div>
+            <!--简答题-->
+            <div>
+
             </div>
           </div>
 
