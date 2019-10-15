@@ -4,6 +4,8 @@ import { AdminComponent } from './admin.component';
 import { CheckStudentComponent } from './check-student/check-student.component';
 import { CheckQuestionComponent } from './check-question/check-question.component';
 import { GeneratePaperComponent } from './generate-paper/generate-paper.component';
+import { JudgePaperComponent } from './judge-paper/judge-paper.component';
+import { CheckPaperComponent } from './check-paper/check-paper.component';
 
 const routes: Routes = [
   {
@@ -19,7 +21,13 @@ const routes: Routes = [
       },
       {
         path: 'generate-paper', component: GeneratePaperComponent
-      }
+      },
+      {
+        path: 'check-paper', component: CheckPaperComponent
+      },
+      {
+        path: 'judge-paper', component: JudgePaperComponent
+      },
     ]
   }
 ];

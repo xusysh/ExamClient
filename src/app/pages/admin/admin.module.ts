@@ -10,9 +10,12 @@ import { CheckStudentModule } from './check-student/check-student.module';
 
 import {CheckQuestionModule} from './check-question/check-question.module';
 import { GeneratePaperModule } from './generate-paper/generate-paper.module';
+import { JudgePaperModule } from './judge-paper/judge-paper.module';
+import { CheckPaperModule } from './check-paper/check-paper.module';
 
 @NgModule({
-  imports: [AdminRoutingModule,NgZorroAntdModule,CheckStudentModule,CheckQuestionModule,GeneratePaperModule],
+  imports: [AdminRoutingModule,NgZorroAntdModule,CheckStudentModule,CheckQuestionModule,GeneratePaperModule,
+  CheckPaperModule,JudgePaperModule],
   declarations: [AdminComponent],
   exports: [AdminComponent]
 })
