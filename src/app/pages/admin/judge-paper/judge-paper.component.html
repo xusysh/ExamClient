@@ -15,18 +15,6 @@
     </nz-breadcrumb>
     <nz-page-header-content style="height: 100%;">
       <nz-layout>
-        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,width:'200px',
-            'overflow-y':'auto','overflow-x':'auto','padding-right':'20px'}">
-          <nz-input-group [nzSuffix]="suffixIcon">
-            <input type="text" nz-input placeholder="搜索知识点" [(ngModel)]="search_value" />
-          </nz-input-group>
-          <ng-template #suffixIcon>
-            <i nz-icon nzType="search"></i>
-          </ng-template>
-          <nz-tree [nzData]="nodes" [nzSearchValue]="search_value" (nzClick)="nzEvent($event)"
-            (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
-          </nz-tree>
-        </nz-sider>
         <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,
           'overflow-y':'auto','padding-left':'20px'}">
           <nz-collapse>
