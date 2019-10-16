@@ -1,22 +1,119 @@
-<nz-page-header nzTitle="" class="check-question-page">
-  <nz-breadcrumb nz-page-header-breadcrumb>
-    <nz-breadcrumb-item>
-      <a routerLink="/admin">
-        <i nz-icon nzType="home">
-        </i>
-      </a>
-    </nz-breadcrumb-item>
-    <nz-breadcrumb-item>
-      <a>考试管理</a>
-    </nz-breadcrumb-item>
-    <nz-breadcrumb-item>
-      <a>阅卷</a>
-    </nz-breadcrumb-item>
-  </nz-breadcrumb>
-  <nz-page-header-content>
-    <div>
-        <h3>客观题得分：{{objective_grade}}</h3>
-    </div>
-    <div [innerHtml]="user_ans"></div>
-  </nz-page-header-content>
-</nz-page-header>
+<div #content_canvas style="height: 100%;width: 100%;">
+  <nz-page-header nzTitle="" class="judge-paper-page">
+    <nz-breadcrumb nz-page-header-breadcrumb>
+      <nz-breadcrumb-item>
+        <a routerLink="/admin">
+          <i nz-icon nzType="home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a>试卷管理</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a>阅卷</a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+    <nz-page-header-content style="height: 100%;">
+      <nz-layout>
+        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,width:'200px',
+            'overflow-y':'auto','overflow-x':'auto','padding-right':'20px'}">
+          <nz-input-group [nzSuffix]="suffixIcon">
+            <input type="text" nz-input placeholder="搜索知识点" [(ngModel)]="search_value" />
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+          <nz-tree [nzData]="nodes" [nzSearchValue]="search_value" (nzClick)="nzEvent($event)"
+            (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
+          </nz-tree>
+        </nz-sider>
+        <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,
+          'overflow-y':'auto','padding-left':'20px'}">
+          <nz-collapse>
+            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false">
+              <nz-collapse>
+                <nz-collapse-panel *ngFor="let question of questions" [nzHeader]="question.content" [nzActive]="true"
+                  [nzShowArrow]="true">
+                  <nz-card [nzActions]="[actionSetting, actionEdit]">
+                    <section class="code-box">
+                      <section class="code-box-demo">
+                        <nz-list nzSize="large">
+                          <nz-list-item *ngIf="question.description != ''">
+                            <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
+                          </nz-list-item>
+                          <nz-list-item *ngFor="let option of question.options" [nzContent]="option"></nz-list-item>
+                        </nz-list>
+                      </section>
+                      <section class="code-box-meta markdown">
+                        <section class="code-box-title">
+                          参考答案
+                          <i nz-icon nzType="edit"></i>
+                        </section>
+                        <section class="code-box-description">
+                          {{question.answer}}
+                        </section>
+                        <section class="code-box-actions">
+                          知识点：C语言、计算机组成原理
+                        </section>
+                      </section>
+                    </section>
+                  </nz-card>
+
+                  <ng-template #actionSetting>
+                    <i nz-icon nzType="setting"></i>
+                    设置分数
+                    <input nz-input style="width: 50px;margin-left: 10px" />
+                  </ng-template>
+                  <ng-template #actionEdit>
+                    <i nz-icon nzType="edit"></i>
+                    <span>添加至大题</span>
+                    <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
+                      [(ngModel)]="selected_value">
+                      <nz-option *ngFor="let catgory of selected_questions" [nzLabel]="catgory.field_name"
+                        [nzValue]="catgory.field_name"></nz-option>
+                    </nz-select>
+                  </ng-template>
+                </nz-collapse-panel>
+              </nz-collapse>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </nz-content>
+        <span style="background-color: #FFFFFF">
+          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed"
+            style="font-size: 25px;margin-left: 10px;margin-right: 10px;"
+            [nzType]="isCollapsed ? 'menu-fold' : 'menu-unfold'"></i>
+        </span>
+        <nz-sider [nzWidth]="300" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null"
+          nzTheme="light"
+          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','overflow-x':'auto'}">
+          <h2 style="text-align: center;">已选题目(100分)</h2>
+          <div>
+            <input type="text" nz-input style="width:80%;margin-left: 2px;margin-right: 10px;margin-bottom: 15px;"
+              placeholder="输入大题" />
+            <button nz-button nzType="small" nzShape="circle"><i nz-icon nzType="plus"></i></button>
+          </div>
+          <nz-card *ngFor="let catgory of selected_questions" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
+            [nzTitle]="catgory.field_name+'(10分)'" [nzExtra]="extraTemplate">
+              <nz-badge *ngFor="let question of catgory.questions" [nzCount]="5" [nzStyle]="{ backgroundColor: 'grey' }">
+                <nz-tag 
+                  style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
+                  <div
+                    [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
+                    {{question.content}}
+                  </div>
+                </nz-tag>
+              </nz-badge>
+          </nz-card>
+
+          <ng-template #extraTemplate>
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="linefeed=!linefeed"
+              [nzType]="linefeed?'zoom-in':'zoom-out'"></i>
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"></i>
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="plus"></i>
+          </ng-template>
+        </nz-sider>
+      </nz-layout>
+    </nz-page-header-content>
+  </nz-page-header>
+
+</div>
