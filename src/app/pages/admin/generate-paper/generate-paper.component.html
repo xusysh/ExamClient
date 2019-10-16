@@ -79,35 +79,30 @@
           </nz-collapse>
         </nz-content>
         <span style="background-color: #FFFFFF">
-          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed"
-            style="font-size: 25px;margin-left: 10px;margin-right: 10px;"
+          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed" style="font-size: 25px;margin-left: 10px;"
             [nzType]="isCollapsed ? 'menu-fold' : 'menu-unfold'"></i>
         </span>
         <nz-sider [nzWidth]="300" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null"
           nzTheme="light"
           [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','overflow-x':'auto'}">
-          <h2 style="text-align: center;">已选题目(100分)</h2>
+          <h2 style="text-align: center;">已选题目</h2>
           <div>
             <input type="text" nz-input style="width:80%;margin-left: 2px;margin-right: 10px;margin-bottom: 15px;"
               placeholder="输入大题" />
             <button nz-button nzType="small" nzShape="circle"><i nz-icon nzType="plus"></i></button>
           </div>
-          <nz-card *ngFor="let catgory of selected_questions" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
-            [nzTitle]="catgory.field_name+'(10分)'" [nzExtra]="extraTemplate">
-              <nz-badge *ngFor="let question of catgory.questions" [nzCount]="5" [nzStyle]="{ backgroundColor: 'grey' }">
-                <nz-tag 
-                  style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
-                  <div
-                    [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
-                    {{question.content}}
-                  </div>
-                </nz-tag>
-              </nz-badge>
+          <nz-card *ngFor="let catgory of selected_questions" style="margin-right: 15px;" nzType="inner"
+            [nzTitle]="catgory.field_name" [nzExtra]="extraTemplate">
+            <nz-tag *ngFor="let question of catgory.questions"
+              style="width: 100%;margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
+              <div
+                [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'pre-wrap':'unset','overflow':'hidden'}">
+                {{question.content}}
+              </div>
+            </nz-tag>
           </nz-card>
-
           <ng-template #extraTemplate>
-            <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="linefeed=!linefeed"
-              [nzType]="linefeed?'zoom-in':'zoom-out'"></i>
+            <i nz-icon style="cursor: pointer;" (click)="linefeed=!linefeed" [nzType]="linefeed?'zoom-out':'zoom-in'"></i>
             <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"></i>
             <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="plus"></i>
           </ng-template>
