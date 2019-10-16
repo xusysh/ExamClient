@@ -10,10 +10,13 @@
       <a>考试管理</a>
     </nz-breadcrumb-item>
     <nz-breadcrumb-item>
-      <a>判题</a>
+      <a>阅卷</a>
     </nz-breadcrumb-item>
   </nz-breadcrumb>
   <nz-page-header-content>
-      <h2>asd2</h2>
+    <div>
+        <h3>客观题得分：{{objective_grade}}</h3>
+    </div>
+    <div [innerHtml]="user_ans"></div>
   </nz-page-header-content>
 </nz-page-header>
