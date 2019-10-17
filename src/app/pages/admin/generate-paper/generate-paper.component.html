@@ -32,8 +32,8 @@
           <nz-collapse>
             <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false">
               <nz-collapse>
-                <nz-collapse-panel *ngFor="let question of questions" [nzHeader]="question.content" [nzActive]="true"
-                  [nzShowArrow]="true">
+                <nz-collapse-panel *ngFor="let question of questions" [nzActive]="true" [nzShowArrow]="true"
+                 [nzHeader]="GetQuestionHead(question)" >
                   <nz-card [nzActions]="[actionSetting, actionEdit]">
                     <section class="code-box">
                       <section class="code-box-demo">
@@ -50,7 +50,7 @@
                           <i nz-icon nzType="edit"></i>
                         </section>
                         <section class="code-box-description">
-                          {{question.answer}}
+                            <div [innerHtml]="question.answer"></div>
                         </section>
                         <section class="code-box-actions">
                           知识点：C语言、计算机组成原理
