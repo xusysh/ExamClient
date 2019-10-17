@@ -63,16 +63,16 @@
             </nz-collapse-panel>
           </nz-collapse>
         </nz-content>
-        <span style="background-color: #FFFFFF">
-          <i class="trigger" nz-icon (click)="isCollapsed = !isCollapsed"
-            style="font-size: 25px;margin-left: 10px;margin-right: 10px;"
-            [nzType]="isCollapsed ? 'menu-fold' : 'menu-unfold'"></i>
-        </span>
-        <nz-sider [nzWidth]="300" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null"
-          nzTheme="light"
-          [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','overflow-x':'auto'}">
-          <div>emm</div>
-        </nz-sider>
+        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
+            <ul nz-menu nzMode="inline">
+              <li nz-submenu nzOpen nzTitle="考生列表" nzIcon="reconciliation">
+                <ul>
+                    <li *ngFor="let student of student_answers['student_answers_detail']" nz-menu-item>{{student['student_name']}}</li>
+                </ul>
+              </li>
+  
+            </ul>
+          </nz-sider>
       </nz-layout>
     </nz-page-header-content>
   </nz-page-header>

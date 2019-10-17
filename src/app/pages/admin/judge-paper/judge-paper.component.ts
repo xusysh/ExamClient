@@ -36,6 +36,7 @@ export class JudgePaperComponent implements OnInit {
     "student_answers_detail": [
       {
         "student_id": 1,
+        "student_name": '郭靖与',
         "paper_status": {
           "objective_grade": 60,
           "subjective_answers": [
@@ -60,6 +61,7 @@ export class JudgePaperComponent implements OnInit {
       },
       {
         "student_id": 2,
+        "student_name": '王涛',
         "paper_status": {
           "objective_grade": 66,
           "subjective_answers": [
