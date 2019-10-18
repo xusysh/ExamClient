@@ -186,7 +186,7 @@ export class CheckStudentComponent implements OnInit {
 
   DownloadTemplate(): void {
     this.is_downloading_template = true;
-    this.http_client.post(this.base_url + 'upi/user/template', null, {
+    this.http_client.get(this.base_url + 'upi/user/template', {
       responseType: 'arraybuffer'
     }
     ).subscribe(response => this.DownloadFile(response, "application/ms-excel"),
