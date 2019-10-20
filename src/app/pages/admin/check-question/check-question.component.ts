@@ -3,7 +3,8 @@ import { TableUpdateService } from '../../../tools/TableUpdateService.component'
 import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
-import { forkJoin } from 'rxjs';
+import { forkJoin, from } from 'rxjs';
+import { MyServerResponse } from '../../login/login.component'
 
 @Component({
   selector: 'app-check-question',
@@ -21,7 +22,7 @@ export class CheckQuestionComponent implements OnInit {
   public sortKey: string | null = null;
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
-  public student_info_list: Array<UserInfo> = [];
+  public question_info_list: Array<QuestionInfo> = [];
 
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
@@ -66,7 +67,7 @@ export class CheckQuestionComponent implements OnInit {
     this.loading = true;
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
       response => {
-        this.student_info_list = response.data;
+        this.question_info_list = response.data;
         this.loading = false;
       },
       error => {
@@ -84,19 +85,16 @@ export class CheckQuestionComponent implements OnInit {
   CheckStudentInfo(index: number): void {
     this.current_select_user = (this.page_index - 1) * this.page_size + index;
     this.drawer_visible = true;
-    this.edit_user_name = this.student_info_list[this.current_select_user].userName;
-    this.edit_password = this.student_info_list[this.current_select_user].password;
-    this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
   }
 
   EditUserInfo(): void {
     this.edit_user_info_loading = true;
-    this.edit_user_id = this.student_info_list[this.current_select_user].id;
+    this.edit_user_id = this.question_info_list[this.current_select_user].id;
     let user_edit_info: UserEditInfo = {
       id: this.edit_user_id,
       userName: this.edit_user_name,
       password: this.edit_password,
-      userType: this.student_info_list[this.current_select_user].userType,
+      userType: this.question_info_list[this.current_select_user].type,
       group_add: [],
       group_del: []
     }
@@ -120,7 +118,7 @@ export class CheckQuestionComponent implements OnInit {
   DeleteUser(index: number): void {
     this.current_select_user = (this.page_index - 1) * this.page_size + index;
     let user_delete_info = {
-      id: [this.student_info_list[this.current_select_user].id]
+      id: [this.question_info_list[this.current_select_user].id]
     }
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -132,7 +130,7 @@ export class CheckQuestionComponent implements OnInit {
           this.message.create('error', '用户删除失败:' + response.msg);
         }
         else {
-          this.message.create('success', '用户 ' + this.student_info_list[this.current_select_user].userName + ' 删除成功');
+      //    this.message.create('success', '用户 ' + this.question_info_list[this.current_select_user].userName + ' 删除成功');
           this.UpdateTableData();
         }
       }, error => {
@@ -265,29 +263,18 @@ export class CheckQuestionComponent implements OnInit {
 
 }
 
-interface MyServerResponse {
-  status: number;
-  msg: string;
-  data: any
-}
-
-interface UserInfo {
+interface QuestionInfo {
   id: number,
-  userName: string,
-  password: string,
-  userType: string,
-  group_list: Array<UserGroupInfo>
+  content: string,
+  type: string,
+  description: string,
+  answer:Array<object>,
+  options: Array<Option>
 }
 
-interface UserGroupInfo {
+interface Option {
   id: number,
-  groupName: string
-}
-
-interface UploadResp {
-  status: number,
-  msg: string,
-  data: any
+  option: string
 }
 
 interface UserEditInfo {

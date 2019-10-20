@@ -65,10 +65,10 @@ export class LoginComponent implements OnInit {
 
 }
 
-interface MyServerResponse {
+export interface MyServerResponse {
   status:number;
   msg:string;
-  data:UserInfo;
+  data:any;
 }
 
 interface UserInfo{

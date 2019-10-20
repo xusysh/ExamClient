@@ -265,7 +265,7 @@ export class CheckStudentComponent implements OnInit {
 
 }
 
-interface MyServerResponse {
+export interface MyServerResponse {
   status: number;
   msg: string;
   data: any
