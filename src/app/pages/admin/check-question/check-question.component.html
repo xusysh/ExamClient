@@ -30,23 +30,23 @@
             <i nz-icon nzType="usergroup-add"></i>批量导入
           </button>
         </div>
-        <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
+        <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="question_info_list"
           [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'350px'}">
           <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>
               <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate"></th>
               <th nzWidth="200px" nzCustomFilter>
-                <b>试题名
+                <b>题干
                   <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                     [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
                     nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                 </b>
               </th>
-              <th nzWidth="100px"><b>试题类型</b></th>
-              <th nzWidth="300px"><b>题干</b></th>
+              <th nzWidth="160px"><b>试题类型</b></th>
+              <th nzWidth="300px"><b>追加描述</b></th>
               <th nzWidth="200px"><b>选项</b></th>
-              <th nzWidth="200px"><b>参考答案</b></th>
-              <th nzWidth="200px" style="align-content: center"><b>操作</b></th>
+              <th nzWidth="150px"><b>参考答案</b></th>
+              <th nzWidth="150px" style="align-content: center"><b>操作</b></th>
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
               <div class="search-box">
@@ -62,25 +62,26 @@
             <tr *ngFor="let data of ajaxTable.data;let i=index">
               <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
               <td>
-                <p nz-paragraph nzCopyable [(nzContent)]="data.userName"></p>
+                <p nz-paragraph nzCopyable [nzContent]="data.content"></p>
               </td>
               <td>
-                <p nz-paragraph nzCopyable [(nzContent)]="data.userName"></p>
+                {{GetTypeStr(i)}}
               </td>
               <td>
-                <p nz-paragraph nzCopyable [(nzContent)]="data.userName"></p>
+                {{data.description}}
               </td>
-              <td>
-                <p nz-paragraph nzCopyable [(nzContent)]="data.password"></p>
-              </td>
-              <td nz-popover [nzTitle]="'所在组'" [nzContent]="popoverContentTemplate">
+
+              <td nz-popover [nzTitle]="'选项'" [nzContent]="popoverContentTemplate">
                 <ng-template #popoverContentTemplate>
-                  <div *ngFor="let group of data.group_list">{{group.groupName}}</div>
+                  <div *ngFor="let option of data.options">{{option.option}}</div>
                 </ng-template>
-                <nz-badge [nzCount]="data.group_list.length">
-                  <span>{{data.group_list.length==0 ? '无':data.group_list[0].groupName}}</span>
+                <nz-badge [nzCount]="data.options.length">
+                  <span>{{data.options==0 ? '无':data.options[0].option+'...'}}</span>
                   <span>&nbsp;&nbsp;&nbsp;</span>
                 </nz-badge>
+              </td>
+              <td>
+                {{GetAnswer(i)}}
               </td>
               <td>
                 <button nz-button nzSize="small" nzType="primary" (click)="CheckStudentInfo(i)" nzShape="circle"
@@ -119,7 +120,7 @@
       [nzWidth]="500">
       <form nz-form>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题名</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>题干</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
             <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
           </nz-form-control>
@@ -131,7 +132,7 @@
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>题干</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题描述</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
             <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
           </nz-form-control>

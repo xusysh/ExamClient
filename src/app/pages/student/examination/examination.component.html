@@ -88,9 +88,10 @@
 
           <div style="width: 100%;">
             <p style="font-weight:bold;font-size: 125%">
-              [{{getTypeStr()}}]&nbsp;
+              [{{GetTypeStr()}}]&nbsp;
               {{current_question+1}}.
               {{questions[current_category].questions[current_question].content}}
+              {{questions[current_category].questions[current_question].score}}
             </p>
             <!--pre标签，代码换行的话会影响显示内容，所以都写在一行了-->
             <pre
@@ -102,7 +103,7 @@
               <label nz-radio
                 *ngFor="let option of questions[current_category].questions[current_question].options;let i = index"
                 class="option-radio" (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'"
-                (mouseleave)="updateRadioStatus()" [nzValue]="getValue(i)"
+                (mouseleave)="updateRadioStatus()" [nzValue]="GetValue(i)"
                 [ngStyle]="{'background-color': option_bgcolor[i],'border-color':option_bdcolor[i]}">
                 {{option}}
               </label>

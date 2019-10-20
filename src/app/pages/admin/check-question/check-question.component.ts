@@ -29,17 +29,19 @@ export class CheckQuestionComponent implements OnInit {
   public dialog_ok_loading: boolean = false;
   public is_allDisplay_data_checked = false;
   public is_indeterminate = false;
-  public edit_user_id: number = 0;
-  public edit_user_name: string = '';
-  public edit_password: string = '';
-  public edit_group_list: Array<object> = [];
+
+  public edit_question_id: number = 0;
+  public edit_question_content: string = '';
+  public edit_question_description: string = '';
+  public edit_question_options: Array<object> = [];
+  public edit_question_answer: Array<object> = [];
 
   public user_group_tags = [];
   public inputVisible = false;
   public inputValue = '';
   public edit_user_info_loading = false;
 
-  current_select_user: number = 0;
+  current_select_question: number = 0;
 
 
   //假数据
@@ -48,7 +50,8 @@ export class CheckQuestionComponent implements OnInit {
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) { }
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) { 
+    }
 
   ngOnInit(): void {
     this.UpdateTableData();
@@ -65,18 +68,44 @@ export class CheckQuestionComponent implements OnInit {
       this.page_index = 1;
     }
     this.loading = true;
-    this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
+    this.http_client.get<MyServerResponse>(this.base_url + 'question/all').subscribe(
       response => {
         this.question_info_list = response.data;
+        for(let i=0;i<this.question_info_list.length;i++){
+          this.question_info_list[i].options = JSON.parse(this.question_info_list[i].options);
+          this.question_info_list[i].answer = JSON.parse(this.question_info_list[i].answer);
+        }
         this.loading = false;
       },
       error => {
         this.message.create('error', '用户信息获取失败：连接服务器失败');
         this.loading = false;
       });
-
   }
 
+  GetTypeStr(index:number): string {
+    let type = this.question_info_list[index].type;
+    switch (type) {
+      case 'single': return '单选题';
+      case 'multi': return '不定项选择题';
+      case 'judge': return '判断题';
+      case 'subjective': return '简答题';
+      default: break;
+    }
+  }
+
+  GetAnswer(index:number):string {
+    if(this.question_info_list[index].type == 'subjective') return '鼠标悬浮查看详情';
+    var answers_info = '';
+    var answers = this.question_info_list[index].answer;
+    for(let i =0;i<answers.length;i++) {
+      answers_info += String.fromCharCode(answers[i].id+0x41);
+      answers_info += ',';
+    }
+    answers_info = answers_info.substring(0,answers_info.length-1);
+    return answers_info;
+  }
+  
   updateFilter(value: string[]): void {
     this.searchGenderList = value;
     this.UpdateTableData(true);
@@ -89,7 +118,7 @@ export class CheckQuestionComponent implements OnInit {
 
   EditUserInfo(): void {
     this.edit_user_info_loading = true;
-    this.edit_user_id = this.question_info_list[this.current_select_user].id;
+    this.edit_question_id = this.question_info_list[this.current_select_user].id;
     let user_edit_info: UserEditInfo = {
       id: this.edit_user_id,
       userName: this.edit_user_name,
@@ -268,8 +297,8 @@ interface QuestionInfo {
   content: string,
   type: string,
   description: string,
-  answer:Array<object>,
-  options: Array<Option>
+  answer:any,
+  options: any 
 }
 
 interface Option {
@@ -277,11 +306,7 @@ interface Option {
   option: string
 }
 
-interface UserEditInfo {
+interface Answer {
   id: number,
-  userName: string,
-  password: string,
-  userType: string,
-  group_add: Array<number>,
-  group_del: Array<number>
+  content: string
 }

@@ -31,6 +31,7 @@ export class ExaminationComponent implements OnInit {
         {
           'type': 'multi',
           'answer': ['A', 'B'],
+          'score': 10.0,
           'content': '时间复杂度为O(nlog2n)的排序算法有（          ）',
           'description': '',
           'options': ['A.快速排序', 'B.堆排序', 'C.冒泡排序', 'D.折半插入排序']
@@ -38,6 +39,7 @@ export class ExaminationComponent implements OnInit {
         {
           'type': 'single',
           'answer': ['A'],
+          'score': 10.0,
           'content': '若入栈序列为A B C D E F，且进栈和出栈可以穿插进行，则不可能的输出序列为',
           'description': '',
           'options': [
@@ -50,6 +52,7 @@ export class ExaminationComponent implements OnInit {
         {
           'type': 'single',
           'answer': ['D'],
+          'score': 10.0,
           'content': '若某表最常用的操作是在最后一个结点之后插入一个节点或删除最后一二个结点，则采用（）省运算时间。',
           'description': '',
           'options': [
@@ -61,6 +64,7 @@ export class ExaminationComponent implements OnInit {
         },
         {
           'type': 'single',
+          'score': 10.0,
           'answer': ['D'],
           'content': '对于int *pa[5] ;的描述，正确的是（    ）',
           'description': '',
@@ -78,6 +82,7 @@ export class ExaminationComponent implements OnInit {
       'questions': [
         {
           'type': 'single',
+          'score': 10.0,
           'answer': ['A'],
           'content': '下列关于RISC的叙述中，错误的是（）。',
           'description': '',
@@ -91,6 +96,7 @@ export class ExaminationComponent implements OnInit {
         {
           'type': 'single',
           'answer': ['A'],
+          'score': 10.0,
           'content': '指出下列代码的缺陷（      ）。',
           'description': 'float   f[10];\n\
   // 假设这里有对f进行初始化的代码\n\
@@ -110,6 +116,7 @@ export class ExaminationComponent implements OnInit {
         {
           'type': 'subjective',
           'answer': [''],
+          'score': 10.0,
           'content': '请简述操作系统中进程之间的通信方式',
           'description': '',
           'options': ['']
@@ -117,9 +124,10 @@ export class ExaminationComponent implements OnInit {
         {
           'type': 'judge',
           'answer': ['A'],
+          'score': 10.0,
           'content': '判断下面的描述是否正确（）',
           'description': '继承抽象类的派生类可以被声明对像，不需要实现基类中全部纯虚函数，只需要实现在派生类中用到的纯虚函数',
-          'options': ['A.正确','B.错误']
+          'options': ['A.正确', 'B.错误']
         }
       ]
     },
@@ -139,7 +147,7 @@ export class ExaminationComponent implements OnInit {
   //当前选中的单选项
   public radio_value: string = String.fromCharCode(0x41);
   //当前选中的多选项
-  public checkbox_values=new Array<boolean>(this.questions[this.current_category].questions[this.current_question].options.length);
+  public checkbox_values = new Array<boolean>(this.questions[this.current_category].questions[this.current_question].options.length);
   //控制选择框不同状态的背景色
   public option_bgcolor: Array<string> = new Array<string>(this.questions[this.current_category].questions[this.current_question].options.length);
   public option_default_bgcolor: string = '#FFFFFF';
@@ -148,12 +156,12 @@ export class ExaminationComponent implements OnInit {
   public option_default_bdcolor: string = '#d4d4d4';
   //简答题编辑器和内容
   public editor = ClassicEditor;
-  public editor_data='';
+  public editor_data = '';
   public editor_config = {
     // 配置语言
     language: 'zh-cn',
     // 工具栏
-    toolbar: ['heading', '|', 'bold','italic','link','bulletedList','numberedList','blockQuote','insertTable','undo','redo'],
+    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo'],
   };
 
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
@@ -174,11 +182,11 @@ export class ExaminationComponent implements OnInit {
 
   }
 
-  getValue(i: number): string {
+  GetValue(i: number): string {
     return String.fromCharCode(0x41 + i);
   }
 
-  getTypeStr(): string {
+  GetTypeStr(): string {
     let type = this.questions[this.current_category].questions[this.current_question].type;
     switch (type) {
       case 'single': return '单选题';
@@ -236,8 +244,8 @@ export class ExaminationComponent implements OnInit {
     }
   }
 
-  limit(){
-    if(this.editor_data.length>20000) this.editor_data = this.editor_data.substring(0,20000);
+  limit() {
+    if (this.editor_data.length > 20000) this.editor_data = this.editor_data.substring(0, 20000);
   }
 
 }

@@ -67,7 +67,7 @@
                       <div *ngFor="let group of data.group_list">{{group.groupName}}</div>
                     </ng-template>
                     <nz-badge [nzCount]="data.group_list.length">
-                      <span>{{data.group_list.length==0 ? '无':data.group_list[0].groupName}}</span>
+                      <span>{{data.group_list.length==0 ? '无':data.group_list[0].groupName+'...'}}</span>
                       <span>&nbsp;&nbsp;&nbsp;</span>
                     </nz-badge>
                   </td>
