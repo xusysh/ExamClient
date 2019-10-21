@@ -31,15 +31,16 @@ export class CheckQuestionComponent implements OnInit {
   public is_indeterminate = false;
 
   public edit_question_id: number = 0;
+  public edit_question_type: string = '';
   public edit_question_content: string = '';
   public edit_question_description: string = '';
   public edit_question_options: Array<object> = [];
-  public edit_question_answer: Array<object> = [];
+  public edit_question_answer: Array<any> = [];
 
   public user_group_tags = [];
   public inputVisible = false;
   public inputValue = '';
-  public edit_user_info_loading = false;
+  public edit_question_info_loading = false;
 
   current_select_question: number = 0;
 
@@ -50,8 +51,8 @@ export class CheckQuestionComponent implements OnInit {
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) { 
-    }
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) {
+  }
 
   ngOnInit(): void {
     this.UpdateTableData();
@@ -71,7 +72,7 @@ export class CheckQuestionComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'question/all').subscribe(
       response => {
         this.question_info_list = response.data;
-        for(let i=0;i<this.question_info_list.length;i++){
+        for (let i = 0; i < this.question_info_list.length; i++) {
           this.question_info_list[i].options = JSON.parse(this.question_info_list[i].options);
           this.question_info_list[i].answer = JSON.parse(this.question_info_list[i].answer);
         }
@@ -83,8 +84,9 @@ export class CheckQuestionComponent implements OnInit {
       });
   }
 
-  GetTypeStr(index:number): string {
-    let type = this.question_info_list[index].type;
+  GetTypeStr(index: number): string {
+    let current_question = (this.page_index - 1) * this.page_size + index;
+    let type = this.question_info_list[current_question].type;
     switch (type) {
       case 'single': return '单选题';
       case 'multi': return '不定项选择题';
@@ -94,64 +96,78 @@ export class CheckQuestionComponent implements OnInit {
     }
   }
 
-  GetAnswer(index:number):string {
-    if(this.question_info_list[index].type == 'subjective') return '鼠标悬浮查看详情';
+  GetAnswer(index: number): string {
+    let current_question = (this.page_index - 1) * this.page_size + index;
+    if (this.question_info_list[current_question].type == 'subjective') return '鼠标悬浮查看详情';
     var answers_info = '';
-    var answers = this.question_info_list[index].answer;
-    for(let i =0;i<answers.length;i++) {
-      answers_info += String.fromCharCode(answers[i].id+0x41);
+    var answers = this.question_info_list[current_question].answer;
+    for (let i = 0; i < answers.length; i++) {
+      answers_info += String.fromCharCode(answers[i].id + 0x41);
       answers_info += ',';
     }
-    answers_info = answers_info.substring(0,answers_info.length-1);
+    answers_info = answers_info.substring(0, answers_info.length - 1);
     return answers_info;
   }
-  
+
   updateFilter(value: string[]): void {
     this.searchGenderList = value;
     this.UpdateTableData(true);
   }
 
-  CheckStudentInfo(index: number): void {
-    this.current_select_user = (this.page_index - 1) * this.page_size + index;
+  CheckQuestionInfo(index: number): void {
+    this.current_select_question = (this.page_index - 1) * this.page_size + index;
+    this.edit_question_id = this.question_info_list[this.current_select_question].id;
+    this.edit_question_type = this.question_info_list[this.current_select_question].type;
+    this.edit_question_content = this.question_info_list[this.current_select_question].content;
+    this.edit_question_description = this.question_info_list[this.current_select_question].description;
+    this.edit_question_options = this.question_info_list[this.current_select_question].options;
+    var answers:Array<Answer> = this.question_info_list[this.current_select_question].answer;
+    this.edit_question_answer = []
+    for(let i=0;i<answers.length;i++) 
+      this.edit_question_answer.push(answers[i].content)
     this.drawer_visible = true;
   }
 
+  test(){
+    console.log(this.edit_question_answer);
+  }
+
   EditUserInfo(): void {
-    this.edit_user_info_loading = true;
-    this.edit_question_id = this.question_info_list[this.current_select_user].id;
-    let user_edit_info: UserEditInfo = {
-      id: this.edit_user_id,
-      userName: this.edit_user_name,
-      password: this.edit_password,
-      userType: this.question_info_list[this.current_select_user].type,
-      group_add: [],
-      group_del: []
+    this.edit_question_info_loading = true;
+    this.edit_question_id = this.question_info_list[this.current_select_question].id;
+    let question_edit_info: QuestionInfo = {
+      id: this.edit_question_id,
+      type: this.edit_question_type,
+      content: this.edit_question_content,
+      description: this.edit_question_description,
+      options: this.edit_question_options,
+      answer: this.edit_question_answer
     }
-    this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', user_edit_info).
+    this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', question_edit_info).
       subscribe(response => {
         if (response.status != 200) {
-          this.message.create('error', '用户编辑失败:' + response.msg);
+          this.message.create('error', '试题编辑失败:' + response.msg);
         }
         else {
-          this.message.create('success', '用户 ' + this.edit_user_name + ' 编辑成功');
+          this.message.create('success', '试题 ' + this.edit_question_content + ' 编辑成功');
           this.UpdateTableData();
         }
       }, error => {
-        this.message.create('error', '用户编辑失败：连接服务器失败');
+        this.message.create('error', '试题编辑失败：连接服务器失败');
       });
-    this.edit_user_info_loading = false;
+    this.edit_question_info_loading = false;
     this.drawer_visible = false;
   }
 
   //删除单个用户
   DeleteUser(index: number): void {
-    this.current_select_user = (this.page_index - 1) * this.page_size + index;
-    let user_delete_info = {
-      id: [this.question_info_list[this.current_select_user].id]
+    this.current_select_question = (this.page_index - 1) * this.page_size + index;
+    let question_delete_info = {
+      id: [this.question_info_list[this.current_select_question].id]
     }
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      body: user_delete_info
+      body: question_delete_info
     };
     this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
       subscribe(response => {
@@ -159,7 +175,7 @@ export class CheckQuestionComponent implements OnInit {
           this.message.create('error', '用户删除失败:' + response.msg);
         }
         else {
-      //    this.message.create('success', '用户 ' + this.question_info_list[this.current_select_user].userName + ' 删除成功');
+          //    this.message.create('success', '用户 ' + this.question_info_list[this.current_select_user].userName + ' 删除成功');
           this.UpdateTableData();
         }
       }, error => {
@@ -169,11 +185,13 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   AddStudentInfo(): void {
+    this.edit_question_id = 0;
+    this.edit_question_type = 'single'
+    this.edit_question_content = '';
+    this.edit_question_description = '';
+    this.edit_question_options = [];
+    this.edit_question_answer = [];
     this.drawer_visible = true;
-    this.edit_user_id = 0;
-    this.edit_user_name = '';
-    this.edit_password = '';
-    this.edit_group_list = null;
   }
 
   DrawerClose(): void {
@@ -297,8 +315,8 @@ interface QuestionInfo {
   content: string,
   type: string,
   description: string,
-  answer:any,
-  options: any 
+  answer: any,
+  options: any
 }
 
 interface Option {

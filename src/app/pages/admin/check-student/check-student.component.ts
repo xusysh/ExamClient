@@ -90,6 +90,14 @@ export class CheckStudentComponent implements OnInit {
   }
 
   EditUserInfo(): void {
+    if(this.edit_user_name=='' || this.edit_user_name==null){
+      this.edit_user_name='';
+      return;
+    }
+    if(this.edit_password=='' || this.edit_password==null){
+      this.edit_password='';
+      return;
+    }
     this.edit_user_info_loading = true;
     this.edit_user_id = this.student_info_list[this.current_select_user].id;
     let user_edit_info: UserEditInfo = {

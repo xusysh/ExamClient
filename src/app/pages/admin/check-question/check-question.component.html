@@ -84,7 +84,7 @@
                 {{GetAnswer(i)}}
               </td>
               <td>
-                <button nz-button nzSize="small" nzType="primary" (click)="CheckStudentInfo(i)" nzShape="circle"
+                <button nz-button nzSize="small" nzType="primary" (click)="CheckQuestionInfo(i)" nzShape="circle"
                   nz-tooltip nzTitle="编辑">
                   <i nz-icon nzType="edit"></i>
                 </button>
@@ -117,55 +117,86 @@
       </div>
     </nz-modal>
     <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
-      [nzWidth]="500">
+      [nzWidth]="700">
       <form nz-form>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>题干</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
-            <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="题干不能为空!">
+            <input nz-input nzSize="large" name="question_content" [(ngModel)]="edit_question_content" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题类型</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="用户名不能为空!">
-            <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="试题类型不能为空!">
+            <nz-select [(ngModel)]="edit_question_type" name="question_type" nzSize="large" nzAllowClear
+              nzPlaceHolder="选择题目类型">
+              <nz-option-group nzLabel="客观题">
+                <nz-option nzValue="single" nzLabel="单选题"></nz-option>
+                <nz-option nzValue="multi" nzLabel="不定项选择题"></nz-option>
+                <nz-option nzValue="judge" nzLabel="判断题"></nz-option>
+                <nz-option nzValue="code" nzLabel="编程题" nzDisabled></nz-option>
+              </nz-option-group>
+              <nz-option-group nzLabel="主观题">
+                <nz-option nzValue="subjective" nzLabel="简答题"></nz-option>
+              </nz-option-group>
+            </nz-select>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题描述</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
-            <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input nzSize="large" name="question_description" [(ngModel)]="edit_question_description" />
           </nz-form-control>
         </nz-form-item>
-        <!--todo:分割选项显示编辑-->
+        <!--todo: 选择题分割选项显示编辑-->
+        <div *ngIf="edit_question_type!='subjective'">
+          <nz-form-item *ngFor="let option of edit_question_options;let i = index">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项{{i+1}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24"
+              nzErrorTip="选项不能为空！">
+              <input nz-input nzSize="large" [name]="'question_option'+i" [(ngModel)]="option.option" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <button nz-button nzSize="large" nzType="primary" style="margin-left: 66%;margin-bottom: 20px;">添加选项</button>
+          
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="参考答案不能为空！">
+              <nz-select [(ngModel)]="edit_question_answer" (ngModelChange)="test()" name="question_answer"
+              nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案">
+                <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.option" [nzValue]="option.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!--todo: 简答题显示分割选项显示编辑-->
+        <div *ngIf="edit_question_type=='subjective'">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
+              <input nz-input nzSize="large" name="question_description" [(ngModel)]="edit_question_description" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
-            <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
-            <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
-          </nz-form-control>
-        </nz-form-item>
-        <div>知识点:</div>
-        <nz-tag *ngFor="let group of edit_group_list" nzMode="closeable" nzColor="blue" class="display-tag">
-          <span class="tag-content">{{ group.groupName }}</span>
-        </nz-tag>
-        <nz-tag *ngIf="!inputVisible" class="editable-tag" (click)="showInput()" nzColor="blue">
-          <div class="edit-tag-content"><i nz-icon nzType="plus"></i>添加</div>
-        </nz-tag>
-        <input #inputElement nz-input nzSize="defalut" *ngIf="inputVisible" type="text" [(ngModel)]="inputValue"
-          class="input-tag" (blur)="handleInputConfirm()" (keydown.enter)="handleInputConfirm()" name="tagInput" />
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>知识点</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+              <nz-select [ngModel]="edit_question_knowledge" nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案">
+                <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.option" [nzValue]="option.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        <div class="drawer-footer">
+          <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
+            style="margin-right: 15px;"><span>取消</span></button>
+          <button nz-button type="button" (click)="EditUserInfo()" class="ant-btn ant-btn-primary"
+            [nzLoading]="edit_question_info_loading"><span>提交</span></button>
+        </div>
       </form>
-      <div class="drawer-footer">
-        <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
-          style="margin-right: 15px;"><span>取消</span></button>
-        <button nz-button type="button" (click)="EditUserInfo()" class="ant-btn ant-btn-primary"
-          [nzLoading]="edit_user_info_loading"><span>提交</span></button>
-      </div>
     </nz-drawer>
   </nz-page-header-content>
 </nz-page-header>
