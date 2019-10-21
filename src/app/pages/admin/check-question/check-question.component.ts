@@ -36,13 +36,16 @@ export class CheckQuestionComponent implements OnInit {
   public edit_question_description: string = '';
   public edit_question_options: Array<object> = [];
   public edit_question_answer: Array<any> = [];
+  public edit_question_knowledge: Array<string> = [];
 
   public user_group_tags = [];
   public inputVisible = false;
   public inputValue = '';
   public edit_question_info_loading = false;
 
-  current_select_question: number = 0;
+  public current_select_question: number = 0;
+  public all_knowledge_info: Array<object> = [];
+  compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
 
   //假数据
@@ -114,6 +117,7 @@ export class CheckQuestionComponent implements OnInit {
     this.UpdateTableData(true);
   }
 
+  //todo：拷贝对象
   CheckQuestionInfo(index: number): void {
     this.current_select_question = (this.page_index - 1) * this.page_size + index;
     this.edit_question_id = this.question_info_list[this.current_select_question].id;
@@ -121,15 +125,33 @@ export class CheckQuestionComponent implements OnInit {
     this.edit_question_content = this.question_info_list[this.current_select_question].content;
     this.edit_question_description = this.question_info_list[this.current_select_question].description;
     this.edit_question_options = this.question_info_list[this.current_select_question].options;
-    var answers:Array<Answer> = this.question_info_list[this.current_select_question].answer;
-    this.edit_question_answer = []
-    for(let i=0;i<answers.length;i++) 
-      this.edit_question_answer.push(answers[i].content)
+    this.edit_question_answer = this.question_info_list[this.current_select_question].answer;
+    this.edit_question_knowledge = ["数据库", "计算机网络"];
     this.drawer_visible = true;
+    this.UpdateKnowledgeInfo();
   }
 
-  test(){
+  test() {
     console.log(this.edit_question_answer);
+  }
+
+  UpdateKnowledgeInfo() {
+    this.all_knowledge_info = []
+    this.http_client.get<MyServerResponse>(this.base_url + 'keypoint/all').subscribe(
+      response => {
+        this.all_knowledge_info = response.data;
+      },
+      error => {
+        this.message.create('error', '知识点信息获取失败：连接服务器失败');
+      });
+  }
+
+  AddEditOption() {
+    let option:Option={
+      id:this.edit_question_options.length,
+      content:''
+    }
+    this.edit_question_options.push(option);
   }
 
   EditUserInfo(): void {
@@ -159,7 +181,7 @@ export class CheckQuestionComponent implements OnInit {
     this.drawer_visible = false;
   }
 
-  //删除单个用户
+  //删除单个试题
   DeleteUser(index: number): void {
     this.current_select_question = (this.page_index - 1) * this.page_size + index;
     let question_delete_info = {
@@ -321,7 +343,7 @@ interface QuestionInfo {
 
 interface Option {
   id: number,
-  option: string
+  content: string
 }
 
 interface Answer {

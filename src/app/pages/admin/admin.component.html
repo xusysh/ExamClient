@@ -69,22 +69,25 @@
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-menu-item routerLink="/admin/check-student">
         <i nz-icon nzType="team"></i>
-        <span>考生&组管理</span>
+        <span>考生管理</span>
       </li>
       <li nz-submenu nzOpen nzTitle="试卷管理" nzIcon="solution">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/admin/generate-paper">
-            <a>编写试卷&组题</a>
-          </li>
           <li nz-menu-item nzMatchRouter routerLink="/admin/check-question">
             <a>题库管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/check-paper">
+            <a>试卷管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/generate-paper">
+            <a>编辑试卷&组题</a>
           </li>
         </ul>
       </li>
       <li nz-submenu nzOpen nzTitle="考试管理" nzIcon="reconciliation">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/admin/check-paper">
-            <a>试卷管理</a>
+          <li nz-menu-item nzMatchRouter routerLink="/admin/check-exam">
+            <a>考试&答题情况</a>
           </li>
           <li nz-menu-item nzMatchRouter routerLink="/admin/judge-paper">
             <a>阅卷</a>

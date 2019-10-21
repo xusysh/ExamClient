@@ -39,7 +39,9 @@ export class CheckStudentComponent implements OnInit {
   public edit_user_info_loading = false;
 
   current_select_user: number = 0;
-
+  group_loading: boolean;
+  all_group_info:Array<object> = [];
+  compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
 
   //假数据
   public users_group_list = [['产品开发科', '招投标项目组', '考试系统小组'], ['需求分析科'], ['产品开发科', '人工智能小组'],
@@ -87,6 +89,8 @@ export class CheckStudentComponent implements OnInit {
     this.edit_user_name = this.student_info_list[this.current_select_user].userName;
     this.edit_password = this.student_info_list[this.current_select_user].password;
     this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
+    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
+    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
   }
 
   EditUserInfo(): void {
@@ -156,6 +160,29 @@ export class CheckStudentComponent implements OnInit {
     this.edit_password = '';
     this.edit_group_list = null;
   }
+
+  UpdateGroupInfo(){
+    this.all_group_info=[]
+    this.http_client.get<MyServerResponse>(this.base_url + 'upi/groupuser/all').subscribe(
+      response => {
+        this.all_group_info = response.data;
+      },
+      error => {
+        this.message.create('error', '用户信息获取失败：连接服务器失败');
+      });
+  }
+
+  EditGroupChange() {
+    console.log(this.edit_group_list);
+  }
+
+	GroupSelectOpened(opened: boolean) {
+		if (opened) {
+      this.group_loading=true;
+      this.UpdateGroupInfo();
+      this.group_loading=false;
+    }
+	}
 
   DrawerClose(): void {
     this.drawer_visible = false;
@@ -291,6 +318,7 @@ interface UserGroupInfo {
   id: number,
   groupName: string
 }
+
 
 interface UploadResp {
   status: number,

@@ -73,10 +73,10 @@
 
               <td nz-popover [nzTitle]="'选项'" [nzContent]="popoverContentTemplate">
                 <ng-template #popoverContentTemplate>
-                  <div *ngFor="let option of data.options">{{option.option}}</div>
+                  <div *ngFor="let option of data.options">{{option.content}}</div>
                 </ng-template>
                 <nz-badge [nzCount]="data.options.length">
-                  <span>{{data.options==0 ? '无':data.options[0].option+'...'}}</span>
+                  <span>{{data.options==0 ? '无':data.options[0].content+'...'}}</span>
                   <span>&nbsp;&nbsp;&nbsp;</span>
                 </nz-badge>
               </td>
@@ -152,26 +152,27 @@
         <div *ngIf="edit_question_type!='subjective'">
           <nz-form-item *ngFor="let option of edit_question_options;let i = index">
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项{{i+1}}</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24"
-              nzErrorTip="选项不能为空！">
-              <input nz-input nzSize="large" [name]="'question_option'+i" [(ngModel)]="option.option" />
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="选项不能为空！">
+              <input nz-input nzSize="large" [name]="'question_option'+i" [(ngModel)]="option.content" />
             </nz-form-control>
           </nz-form-item>
 
-          <button nz-button nzSize="large" nzType="primary" style="margin-left: 66%;margin-bottom: 20px;">添加选项</button>
-          
+          <button nz-button style="margin-left: 65%;margin-bottom: 20px;" (click)="AddEditOption()">
+            <i nz-icon [nzType]="'plus'"></i>添加选项
+          </button>
+
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="参考答案不能为空！">
               <nz-select [(ngModel)]="edit_question_answer" (ngModelChange)="test()" name="question_answer"
-              nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案">
-                <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.option" [nzValue]="option.id">
+                nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn">
+                <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.content" [nzValue]="option">
                 </nz-option>
               </nz-select>
             </nz-form-control>
           </nz-form-item>
         </div>
-        <!--todo: 简答题显示分割选项显示编辑-->
+        <!--todo: 简答题显示富文本格式-->
         <div *ngIf="edit_question_type=='subjective'">
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
@@ -182,14 +183,14 @@
         </div>
 
         <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>知识点</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24">
-              <nz-select [ngModel]="edit_question_knowledge" nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案">
-                <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.option" [nzValue]="option.id">
-                </nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>知识点</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-tree-select nzPlaceHolder="Please select" [(ngModel)]="edit_question_knowledge"
+              [nzNodes]="all_knowledge_info" [nzDefaultExpandAll]="true" nzSize="large" name="knowledge_tree_select"
+              [nzAllowClear]="true" [nzMultiple]="true" (ngModelChange)="onChange($event)">
+            </nz-tree-select>
+          </nz-form-control>
+        </nz-form-item>
         <div class="drawer-footer">
           <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
             style="margin-right: 15px;"><span>取消</span></button>
