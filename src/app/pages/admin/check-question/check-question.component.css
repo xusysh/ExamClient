@@ -85,3 +85,8 @@
   .search-button {
     margin-right: 8px;
   }
+
+  :host ::ng-deep .ck-editor__editable_inline {
+    min-height: 220px;
+    max-height: 220px;
+  }

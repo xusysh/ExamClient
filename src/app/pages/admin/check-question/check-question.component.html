@@ -148,7 +148,7 @@
             <input nz-input nzSize="large" name="question_description" [(ngModel)]="edit_question_description" />
           </nz-form-control>
         </nz-form-item>
-        <!--todo: 选择题分割选项显示编辑-->
+        <!--选择题-->
         <div *ngIf="edit_question_type!='subjective'">
           <nz-form-item *ngFor="let option of edit_question_options;let i = index">
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项{{i+1}}</nz-form-label>
@@ -172,18 +172,20 @@
             </nz-form-control>
           </nz-form-item>
         </div>
-        <!--todo: 简答题显示富文本格式-->
+        <!--简答题显示富文本格式-->
         <div *ngIf="edit_question_type=='subjective'">
           <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="密码不能为空！">
-              <input nz-input nzSize="large" name="question_description" [(ngModel)]="edit_question_description" />
+            <nz-form-label [nzSm]="6" [nzXs]="24">参考答案</nz-form-label>
+            <nz-form-control [nzPush]="2" [nzSm]="20" [nzXs]="24" nzErrorTip="参考答案不能为空！">
+              <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="edit_question_answer[0].content"
+                name="subjective_editor" (ngModelChange)="limit()">
+              </ckeditor>
             </nz-form-control>
           </nz-form-item>
         </div>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>知识点</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-tree-select nzPlaceHolder="Please select" [(ngModel)]="edit_question_knowledge"
               [nzNodes]="all_knowledge_info" [nzDefaultExpandAll]="true" nzSize="large" name="knowledge_tree_select"

@@ -5,6 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin, from } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component'
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 @Component({
   selector: 'app-check-question',
@@ -46,7 +47,14 @@ export class CheckQuestionComponent implements OnInit {
   public current_select_question: number = 0;
   public all_knowledge_info: Array<object> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
-
+  //简答题编辑器和内容
+  public editor = ClassicEditor;
+  public editor_config = {
+    // 配置语言
+    language: 'zh-cn',
+    // 工具栏
+    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+  };
 
   //假数据
   public users_group_list = [['产品开发科', '招投标项目组', '考试系统小组'], ['需求分析科'], ['产品开发科', '人工智能小组'],
@@ -329,6 +337,12 @@ export class CheckQuestionComponent implements OnInit {
       }
     );
   };
+
+  
+  limit() {
+    if (this.edit_question_answer[0].content.length > 20000) 
+      this.edit_question_answer[0].content = this.edit_question_answer[0].content.substring(0, 20000);
+  }
 
 }
 
