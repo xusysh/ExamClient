@@ -73,10 +73,10 @@
 
               <td nz-popover [nzTitle]="'选项'" [nzContent]="popoverContentTemplate">
                 <ng-template #popoverContentTemplate>
-                  <div *ngFor="let option of data.options">{{option.content}}</div>
+                  <div *ngFor="let option of data.options;let i=index;">{{GetOptionLabel(i)+option.content}}</div>
                 </ng-template>
                 <nz-badge [nzCount]="data.options.length">
-                  <span>{{data.options==0 ? '无':data.options[0].content+'...'}}</span>
+                  <span>{{data.options==0 ? '无':'A. '+data.options[0].content+'...'}}</span>
                   <span>&nbsp;&nbsp;&nbsp;</span>
                 </nz-badge>
               </td>
@@ -148,6 +148,15 @@
             <input nz-input nzSize="large" name="question_description" [(ngModel)]="edit_question_description" />
           </nz-form-control>
         </nz-form-item>
+                <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-tree-select nzPlaceHolder="Please select" [(ngModel)]="edit_question_knowledge"
+              [nzNodes]="all_knowledge_info" [nzDefaultExpandAll]="true" nzSize="large" name="knowledge_tree_select"
+              [nzAllowClear]="true" [nzMultiple]="true" (ngModelChange)="onChange($event)">
+            </nz-tree-select>
+          </nz-form-control>
+        </nz-form-item>
         <!--选择题-->
         <div *ngIf="edit_question_type!='subjective'">
           <nz-form-item *ngFor="let option of edit_question_options;let i = index">
@@ -173,6 +182,7 @@
           </nz-form-item>
         </div>
         <!--简答题显示富文本格式-->
+        <!--todo:ckeditor高度失效-->
         <div *ngIf="edit_question_type=='subjective'">
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">参考答案</nz-form-label>
@@ -184,15 +194,7 @@
           </nz-form-item>
         </div>
 
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-tree-select nzPlaceHolder="Please select" [(ngModel)]="edit_question_knowledge"
-              [nzNodes]="all_knowledge_info" [nzDefaultExpandAll]="true" nzSize="large" name="knowledge_tree_select"
-              [nzAllowClear]="true" [nzMultiple]="true" (ngModelChange)="onChange($event)">
-            </nz-tree-select>
-          </nz-form-control>
-        </nz-form-item>
+
         <div class="drawer-footer">
           <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
             style="margin-right: 15px;"><span>取消</span></button>

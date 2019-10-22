@@ -95,6 +95,10 @@ export class CheckQuestionComponent implements OnInit {
       });
   }
 
+  GetOptionLabel(i: number): string {
+    return String.fromCharCode(i + 0x41) + '. ';
+  }
+
   GetTypeStr(index: number): string {
     let current_question = (this.page_index - 1) * this.page_size + index;
     let type = this.question_info_list[current_question].type;
@@ -134,7 +138,7 @@ export class CheckQuestionComponent implements OnInit {
     this.edit_question_description = this.question_info_list[this.current_select_question].description;
     this.edit_question_options = this.question_info_list[this.current_select_question].options;
     this.edit_question_answer = this.question_info_list[this.current_select_question].answer;
-    this.edit_question_knowledge = ["数据库", "计算机网络"];
+    this.edit_question_knowledge = this.question_info_list[this.current_select_question].knowledge;
     this.drawer_visible = true;
     this.UpdateKnowledgeInfo();
   }
@@ -171,7 +175,8 @@ export class CheckQuestionComponent implements OnInit {
       content: this.edit_question_content,
       description: this.edit_question_description,
       options: this.edit_question_options,
-      answer: this.edit_question_answer
+      answer: this.edit_question_answer,
+      knowledge:this.edit_question_knowledge
     }
     this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', question_edit_info).
       subscribe(response => {
@@ -346,11 +351,12 @@ export class CheckQuestionComponent implements OnInit {
 
 }
 
-interface QuestionInfo {
+export interface QuestionInfo {
   id: number,
   content: string,
   type: string,
   description: string,
+  knowledge:Array<string>,
   answer: any,
   options: any
 }

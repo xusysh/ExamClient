@@ -23,58 +23,68 @@
           <ng-template #suffixIcon>
             <i nz-icon nzType="search"></i>
           </ng-template>
-          <nz-tree [nzData]="nodes" [nzSearchValue]="search_value" (nzClick)="nzEvent($event)"
-            (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
-          </nz-tree>
+          <nz-skeleton [nzLoading]="knowledge_loading" [nzActive]="true">
+            <nz-tree [nzData]="knowledge" [nzSearchValue]="search_value" (nzClick)="nzEvent($event)"
+              (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
+            </nz-tree>
+          </nz-skeleton>
+
         </nz-sider>
         <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,
           'overflow-y':'auto','padding-left':'20px'}">
           <nz-collapse>
-            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false">
-              <nz-collapse>
-                <nz-collapse-panel *ngFor="let question of questions" [nzActive]="true" [nzShowArrow]="true"
-                 [nzHeader]="GetQuestionHead(question)" >
-                  <nz-card [nzActions]="[actionSetting, actionEdit]">
-                    <section class="code-box">
-                      <section class="code-box-demo">
-                        <nz-list nzSize="large">
-                          <nz-list-item *ngIf="question.description != ''">
-                            <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
-                          </nz-list-item>
-                          <nz-list-item *ngFor="let option of question.options" [nzContent]="option"></nz-list-item>
-                        </nz-list>
-                      </section>
-                      <section class="code-box-meta markdown">
-                        <section class="code-box-title">
-                          参考答案
-                          <i nz-icon nzType="edit"></i>
-                        </section>
-                        <section class="code-box-description">
-                            <div [innerHtml]="question.answer"></div>
-                        </section>
-                        <section class="code-box-actions">
-                          知识点：C语言、计算机组成原理
-                        </section>
-                      </section>
-                    </section>
-                  </nz-card>
 
-                  <ng-template #actionSetting>
-                    <i nz-icon nzType="setting"></i>
-                    设置分数
-                    <input nz-input style="width: 50px;margin-left: 10px" />
-                  </ng-template>
-                  <ng-template #actionEdit>
-                    <i nz-icon nzType="edit"></i>
-                    <span>添加至大题</span>
-                    <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
-                      [(ngModel)]="selected_value">
-                      <nz-option *ngFor="let catgory of selected_questions" [nzLabel]="catgory.field_name"
-                        [nzValue]="catgory.field_name"></nz-option>
-                    </nz-select>
-                  </ng-template>
-                </nz-collapse-panel>
-              </nz-collapse>
+            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false">
+              <nz-skeleton [nzLoading]="all_filtered_questions_loading" [nzActive]="true">
+
+                <nz-collapse>
+                  <nz-collapse-panel *ngFor="let question of all_filtered_questions" [nzActive]="true"
+                    [nzShowArrow]="true" [nzHeader]="GetQuestionHead(question)">
+                    <nz-card [nzActions]="[actionSetting, actionEdit]">
+                      <section class="code-box">
+                        <section class="code-box-demo">
+                          <nz-list nzSize="large">
+                            <nz-list-item *ngIf="question.description != '' && question.description != null">
+                              <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
+                            </nz-list-item>
+                            <nz-list-item *ngFor="let option of question.options;let i=index;" 
+                            [nzContent]="GetOptionLabel(i)+option.content">
+                            </nz-list-item>
+                          </nz-list>
+                        </section>
+                        <section class="code-box-meta markdown">
+                          <section class="code-box-title">
+                            参考答案
+                            <i nz-icon nzType="edit"></i>
+                          </section>
+                          <section class="code-box-description">
+                            <div>{{GetAnswer(question)}}</div>
+                          </section>
+                          <section class="code-box-actions">
+                            知识点：{{question.knowledge}}
+                          </section>
+                        </section>
+                      </section>
+                    </nz-card>
+
+                    <ng-template #actionSetting>
+                      <i nz-icon nzType="setting"></i>
+                      设置分数
+                      <input nz-input style="width: 50px;margin-left: 10px" />
+                    </ng-template>
+                    <ng-template #actionEdit>
+                      <i nz-icon nzType="edit"></i>
+                      <span>添加至大题</span>
+                      <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
+                        [(ngModel)]="selected_value">
+                        <nz-option *ngFor="let catgory of selected_questions" [nzLabel]="catgory.field_name"
+                          [nzValue]="catgory.field_name"></nz-option>
+                      </nz-select>
+                    </ng-template>
+                  </nz-collapse-panel>
+                </nz-collapse>
+              </nz-skeleton>
+
             </nz-collapse-panel>
           </nz-collapse>
         </nz-content>
@@ -94,15 +104,14 @@
           </div>
           <nz-card *ngFor="let catgory of selected_questions" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
             [nzTitle]="catgory.field_name+'(10分)'" [nzExtra]="extraTemplate">
-              <nz-badge *ngFor="let question of catgory.questions" [nzCount]="5" [nzStyle]="{ backgroundColor: 'grey' }">
-                <nz-tag 
-                  style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
-                  <div
-                    [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
-                    {{question.content}}
-                  </div>
-                </nz-tag>
-              </nz-badge>
+            <nz-badge *ngFor="let question of catgory.questions" [nzCount]="5" [nzStyle]="{ backgroundColor: 'grey' }">
+              <nz-tag style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
+                <div
+                  [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
+                  {{question.content}}
+                </div>
+              </nz-tag>
+            </nz-badge>
           </nz-card>
 
           <ng-template #extraTemplate>
