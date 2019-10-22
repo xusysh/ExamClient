@@ -89,8 +89,8 @@ export class CheckStudentComponent implements OnInit {
     this.edit_user_name = this.student_info_list[this.current_select_user].userName;
     this.edit_password = this.student_info_list[this.current_select_user].password;
     this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
-    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
-    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
+//    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
+  //  this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
   }
 
   EditUserInfo(): void {
