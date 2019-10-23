@@ -104,8 +104,10 @@
           </div>
           <nz-card *ngFor="let category of categorys" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
             [nzTitle]="category + '(10分)'" [nzExtra]="extraTemplate">
-            <nz-badge *ngFor="let question of category_to_questions.get(category)" [nzCount]="paper_question_scores[i]" [nzStyle]="{ backgroundColor: 'grey' }">
-              <nz-tag style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
+            <nz-badge *ngFor="let question of category_to_questions.get(category);let i=index"
+             [nzCount]="question.score" [nzStyle]="{ backgroundColor: 'grey' }">
+              <nz-tag style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" 
+                nzMode="closeable" (nzOnClose)="QuestionTagClose(category_to_questions.get(category),i)">
                 <div
                   [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
                   {{question.content}}

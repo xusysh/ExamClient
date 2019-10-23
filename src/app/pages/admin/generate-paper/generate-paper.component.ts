@@ -169,9 +169,8 @@ export class GeneratePaperComponent implements OnInit {
     }
   }
 
-  GetPaperQuestionScore(index:number):number {
-    //todo
-    return 1;
+  QuestionTagClose(category_questions:Array<PaperQuestionInfo>,index:number) {
+    category_questions.splice(index,1);
   }
 
 }
