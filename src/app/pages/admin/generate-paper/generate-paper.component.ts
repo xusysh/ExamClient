@@ -169,6 +169,11 @@ export class GeneratePaperComponent implements OnInit {
     }
   }
 
+  GetPaperQuestionScore(index:number):number {
+    //todo
+    return 1;
+  }
+
 }
 
 interface PaperQuestionInfo {
