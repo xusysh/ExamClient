@@ -16,7 +16,7 @@ import { QuestionInfo } from '../check-question/check-question.component';
 export class GeneratePaperComponent implements OnInit {
 
   search_value = '';
-  selected_value = null;
+  selected_values = null;
 
   knowledge: Array<object> = []
   knowledge_loading: boolean = true;
@@ -24,10 +24,11 @@ export class GeneratePaperComponent implements OnInit {
   all_filtered_questions: Array<QuestionInfo> = []
   all_filtered_questions_loading: boolean = true;
 
-  categorys = []
-  new_category_str:string = '';
+  categorys: Set<string> = new Set<string>();
+  new_category_str: string = '';
 
-  category_to_questions = new Map<string,Array<PaperQuestionInfo>>();
+  category_to_questions = new Map<string, Array<PaperQuestionInfo>>();
+  paper_question_scores: Array<number> = [];
 
   selected_questions = []
 
@@ -74,18 +75,37 @@ export class GeneratePaperComponent implements OnInit {
     answers_info = answers_info.substring(0, answers_info.length - 1);
     return answers_info;
   }
-  
-  GetKnowledgeStr(question: QuestionInfo):string{
-    if(question.knowledge.length==0 || question.knowledge==null) return '无';
+
+  GetKnowledgeStr(question: QuestionInfo): string {
+    if (question.knowledge.length == 0 || question.knowledge == null) return '无';
     let knowledge_str = '';
-    for(let i=0;i<question.knowledge.length;i++) {
+    for (let i = 0; i < question.knowledge.length; i++) {
       knowledge_str += question.knowledge[i];
       knowledge_str += ', ';
     }
-    return knowledge_str.substring(0,knowledge_str.length-2);
+    return knowledge_str.substring(0, knowledge_str.length - 2);
   }
 
   GetAllQuestions() {
+    this.all_filtered_questions_loading = true;
+    this.http_client.get<MyServerResponse>(this.base_url + 'question/all').subscribe(
+      response => {
+        this.all_filtered_questions = response.data;
+        this.paper_question_scores = new Array<number>(this.all_filtered_questions.length);
+        this.selected_values=new Array<string>(this.all_filtered_questions.length);
+        for (let i = 0; i < this.all_filtered_questions.length; i++) {
+          this.all_filtered_questions[i].options = JSON.parse(this.all_filtered_questions[i].options);
+          this.all_filtered_questions[i].answer = JSON.parse(this.all_filtered_questions[i].answer);
+        }
+        this.all_filtered_questions_loading = false;
+      },
+      error => {
+        this.message.create('error', '知识点信息获取失败：连接服务器失败');
+      });
+  }
+
+  GetFilteredQuestions() {
+    this.all_filtered_questions = []
     this.all_filtered_questions_loading = true;
     this.http_client.get<MyServerResponse>(this.base_url + 'question/all').subscribe(
       response => {
@@ -99,16 +119,18 @@ export class GeneratePaperComponent implements OnInit {
       error => {
         this.message.create('error', '知识点信息获取失败：连接服务器失败');
       });
-  }
-
-  GetFilteredQuestions() {
-
+    this.paper_question_scores = new Array<number>(this.all_filtered_questions.length);
+    this.selected_values=new Array<string>(this.all_filtered_questions.length);
   }
 
   AddCategory() {
-    this.categorys.push(this.new_category_str)
-    this.new_category_str = ''
-    this.message.success('添加成功')
+    if (this.categorys.has(this.new_category_str)) {
+      this.message.warning('大题已存在');
+      return;
+    }
+    this.categorys.add(this.new_category_str);
+    this.new_category_str = '';
+    this.message.success('添加成功');
   }
 
   GetOptionLabel(i: number): string {
@@ -127,8 +149,35 @@ export class GeneratePaperComponent implements OnInit {
       });
   }
 
+  CategorySelectChanged(index:number) {
+    var question = this.all_filtered_questions[index];
+    let paper_question_info: PaperQuestionInfo = {
+      type: question.type,
+      score:this.paper_question_scores[index],
+      description:question.description,
+      content:question.content,
+      must_or_not:0,
+      category_content:this.selected_values[index],
+      option_list:question.options,
+      answer_list:question.answer
+    }
+    if(this.category_to_questions.has(this.selected_values[index])) {
+      this.category_to_questions.get(this.selected_values[index]).push(paper_question_info);
+    }
+    else {
+      this.category_to_questions.set(this.selected_values[index],[paper_question_info])
+    }
+  }
+
 }
 
-interface PaperQuestionInfo{
-
+interface PaperQuestionInfo {
+  type: string,
+  score: number,
+  description: string,
+  content: string,
+  must_or_not: 0,
+  category_content: string,
+  option_list: Array<any>,
+  answer_list: Array<any>
 }

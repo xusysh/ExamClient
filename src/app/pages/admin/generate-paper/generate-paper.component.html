@@ -34,11 +34,11 @@
           'overflow-y':'auto','padding-left':'20px'}">
           <nz-collapse>
 
-            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false">
+            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false" style="cursor:unset;">
               <nz-skeleton [nzLoading]="all_filtered_questions_loading" [nzActive]="true">
 
                 <nz-collapse>
-                  <nz-collapse-panel *ngFor="let question of all_filtered_questions" [nzActive]="true"
+                  <nz-collapse-panel *ngFor="let question of all_filtered_questions;let i=index;" [nzActive]="true"
                     [nzShowArrow]="true" [nzHeader]="GetQuestionHead(question)">
                     <nz-card [nzActions]="[actionSetting, actionEdit]">
                       <section class="code-box">
@@ -70,13 +70,13 @@
                     <ng-template #actionSetting>
                       <i nz-icon nzType="setting"></i>
                       设置分数
-                      <input nz-input style="width: 50px;margin-left: 10px" />
+                      <input nz-input style="width: 50px;margin-left: 10px" [(ngModel)]="paper_question_scores[i]"/>
                     </ng-template>
                     <ng-template #actionEdit>
                       <i nz-icon nzType="edit"></i>
                       <span>添加至大题</span>
                       <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
-                        [(ngModel)]="selected_value">
+                        [(ngModel)]="selected_values[i]" (ngModelChange)="CategorySelectChanged(i)">
                         <nz-option *ngFor="let category of categorys" [nzLabel]="category"
                           [nzValue]="category"></nz-option>
                       </nz-select>
@@ -102,9 +102,9 @@
               placeholder="输入大题名称" [(ngModel)]="new_category_str"/>
             <button nz-button nzType="small" nzShape="circle" (click)="AddCategory()"><i nz-icon nzType="plus"></i></button>
           </div>
-          <nz-card *ngFor="let category of selected_questions" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
-            [nzTitle]="category.field_name+'(10分)'" [nzExtra]="extraTemplate">
-            <nz-badge *ngFor="let question of category.questions" [nzCount]="5" [nzStyle]="{ backgroundColor: 'grey' }">
+          <nz-card *ngFor="let category of categorys" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
+            [nzTitle]="category + '(10分)'" [nzExtra]="extraTemplate">
+            <nz-badge *ngFor="let question of category_to_questions.get(category)" [nzCount]="5" [nzStyle]="{ backgroundColor: 'grey' }">
               <nz-tag style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable">
                 <div
                   [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
