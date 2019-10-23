@@ -73,7 +73,7 @@
                       <input nz-input style="width: 50px;margin-left: 10px" [(ngModel)]="paper_question_scores[i]"/>
                     </ng-template>
                     <ng-template #actionEdit>
-                      <i nz-icon nzType="edit"></i>
+                      <i nz-icon nzType="highlight"></i>
                       <span>添加至大题</span>
                       <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
                         [(ngModel)]="selected_values[i]" (ngModelChange)="CategorySelectChanged(i)">
@@ -102,25 +102,28 @@
               placeholder="输入大题名称" [(ngModel)]="new_category_str"/>
             <button nz-button nzType="small" nzShape="circle" (click)="AddCategory()"><i nz-icon nzType="plus"></i></button>
           </div>
-          <nz-card *ngFor="let category of categorys" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
+          <nz-card *ngFor="let category of categorys;let i=index" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
             [nzTitle]="category + '(10分)'" [nzExtra]="extraTemplate">
-            <nz-badge *ngFor="let question of category_to_questions.get(category);let i=index"
+            <nz-badge *ngFor="let question of category_to_questions.get(category);let j=index"
              [nzCount]="question.score" [nzStyle]="{ backgroundColor: 'grey' }">
               <nz-tag style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" 
-                nzMode="closeable" (nzOnClose)="QuestionTagClose(category_to_questions.get(category),i)">
+                nzMode="closeable" (nzOnClose)="category_to_questions.get(category).splice(j,1)">
                 <div
                   [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
                   {{question.content}}
                 </div>
               </nz-tag>
             </nz-badge>
-          </nz-card>
-          <ng-template #extraTemplate>
+            <ng-template #extraTemplate>
+            <!--todo-->
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="edit"></i>
             <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="linefeed=!linefeed"
               [nzType]="linefeed?'zoom-in':'zoom-out'"></i>
-            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"></i>
+            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus" (click)="categorys.delete(category)"></i>
             <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="plus"></i>
           </ng-template>
+          </nz-card>
+
         </nz-sider>
       </nz-layout>
     </nz-page-header-content>

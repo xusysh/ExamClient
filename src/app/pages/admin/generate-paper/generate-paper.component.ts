@@ -124,6 +124,10 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   AddCategory() {
+    if(this.new_category_str.trim()=='') {
+      this.message.warning('请输入大题名称');
+      return;
+    }
     if (this.categorys.has(this.new_category_str)) {
       this.message.warning('大题已存在');
       return;
@@ -150,6 +154,11 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   CategorySelectChanged(index:number) {
+    let score = this.paper_question_scores[index];
+    if(score == undefined) {
+      this.message.warning('请设置题目分数');
+      return;
+    }
     var question = this.all_filtered_questions[index];
     let paper_question_info: PaperQuestionInfo = {
       type: question.type,
@@ -169,9 +178,6 @@ export class GeneratePaperComponent implements OnInit {
     }
   }
 
-  QuestionTagClose(category_questions:Array<PaperQuestionInfo>,index:number) {
-    category_questions.splice(index,1);
-  }
 
 }
 
