@@ -96,7 +96,12 @@
         <nz-sider [nzWidth]="300" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzTrigger]="null"
           nzTheme="light"
           [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto','overflow-x':'auto'}">
-          <h2 style="text-align: center;">已选题目(100分)</h2>
+          <div *ngIf="edit_exam_name">
+            <input nz-input nzSize="large" style="width: 70%;margin-left: 20px;float: left;" [(ngModel)]="exam_name">
+            <i nz-icon style="cursor: pointer;margin-left: 10px;margin-top: 6px;font-size: 150%;"
+              (click)="edit_exam_name = false;" nzType="check"></i>
+          </div>
+          <h2 class="exam-title" *ngIf="!edit_exam_name" (click)="edit_exam_name = true;">{{GetExamTitle()}}</h2>
           <div>
             <input type="text" nz-input style="width:80%;margin-left: 2px;margin-right: 10px;margin-bottom: 15px;"
               placeholder="输入大题名称" [(ngModel)]="new_category_str" />
@@ -144,6 +149,8 @@
             </nz-card>
           </div>
         </nz-sider>
+        <button nz-button nzSize="large" (click)="submit_dialog_visible = true" class="submit-paper-button">提交试卷</button>
+        <nz-modal [(nzVisible)]="submit_dialog_visible"></nz-modal>
       </nz-layout>
     </nz-page-header-content>
   </nz-page-header>

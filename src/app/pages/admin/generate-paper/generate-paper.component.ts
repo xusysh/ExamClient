@@ -7,6 +7,7 @@ import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
 import { QuestionInfo } from '../check-question/check-question.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { summaryFileName } from '@angular/compiler/src/aot/util';
 
 @Component({
   selector: 'app-generate-paper',
@@ -18,6 +19,8 @@ export class GeneratePaperComponent implements OnInit {
 
   search_value = '';
   selected_values = null;
+
+  exam_name:string = '点击此处修改考试名称';
 
   knowledge: Array<object> = []
   knowledge_loading: boolean = true;
@@ -201,6 +204,20 @@ export class GeneratePaperComponent implements OnInit {
       sum = sum + questions[i].score;
     }
     return category + '（'+sum +'分）';
+  }
+
+  GetExamTitle():string {
+    var sum:number = 0;
+    if(this.categorys == undefined) return this.exam_name + '（0分）';
+    for(let i=0;i<this.categorys.length;i++) {
+      if(this.category_to_questions.has(this.categorys[i])) {
+        let questions = this.category_to_questions.get(this.categorys[i]);
+        for(let j=0;j<questions.length;j++) {
+          sum = sum + questions[j].score;
+        } 
+      }
+    }
+    return this.exam_name + '（'+sum+'分）';
   }
 
   test(i) {

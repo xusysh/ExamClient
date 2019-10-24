@@ -15,6 +15,16 @@
     padding: 10px 0;
   }
 
+  .exam-title {
+    text-align: center;
+  }
+
+  .exam-title:hover {
+    border: 1px solid rgb(235, 237, 240);
+    border-radius: 5px;
+    cursor: text;
+  }
+
   .code-box {
     position: relative;
     display: inline-block;
@@ -74,4 +84,11 @@
   border-radius:5px;
   background-color: grey;
   color: #fff;
+}
+
+.submit-paper-button {
+  position: fixed;
+  right: 200px;
+  bottom: 80px;
+  background: rgba(255, 255, 255, 0.8);  /*半透明*/
 }
