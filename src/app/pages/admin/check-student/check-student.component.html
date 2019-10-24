@@ -68,10 +68,10 @@
                   </td>
                   <td nz-popover [nzTitle]="'所在组'" [nzContent]="popoverContentTemplate">
                     <ng-template #popoverContentTemplate>
-                      <div *ngFor="let group of data.group_list">{{group.groupName}}</div>
+                      <div *ngFor="let group of data.group_list">{{group.group_name}}</div>
                     </ng-template>
                     <nz-badge [nzCount]="data.group_list.length">
-                      <span>{{data.group_list.length==0 ? '无':data.group_list[0].groupName+'...'}}</span>
+                      <span>{{data.group_list.length==0 ? '无':data.group_list[0].group_name+'...'}}</span>
                       <span>&nbsp;&nbsp;&nbsp;</span>
                     </nz-badge>
                   </td>
