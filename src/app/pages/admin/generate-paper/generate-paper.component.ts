@@ -24,7 +24,7 @@ export class GeneratePaperComponent implements OnInit {
   all_filtered_questions: Array<QuestionInfo> = []
   all_filtered_questions_loading: boolean = true;
 
-  categorys: Set<string> = new Set<string>();
+  categorys: Array<string> = new Array<string>();
   new_category_str: string = '';
   edit_category_flags:Array<boolean> = new Array<boolean>();
 
@@ -130,11 +130,11 @@ export class GeneratePaperComponent implements OnInit {
       this.message.warning('请输入大题名称');
       return;
     }
-    if (this.categorys.has(this.new_category_str)) {
+    if (this.new_category_str in this.categorys) {
       this.message.warning('大题已存在');
       return;
     }
-    this.categorys.add(this.new_category_str);
+    this.categorys.push(this.new_category_str);
     this.edit_category_flags.push(false);
     this.new_category_str = '';
     this.message.success('添加成功');
@@ -204,6 +204,12 @@ export class GeneratePaperComponent implements OnInit {
 
   test(i) {
     console.log(this.categorys[i]);
+  }
+
+  CategoryNameChanged(old_val,new_val) {
+    if(!this.category_to_questions.has(old_val)) return;
+    this.category_to_questions.set(new_val,this.category_to_questions.get(old_val));
+    this.category_to_questions.delete(old_val);
   }
 
 }
