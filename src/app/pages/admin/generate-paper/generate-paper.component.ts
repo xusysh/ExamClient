@@ -213,7 +213,7 @@ export class GeneratePaperComponent implements OnInit {
     this.category_to_questions.delete(old_val);
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(list:Array<any>,event: CdkDragDrop<string[]>) {
     moveItemInArray(this.categorys, event.previousIndex, event.currentIndex);
   }
 

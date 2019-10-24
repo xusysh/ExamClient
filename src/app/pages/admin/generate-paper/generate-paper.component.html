@@ -47,8 +47,8 @@
                             <nz-list-item *ngIf="question.description != '' && question.description != null">
                               <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
                             </nz-list-item>
-                            <nz-list-item *ngFor="let option of question.options;let i=index;" 
-                            [nzContent]="GetOptionLabel(i)+option.content">
+                            <nz-list-item *ngFor="let option of question.options;let i=index;"
+                              [nzContent]="GetOptionLabel(i)+option.content">
                             </nz-list-item>
                           </nz-list>
                         </section>
@@ -70,15 +70,15 @@
                     <ng-template #actionSetting>
                       <i nz-icon nzType="setting"></i>
                       设置分数
-                      <input nz-input style="width: 50px;margin-left: 10px" [(ngModel)]="paper_question_scores[i]"/>
+                      <input nz-input style="width: 50px;margin-left: 10px" [(ngModel)]="paper_question_scores[i]" />
                     </ng-template>
                     <ng-template #actionEdit>
                       <i nz-icon nzType="highlight"></i>
                       <span>添加至大题</span>
                       <nz-select style="width: 160px;margin-left: 10px" nzShowSearch nzAllowClear nzPlaceHolder="选择大题"
                         [(ngModel)]="selected_values[i]" (ngModelChange)="CategorySelectChanged(i)">
-                        <nz-option *ngFor="let category of categorys" [nzLabel]="category"
-                          [nzValue]="category"></nz-option>
+                        <nz-option *ngFor="let category of categorys" [nzLabel]="category" [nzValue]="category">
+                        </nz-option>
                       </nz-select>
                     </ng-template>
                   </nz-collapse-panel>
@@ -99,35 +99,45 @@
           <h2 style="text-align: center;">已选题目(100分)</h2>
           <div>
             <input type="text" nz-input style="width:80%;margin-left: 2px;margin-right: 10px;margin-bottom: 15px;"
-              placeholder="输入大题名称" [(ngModel)]="new_category_str"/>
-            <button nz-button nzType="small" nzShape="circle" (click)="AddCategory()"><i nz-icon nzType="plus"></i></button>
+              placeholder="输入大题名称" [(ngModel)]="new_category_str" />
+            <button nz-button nzType="small" nzShape="circle" (click)="AddCategory()"><i nz-icon
+                nzType="plus"></i></button>
           </div>
-          <div cdkDropList (cdkDropListDropped)="drop($event)">
-          <nz-card cdkDrag *ngFor="let category of categorys;let i=index" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
-            [nzTitle]="GetCategoryTitle(i)" [nzExtra]="extraTemplate">
-            <nz-badge *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
-             [nzCount]="question.score" [nzStyle]="{ backgroundColor: 'grey' }">
-              <nz-tag style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" 
-                nzMode="closeable" (nzOnClose)="category_to_questions.get(categorys[i]).splice(j,1)">
-                <div
-                  [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
-                  {{question.content}}
+          <div cdkDropList (cdkDropListDropped)="drop(categorys,$event)">
+            <nz-card cdkDrag *ngFor="let category of categorys;let i=index" style="margin-right: 15px;overflow-x:auto;"
+              nzType="inner" [nzTitle]="GetCategoryTitle(i)" [nzExtra]="extraTemplate">
+              <!--      <nz-badge *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
+             [nzCount]="question.score" [nzStyle]="{ backgroundColor: 'grey' }">    -->
+              <div nz-tooltip nzTitle="拖拽大题卡片和小题标签以交换顺序" nzPlacement="bottom">
+                <div cdkDropList (cdkDropListDropped)="drop(ategory_to_questions.get(categorys[i]),$event)">
+
+                  <nz-tag cdkDrag *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
+                    style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable"
+                    (nzOnClose)="category_to_questions.get(categorys[i]).splice(j,1)">
+                    <div
+                      [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
+                      {{question.content}}
+                    </div>
+                  </nz-tag>
                 </div>
-              </nz-tag>
-            </nz-badge>
-            <ng-template #extraTemplate>
-            <input nz-input *ngIf="edit_category_flags[i]" [(ngModel)]="categorys[i]" (focus)="old_val = categorys[i]"
-            (ngModelChange)="CategoryNameChanged(old_val,$event); old_val = $event;"
-              style="width: 80%;margin-bottom: 10px;margin-left: 10px;">
-            <i nz-icon *ngIf="edit_category_flags[i]" style="cursor: pointer;margin-left: 10px;" 
-              (click)="EditCateGoryDone(i)" nzType="check"></i>
-            <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="edit_category_flags[i]=true" nzType="edit"></i>
-            <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="linefeed=!linefeed"
-              [nzType]="linefeed?'zoom-in':'zoom-out'"></i>
-            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus" 
-              (click)="categorys.splice(i,1);edit_category_flags.splice(i,1);"></i>
-          </ng-template>
-          </nz-card>
+              </div>
+
+              <!--/nz-badge-->
+              <ng-template #extraTemplate>
+                <input nz-input *ngIf="edit_category_flags[i]" [(ngModel)]="categorys[i]"
+                  (focus)="old_val = categorys[i]"
+                  (ngModelChange)="CategoryNameChanged(old_val,$event); old_val = $event;"
+                  style="width: 80%;margin-bottom: 10px;margin-left: 10px;">
+                <i nz-icon *ngIf="edit_category_flags[i]" style="cursor: pointer;margin-left: 10px;"
+                  (click)="EditCateGoryDone(i)" nzType="check"></i>
+                <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="edit_category_flags[i]=true"
+                  nzType="edit"></i>
+                <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="linefeed=!linefeed"
+                  [nzType]="linefeed?'zoom-in':'zoom-out'"></i>
+                <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"
+                  (click)="categorys.splice(i,1);edit_category_flags.splice(i,1);"></i>
+              </ng-template>
+            </nz-card>
           </div>
         </nz-sider>
       </nz-layout>
