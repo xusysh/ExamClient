@@ -109,16 +109,20 @@
               <!--      <nz-badge *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
              [nzCount]="question.score" [nzStyle]="{ backgroundColor: 'grey' }">    -->
               <div nz-tooltip nzTitle="拖拽大题卡片和小题标签以交换顺序" nzPlacement="bottom">
-                <div cdkDropList (cdkDropListDropped)="drop(ategory_to_questions.get(categorys[i]),$event)">
+                <div cdkDropList (cdkDropListDropped)="drop(category_to_questions.get(categorys[i]),$event)">
+                  <div cdkDrag *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
+                    style="width: 100%;">
+                    <div class="score-badge-div">{{question.score | number:'2.1'}}</div>
+                    <nz-tag
+                      style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;width: 78%;overflow-x: hidden;"
+                      nzMode="closeable" (nzOnClose)="category_to_questions.get(categorys[i]).splice(j,1)">
+                      <div
+                        [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
+                        {{question.content}}
+                      </div>
+                    </nz-tag>
+                  </div>
 
-                  <nz-tag cdkDrag *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
-                    style="margin-top: 5px;margin-bottom: 5px;padding:5px 0 5px 8px;" nzMode="closeable"
-                    (nzOnClose)="category_to_questions.get(categorys[i]).splice(j,1)">
-                    <div
-                      [ngStyle]="{'float': 'left','font-size':'120%','width':'90%','white-space':linefeed?'unset':'pre-wrap'}">
-                      {{question.content}}
-                    </div>
-                  </nz-tag>
                 </div>
               </div>
 

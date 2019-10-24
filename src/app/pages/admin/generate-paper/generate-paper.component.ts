@@ -214,7 +214,7 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   drop(list:Array<any>,event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.categorys, event.previousIndex, event.currentIndex);
+    moveItemInArray(list, event.previousIndex, event.currentIndex);
   }
 
 }
