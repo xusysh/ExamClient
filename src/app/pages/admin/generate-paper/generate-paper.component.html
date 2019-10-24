@@ -102,7 +102,8 @@
               placeholder="输入大题名称" [(ngModel)]="new_category_str"/>
             <button nz-button nzType="small" nzShape="circle" (click)="AddCategory()"><i nz-icon nzType="plus"></i></button>
           </div>
-          <nz-card *ngFor="let category of categorys;let i=index" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
+          <div cdkDropList (cdkDropListDropped)="drop($event)">
+          <nz-card cdkDrag *ngFor="let category of categorys;let i=index" style="margin-right: 15px;overflow-x:auto;" nzType="inner"
             [nzTitle]="GetCategoryTitle(i)" [nzExtra]="extraTemplate">
             <nz-badge *ngFor="let question of category_to_questions.get(categorys[i]);let j=index"
              [nzCount]="question.score" [nzStyle]="{ backgroundColor: 'grey' }">
@@ -127,7 +128,7 @@
               (click)="categorys.splice(i,1);edit_category_flags.splice(i,1);"></i>
           </ng-template>
           </nz-card>
-
+          </div>
         </nz-sider>
       </nz-layout>
     </nz-page-header-content>

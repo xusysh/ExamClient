@@ -6,6 +6,7 @@ import { UploadXHRArgs, NzFormatEmitEvent } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
 import { QuestionInfo } from '../check-question/check-question.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-generate-paper',
@@ -210,6 +211,10 @@ export class GeneratePaperComponent implements OnInit {
     if(!this.category_to_questions.has(old_val)) return;
     this.category_to_questions.set(new_val,this.category_to_questions.get(old_val));
     this.category_to_questions.delete(old_val);
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.categorys, event.previousIndex, event.currentIndex);
   }
 
 }
