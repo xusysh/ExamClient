@@ -268,11 +268,11 @@ export class GeneratePaperComponent implements OnInit {
       //todo:管理员用户id
       //todo:等待关闭
       nzOnOk: () => {
-
+/*
         new Promise((resolve, reject) => {
           
         }).catch(() => console.log('Oops errors!'))
-        
+    */    
         let all_question_list: Array<PaperQuestionInfo> = []
         for (let i = 0; i < this.categorys.length; i++) {
           let question_list = this.category_to_questions.get(this.categorys[i]);
