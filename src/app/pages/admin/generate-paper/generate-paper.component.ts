@@ -39,6 +39,7 @@ export class GeneratePaperComponent implements OnInit {
 
   selected_questions = []
   confirm_modal: NzModalRef;
+  submit_loading:boolean = false;
 
   ques_types = [
     { label: '单选题', value: 'single' },
@@ -61,7 +62,7 @@ export class GeneratePaperComponent implements OnInit {
       case 'single': return '[' + '单选题' + '] ' + question['content'];
       case 'multi': return '[' + '不定项选择题' + '] ' + question['content'];
       case 'judge': return '[' + '判断题' + '] ' + question['content'];
-      case 'subjective': return '[' + '主观题' + '] ' + question['content'];
+      case 'subjective': return '[' + '简答题' + '] ' + question['content'];
       default: return '';
     }
   }
@@ -265,7 +266,13 @@ export class GeneratePaperComponent implements OnInit {
       nzTitle: '是否提交试卷?',
       nzContent: this.exam_name + '（' + this.total_points + '分）',
       //todo:管理员用户id
+      //todo:等待关闭
       nzOnOk: () => {
+
+        new Promise((resolve, reject) => {
+          
+        }).catch(() => console.log('Oops errors!'))
+        
         let all_question_list: Array<PaperQuestionInfo> = []
         for (let i = 0; i < this.categorys.length; i++) {
           let question_list = this.category_to_questions.get(this.categorys[i]);

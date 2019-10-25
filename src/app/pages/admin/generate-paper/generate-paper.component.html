@@ -34,30 +34,32 @@
           'overflow-y':'auto','padding-left':'20px'}">
           <nz-collapse>
             <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false" style="cursor:unset;">
-              <div>
+              <div style="margin-bottom: 10px;">
                 <strong>试题类型筛选：</strong>
                 <nz-tag *ngFor="let ques_type of ques_types"
-                  nzMode="checkable" style="font-size: 120%;height: 120%;" [nzChecked]="false"
+                  nzMode="checkable" style="font-size: 120%;height:30px;padding-top: 3px;" [nzChecked]="false"
                   (nzCheckedChange)="QuesTypeFilterChange(ques_type.value,$event)">{{ques_type.label}}</nz-tag>
               </div>
-              <div>
+              <div style="margin-bottom: 10px;">
                 <strong>知识点筛选：</strong>
                 <nz-tag *ngFor="let ques_knowledge of ques_knowledge_filter;let i=index" nzMode="closeable"
-                  (nzOnClose)="ques_knowledge_filter.splice(i,1);GetFilteredQuestions();"  style="font-size: 120%;margin-left: 10px;">
+                  (nzOnClose)="ques_knowledge_filter.splice(i,1);GetFilteredQuestions();"
+                  style="font-size: 110%;font-weight:600;height:30px;padding-top: 3px;margin-left: 8px;margin-top: 5px;">
                   {{ques_knowledge}}
                 </nz-tag>
               </div>
               <div style="margin-bottom: 10px;">
                 <strong>题干筛选：</strong>
                 <nz-input-group style="width: 30%;" [nzSuffix]="suffixIconSearch">
-                  <input type="text" nz-input placeholder="input search text"
+                  <input type="text" nz-input placeholder="输入部分题干进行搜索"
                     [(ngModel)]="new_ques_name_filter_item_str" />
                 </nz-input-group>
                 <ng-template #suffixIconSearch>
                   <i nz-icon nzType="search" style="cursor: pointer;" (click)="AddQuesNameFilterItem()"></i>
                 </ng-template>
                 <nz-tag *ngFor="let ques_name of ques_name_filter;let i=index;" nzMode="closeable"
-                  (nzOnClose)="ques_name_filter.splice(i,1);GetFilteredQuestions();"  style="font-size: 120%;margin-left: 10px;">
+                  (nzOnClose)="ques_name_filter.splice(i,1);GetFilteredQuestions();"  
+                  style="font-size: 110%;font-weight:600; height:30px;padding-top: 3px;margin-left: 8px;margin-top: 5px;">
                   {{ques_name}}
                 </nz-tag>
               </div>
