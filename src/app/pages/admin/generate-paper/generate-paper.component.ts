@@ -2,7 +2,7 @@ import { Component, OnInit, Injectable, Inject, ViewChild, ElementRef } from '@a
 import { TableUpdateService } from '../../../tools/TableUpdateService.component'
 import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { UploadXHRArgs, NzFormatEmitEvent } from 'ng-zorro-antd';
+import { UploadXHRArgs, NzFormatEmitEvent, NzModalService, NzModalRef } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
 import { QuestionInfo } from '../check-question/check-question.component';
@@ -20,7 +20,8 @@ export class GeneratePaperComponent implements OnInit {
   search_value = '';
   selected_values = null;
 
-  exam_name:string = '点击此处修改考试名称';
+  exam_name: string = '点击此处修改考试名称';
+  total_points: number = 0;
 
   knowledge: Array<object> = []
   knowledge_loading: boolean = true;
@@ -30,13 +31,14 @@ export class GeneratePaperComponent implements OnInit {
 
   categorys: Array<string> = new Array<string>();
   new_category_str: string = '';
-  edit_category_flags:Array<boolean> = new Array<boolean>();
+  edit_category_flags: Array<boolean> = new Array<boolean>();
 
 
   category_to_questions = new Map<string, Array<PaperQuestionInfo>>();
   paper_question_scores: Array<string> = [];
 
   selected_questions = []
+  confirm_modal: NzModalRef;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -62,7 +64,7 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
-    private message: NzMessageService) {
+    private message: NzMessageService, private modal: NzModalService) {
     this.GetKnowledge();
     this.GetAllQuestions();
   }
@@ -98,7 +100,7 @@ export class GeneratePaperComponent implements OnInit {
       response => {
         this.all_filtered_questions = response.data;
         this.paper_question_scores = new Array<string>(this.all_filtered_questions.length);
-        this.selected_values=new Array<string>(this.all_filtered_questions.length);
+        this.selected_values = new Array<string>(this.all_filtered_questions.length);
         for (let i = 0; i < this.all_filtered_questions.length; i++) {
           this.all_filtered_questions[i].options = JSON.parse(this.all_filtered_questions[i].options);
           this.all_filtered_questions[i].answer = JSON.parse(this.all_filtered_questions[i].answer);
@@ -126,15 +128,15 @@ export class GeneratePaperComponent implements OnInit {
         this.message.create('error', '知识点信息获取失败：连接服务器失败');
       });
     this.paper_question_scores = new Array<string>(this.all_filtered_questions.length);
-    this.selected_values=new Array<string>(this.all_filtered_questions.length);
+    this.selected_values = new Array<string>(this.all_filtered_questions.length);
   }
 
   AddCategory() {
-    if(this.new_category_str.trim()=='') {
+    if (this.new_category_str.trim() == '') {
       this.message.warning('请输入大题名称');
       return;
     }
-    if (this.new_category_str in this.categorys) {
+    if (this.categorys.indexOf(this.new_category_str) != -1) {
       this.message.warning('大题已存在');
       return;
     }
@@ -160,78 +162,111 @@ export class GeneratePaperComponent implements OnInit {
       });
   }
 
-  CategorySelectChanged(index:number) {
+  CategorySelectChanged(index: number) {
     var current_category = this.selected_values[index];
-    if(current_category == '') return;
-    if(this.paper_question_scores[index] == undefined) {
+    if (current_category == '') return;
+    if (this.paper_question_scores[index] == undefined) {
       this.message.warning('请设置题目分数');
       return;
     }
     let current_score = parseFloat(this.paper_question_scores[index]);
-    if(Number.isNaN(current_score)) {
+    if (Number.isNaN(current_score)) {
       this.message.warning('试题分数格式不合法');
       return;
     }
     var question = this.all_filtered_questions[index];
     let paper_question_info: PaperQuestionInfo = {
       type: question.type,
-      score:current_score,
-      description:question.description,
-      content:question.content,
-      must_or_not:0,
-      category_content:current_category,
-      option_list:question.options,
-      answer_list:question.answer
+      score: current_score,
+      description: question.description,
+      content: question.content,
+      must_or_not: 0,
+      category_content: current_category,
+      option_list: question.options,
+      answer_list: question.answer
     }
-    if(this.category_to_questions.has(this.selected_values[index])) {
+    if (this.category_to_questions.has(this.selected_values[index])) {
       this.category_to_questions.get(this.selected_values[index]).push(paper_question_info);
     }
     else {
-      this.category_to_questions.set(this.selected_values[index],[paper_question_info])
+      this.category_to_questions.set(this.selected_values[index], [paper_question_info])
     }
   }
 
-  EditCateGoryDone(index:number) {
-    this.edit_category_flags[index]=false;
+  EditCateGoryDone(index: number) {
+    this.edit_category_flags[index] = false;
   }
 
-  GetCategoryTitle(index:number) {
+  GetCategoryTitle(index: number) {
     var category = this.categorys[index];
-    if(!this.category_to_questions.has(category)) return category + '（0分）'
+    if (!this.category_to_questions.has(category)) return category + '（0分）'
     let questions = this.category_to_questions.get(category);
-    var sum:number = 0;
-    for(let i=0;i<questions.length;i++) {
+    var sum: number = 0;
+    for (let i = 0; i < questions.length; i++) {
       sum = sum + questions[i].score;
     }
-    return category + '（'+sum +'分）';
+    return category + '（' + sum + '分）';
   }
 
-  GetExamTitle():string {
-    var sum:number = 0;
-    if(this.categorys == undefined) return this.exam_name + '（0分）';
-    for(let i=0;i<this.categorys.length;i++) {
-      if(this.category_to_questions.has(this.categorys[i])) {
+  GetExamTitle() {
+    var sum: number = 0;
+    if (this.categorys == undefined) return this.exam_name + '（0分）';
+    for (let i = 0; i < this.categorys.length; i++) {
+      if (this.category_to_questions.has(this.categorys[i])) {
         let questions = this.category_to_questions.get(this.categorys[i]);
-        for(let j=0;j<questions.length;j++) {
+        for (let j = 0; j < questions.length; j++) {
           sum = sum + questions[j].score;
-        } 
+        }
       }
     }
-    return this.exam_name + '（'+sum+'分）';
+    this.total_points = sum;
+    return this.exam_name + '（' + this.total_points + '分）';
   }
 
   test(i) {
     console.log(this.categorys[i]);
   }
 
-  CategoryNameChanged(old_val,new_val) {
-    if(!this.category_to_questions.has(old_val)) return;
-    this.category_to_questions.set(new_val,this.category_to_questions.get(old_val));
+  CategoryNameChanged(old_val, new_val) {
+    if (!this.category_to_questions.has(old_val)) return;
+    this.category_to_questions.set(new_val, this.category_to_questions.get(old_val));
     this.category_to_questions.delete(old_val);
   }
 
-  drop(list:Array<any>,event: CdkDragDrop<string[]>) {
+  drop(list: Array<any>, event: CdkDragDrop<string[]>) {
     moveItemInArray(list, event.previousIndex, event.currentIndex);
+  }
+
+  ShowSubmitConfirm() {
+    this.confirm_modal = this.modal.confirm({
+      nzTitle: '是否提交试卷?',
+      nzContent: this.exam_name + '（' + this.total_points + '分）',
+      //todo:管理员用户id
+      nzOnOk: () => {
+        let all_question_list: Array<PaperQuestionInfo> = []
+        for (let i = 0; i < this.categorys.length; i++) {
+          let question_list = this.category_to_questions.get(this.categorys[i]);
+          all_question_list.push(...question_list);
+        }
+        let new_paper_info: PaperInfo = {
+          title: this.exam_name,
+          description: '',
+          user_id: 1,
+          question_list: all_question_list
+        }
+        this.http_client.post<MyServerResponse>(this.base_url + "paper/new", new_paper_info).
+          subscribe(response => {
+            if (response.status == 200) {
+              this.message.create('success', '添加试卷成功');
+            }
+            else {
+              this.message.create('error', '添加试卷失败:' + response.msg);
+            }
+          }, error => {
+            this.message.create('error', '添加试卷失败：连接服务器失败');
+          });
+      }
+    });
   }
 
 }
@@ -245,4 +280,11 @@ interface PaperQuestionInfo {
   category_content: string,
   option_list: Array<any>,
   answer_list: Array<any>
+}
+
+interface PaperInfo {
+  title: string,
+  description: string,
+  user_id: 1,
+  question_list: Array<PaperQuestionInfo>
 }

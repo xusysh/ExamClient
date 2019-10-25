@@ -149,8 +149,8 @@
             </nz-card>
           </div>
         </nz-sider>
-        <button nz-button nzSize="large" (click)="submit_dialog_visible = true" class="submit-paper-button">提交试卷</button>
-        <nz-modal [(nzVisible)]="submit_dialog_visible"></nz-modal>
+        <button nz-button nzSize="large" *ngIf="total_points>0"
+          (click)="ShowSubmitConfirm()" class="submit-paper-button">提交试卷</button>
       </nz-layout>
     </nz-page-header-content>
   </nz-page-header>
