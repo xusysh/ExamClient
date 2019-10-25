@@ -200,6 +200,7 @@ export class GeneratePaperComponent implements OnInit {
     }
     var question = this.all_filtered_questions[index];
     let paper_question_info: PaperQuestionInfo = {
+      id:question.id,
       type: question.type,
       score: current_score,
       description: question.description,
@@ -329,6 +330,7 @@ export class GeneratePaperComponent implements OnInit {
 }
 
 interface PaperQuestionInfo {
+  id:number,
   type: string,
   score: number,
   description: string,
