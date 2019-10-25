@@ -40,6 +40,18 @@ export class GeneratePaperComponent implements OnInit {
   selected_questions = []
   confirm_modal: NzModalRef;
 
+  ques_types = [
+    { label: '单选题', value: 'single' },
+    { label: '不定项选择题', value: 'multi' },
+    { label: '判断题', value: 'judge' },
+    { label: '简答题', value: 'subjective' }
+  ];
+
+  ques_name_filter: Array<string> = []
+  ques_type_filter: Array<string> = []
+  ques_knowledge_filter: Array<string> = []
+  new_ques_name_filter_item_str: string = ''
+
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
   }
@@ -47,7 +59,7 @@ export class GeneratePaperComponent implements OnInit {
   GetQuestionHead(question: object): string {
     switch (question['type']) {
       case 'single': return '[' + '单选题' + '] ' + question['content'];
-      case 'multi': return '[' + '多选题' + '] ' + question['content'];
+      case 'multi': return '[' + '不定项选择题' + '] ' + question['content'];
       case 'judge': return '[' + '判断题' + '] ' + question['content'];
       case 'subjective': return '[' + '主观题' + '] ' + question['content'];
       default: return '';
@@ -99,6 +111,8 @@ export class GeneratePaperComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'question/all').subscribe(
       response => {
         this.all_filtered_questions = response.data;
+        if (this.all_filtered_questions == null || this.all_filtered_questions == undefined)
+          this.all_filtered_questions = [];
         this.paper_question_scores = new Array<string>(this.all_filtered_questions.length);
         this.selected_values = new Array<string>(this.all_filtered_questions.length);
         for (let i = 0; i < this.all_filtered_questions.length; i++) {
@@ -115,9 +129,18 @@ export class GeneratePaperComponent implements OnInit {
   GetFilteredQuestions() {
     this.all_filtered_questions = []
     this.all_filtered_questions_loading = true;
-    this.http_client.get<MyServerResponse>(this.base_url + 'question/all').subscribe(
+    let filter: QuestionFilter = {
+      ques_knowledge_filter: this.ques_knowledge_filter,
+      ques_name_filter: this.ques_name_filter,
+      ques_type_filter: this.ques_type_filter
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'question/filter', filter).subscribe(
       response => {
         this.all_filtered_questions = response.data;
+        if (this.all_filtered_questions == null || this.all_filtered_questions == undefined)
+          this.all_filtered_questions = []
+        this.paper_question_scores = new Array<string>(this.all_filtered_questions.length);
+        this.selected_values = new Array<string>(this.all_filtered_questions.length);
         for (let i = 0; i < this.all_filtered_questions.length; i++) {
           this.all_filtered_questions[i].options = JSON.parse(this.all_filtered_questions[i].options);
           this.all_filtered_questions[i].answer = JSON.parse(this.all_filtered_questions[i].answer);
@@ -269,6 +292,33 @@ export class GeneratePaperComponent implements OnInit {
     });
   }
 
+  AddQuesNameFilterItem() {
+    if (this.ques_name_filter.indexOf(this.new_ques_name_filter_item_str) == -1)
+      this.ques_name_filter.push(this.new_ques_name_filter_item_str);
+    this.new_ques_name_filter_item_str = '';
+    this.GetFilteredQuestions();
+  }
+
+  QuesTypeFilterChange(type: string, checked: any) {
+    if (checked) {
+      if (this.ques_type_filter.indexOf(type) == -1)
+        this.ques_type_filter.push(type);
+    }
+    else {
+      let index = this.ques_type_filter.indexOf(type);
+      if (index != -1)
+        this.ques_type_filter.splice(index, 1);
+    }
+    this.GetFilteredQuestions();
+  }
+
+  AddQuesKnowledgeFilterItem(event: any) {
+    let knowledge = event.keys[0];
+    if (this.ques_knowledge_filter.indexOf(knowledge) == -1)
+      this.ques_knowledge_filter.push(knowledge);
+    this.GetFilteredQuestions();
+  }
+
 }
 
 interface PaperQuestionInfo {
@@ -287,4 +337,10 @@ interface PaperInfo {
   description: string,
   user_id: 1,
   question_list: Array<PaperQuestionInfo>
+}
+
+interface QuestionFilter {
+  ques_name_filter: Array<string>,
+  ques_knowledge_filter: Array<string>,
+  ques_type_filter: Array<string>
 }
