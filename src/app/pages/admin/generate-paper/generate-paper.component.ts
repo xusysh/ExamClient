@@ -282,6 +282,7 @@ export class GeneratePaperComponent implements OnInit {
         let new_paper_info: PaperInfo = {
           title: this.exam_name,
           description: '',
+          paper_code:'',
           user_id: 1,
           question_list: all_question_list
         }
@@ -344,6 +345,7 @@ interface PaperQuestionInfo {
 interface PaperInfo {
   title: string,
   description: string,
+  paper_code:string,
   user_id: 1,
   question_list: Array<PaperQuestionInfo>
 }
