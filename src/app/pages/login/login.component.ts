@@ -46,13 +46,13 @@ export class LoginComponent implements OnInit {
           this.message.create('error', '登陆失败:'+response.msg);
           this.is_checking=false;
         }
-        else if (response.data.userType == "student") {
+        else if (response.data.role == "student") {
           sessionStorage.setItem('username', this.user_name);
           this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
           this.router.navigateByUrl("/student");
           this.is_checking=false;
         }
-        else if (response.data.userType == "admin") {
+        else if (response.data.role == "admin") {
           this.message.create('success', "管理员用户 " + this.user_name + ' 登陆成功');
           this.router.navigate(['/admin']);
           this.is_checking=false;
@@ -73,9 +73,9 @@ export interface MyServerResponse {
 
 interface UserInfo{
   id:number;
+  name:string;
   password:string;
-  userName:string;
-  userType:string;
+  role:string;
 }
 
 interface UserCheckInfo {
