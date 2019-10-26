@@ -25,10 +25,6 @@
                 (click)="dialog_visible=true">
                 <i nz-icon nzType="usergroup-add"></i>批量导入
               </button>
-              <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-                (click)="dialog_visible=true">
-                <i nz-icon nzType="usergroup-add"></i>知识点管理
-              </button>
             </div>
             <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
@@ -128,14 +124,13 @@
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24">所在考生组</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-select [(ngModel)]="edit_group_list" (ngModelChange)="EditGroupChange()" 
-                  name="question_answer" nzSize="large" nzMode="tags" nzPlaceHolder="请选择组" 
-                  (nzOpenChange)="GroupSelectOpened($event)" [compareWith]="compareFn">
+                <nz-select [(ngModel)]="edit_group_list" (ngModelChange)="EditGroupChange()" name="question_answer"
+                  nzSize="large" nzMode="tags" nzPlaceHolder="请选择组" (nzOpenChange)="GroupSelectOpened($event)"
+                  [compareWith]="compareFn">
                   <nz-option *ngIf="group_loading" nzDisabled nzCustomContent>
                     <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                   </nz-option>
-                  <nz-option *ngFor="let group of all_group_info" [nzLabel]="group.group_name"
-                    [nzValue]="group">
+                  <nz-option *ngFor="let group of all_group_info" [nzLabel]="group.group_name" [nzValue]="group">
                   </nz-option>
                 </nz-select>
               </nz-form-control>
@@ -150,7 +145,7 @@
         </nz-drawer>
       </nz-content>
       <nz-sider style="background-color: #ffffff;width:300px">
-        <nz-transfer></nz-transfer>
+        <!--todo:考生组管理（卡片+select）-->
       </nz-sider>
     </nz-layout>
   </nz-page-header-content>

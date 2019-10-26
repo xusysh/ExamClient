@@ -29,6 +29,11 @@
             (click)="dialog_visible=true">
             <i nz-icon nzType="usergroup-add"></i>批量导入
           </button>
+          <!--知识点管理（拖拽树）-->
+          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
+            (click)="dialog_visible=true">
+            <i nz-icon nzType="usergroup-add"></i>知识点管理
+          </button>
         </div>
         <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="question_info_list"
           [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'350px'}">
@@ -148,7 +153,7 @@
             <input nz-input nzSize="large" name="question_description" [(ngModel)]="edit_question_description" />
           </nz-form-control>
         </nz-form-item>
-                <nz-form-item>
+        <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-tree-select nzPlaceHolder="Please select" [(ngModel)]="edit_question_knowledge"
