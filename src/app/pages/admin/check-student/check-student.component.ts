@@ -109,8 +109,7 @@ export class CheckStudentComponent implements OnInit {
       userName: this.edit_user_name,
       password: this.edit_password,
       userType: this.student_info_list[this.current_select_user].userType,
-      group_add: [],
-      group_del: []
+      group_list:this.edit_group_list
     }
     this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', user_edit_info).
       subscribe(response => {
@@ -331,6 +330,5 @@ interface UserEditInfo {
   userName: string,
   password: string,
   userType: string,
-  group_add: Array<number>,
-  group_del: Array<number>
+  group_list:Array<object>
 }
