@@ -84,11 +84,20 @@ export class CheckStudentComponent implements OnInit {
   }
 
   CheckStudentInfo(index: number): void {
-    this.current_select_user = (this.page_index - 1) * this.page_size + index;
+    if(index == -1) {
+      this.edit_user_id = 0;
+      this.edit_user_name = '';
+      this.edit_password = '';
+      this.edit_group_list = null;
+    }
+    else {
+      this.current_select_user = (this.page_index - 1) * this.page_size + index;
+      this.edit_user_id = this.student_info_list[this.current_select_user].id;
+      this.edit_user_name = this.student_info_list[this.current_select_user].userName;
+      this.edit_password = this.student_info_list[this.current_select_user].password;
+      this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
+    }
     this.drawer_visible = true;
-    this.edit_user_name = this.student_info_list[this.current_select_user].userName;
-    this.edit_password = this.student_info_list[this.current_select_user].password;
-    this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
 //    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
   //  this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
   }
@@ -103,12 +112,11 @@ export class CheckStudentComponent implements OnInit {
       return;
     }
     this.edit_user_info_loading = true;
-    this.edit_user_id = this.student_info_list[this.current_select_user].id;
     let user_edit_info: UserEditInfo = {
       id: this.edit_user_id,
       userName: this.edit_user_name,
       password: this.edit_password,
-      userType: this.student_info_list[this.current_select_user].userType,
+      userType: 'student',
       group_list:this.edit_group_list
     }
     this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', user_edit_info).
@@ -152,13 +160,6 @@ export class CheckStudentComponent implements OnInit {
     this.drawer_visible = false;
   }
 
-  AddStudentInfo(): void {
-    this.drawer_visible = true;
-    this.edit_user_id = 0;
-    this.edit_user_name = '';
-    this.edit_password = '';
-    this.edit_group_list = null;
-  }
 
   UpdateGroupInfo(){
     this.all_group_info=[]
@@ -172,7 +173,7 @@ export class CheckStudentComponent implements OnInit {
   }
 
   EditGroupChange() {
-    console.log(this.edit_group_list);
+  //  console.log(this.edit_group_list);
   }
 
 	GroupSelectOpened(opened: boolean) {
