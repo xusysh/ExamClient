@@ -353,6 +353,10 @@ export class CheckQuestionComponent implements OnInit {
     console.log(event);
   }
 
+  TypeSelectChanged(event:string) {
+    this.edit_question_answer = []
+  }
+
 }
 
 export interface QuestionInfo {

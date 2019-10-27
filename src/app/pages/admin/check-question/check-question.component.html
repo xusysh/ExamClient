@@ -134,7 +134,7 @@
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题类型</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="试题类型不能为空!">
             <nz-select [(ngModel)]="edit_question_type" name="question_type" nzSize="large" nzAllowClear
-              nzPlaceHolder="选择题目类型" (ngModelChange)="SelectChanged($event)">
+              nzPlaceHolder="选择题目类型" (ngModelChange)="TypeSelectChanged($event)">
               <nz-option-group nzLabel="客观题">
                 <nz-option nzValue="single" nzLabel="单选题"></nz-option>
                 <nz-option nzValue="multi" nzLabel="不定项选择题"></nz-option>
@@ -180,7 +180,8 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="参考答案不能为空！">
               <nz-select [(ngModel)]="edit_question_answer" (ngModelChange)="test()" name="question_answer"
-                nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn">
+                nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn" 
+                [nzMaxMultipleCount]="edit_question_type=='multi'?edit_question_options.length:1">
                 <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.content" [nzValue]="option">
                 </nz-option>
               </nz-select>
