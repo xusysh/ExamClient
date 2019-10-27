@@ -322,7 +322,7 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   AddQuesKnowledgeFilterItem(event: any) {
-    let knowledge = event.keys[0];
+    let knowledge = event.node['_title'];
     if (this.ques_knowledge_filter.indexOf(knowledge) == -1)
       this.ques_knowledge_filter.push(knowledge);
     this.GetFilteredQuestions();

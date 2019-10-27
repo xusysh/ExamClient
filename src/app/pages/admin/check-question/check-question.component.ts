@@ -166,19 +166,19 @@ export class CheckQuestionComponent implements OnInit {
     this.edit_question_options.push(option);
   }
 
-  EditUserInfo(): void {
+  EditQuestionInfo(): void {
     this.edit_question_info_loading = true;
     this.edit_question_id = this.question_info_list[this.current_select_question].id;
-    let question_edit_info: QuestionInfo = {
+    let question_edit_info:UpdateQuestionInfo = {
       id: this.edit_question_id,
       type: this.edit_question_type,
       content: this.edit_question_content,
       description: this.edit_question_description,
-      options: this.edit_question_options,
-      answer: this.edit_question_answer,
-      knowledge:this.edit_question_knowledge
+      option_list: this.edit_question_options,
+      answer_list: this.edit_question_answer,
+      knowledge_list:this.edit_question_knowledge
     }
-    this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', question_edit_info).
+    this.http_client.post<MyServerResponse>(this.base_url + '/question/single', question_edit_info).
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '试题编辑失败:' + response.msg);
@@ -219,7 +219,7 @@ export class CheckQuestionComponent implements OnInit {
     this.drawer_visible = false;
   }
 
-  AddStudentInfo(): void {
+  AddQuestionInfo(): void {
     this.edit_question_id = 0;
     this.edit_question_type = 'single'
     this.edit_question_content = '';
@@ -349,6 +349,10 @@ export class CheckQuestionComponent implements OnInit {
       this.edit_question_answer[0].content = this.edit_question_answer[0].content.substring(0, 20000);
   }
 
+  SelectChanged(event) {
+    console.log(event);
+  }
+
 }
 
 export interface QuestionInfo {
@@ -359,6 +363,16 @@ export interface QuestionInfo {
   knowledge:Array<string>,
   answer: any,
   options: any
+}
+
+interface UpdateQuestionInfo {
+  id: number,
+  content: string,
+  type: string,
+  description: string,
+  knowledge_list:Array<string>,
+  answer_list: any,
+  option_list: any
 }
 
 interface Option {

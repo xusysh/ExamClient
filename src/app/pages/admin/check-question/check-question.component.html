@@ -22,14 +22,14 @@
             <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
           </button>
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-            (click)="AddStudentInfo()">
+            (click)="AddQuestionInfo()">
             <i nz-icon nzType="user-add"></i>添加试题
           </button>
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
             (click)="dialog_visible=true">
             <i nz-icon nzType="usergroup-add"></i>批量导入
           </button>
-          <!--知识点管理（拖拽树）-->
+          <!--知识点管理（拖拽?树）-->
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
             (click)="dialog_visible=true">
             <i nz-icon nzType="usergroup-add"></i>知识点管理
@@ -95,7 +95,7 @@
                 </button>
                 <nz-divider nzType="vertical"></nz-divider>
                 <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
-                  nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeleteUser(i)" nz-tooltip nzTitle="删除">
+                  nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeleteQuestion(i)" nz-tooltip nzTitle="删除">
                   <i nz-icon nzType="delete"></i>
                 </button>
               </td>
@@ -134,7 +134,7 @@
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题类型</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="试题类型不能为空!">
             <nz-select [(ngModel)]="edit_question_type" name="question_type" nzSize="large" nzAllowClear
-              nzPlaceHolder="选择题目类型">
+              nzPlaceHolder="选择题目类型" (ngModelChange)="SelectChanged($event)">
               <nz-option-group nzLabel="客观题">
                 <nz-option nzValue="single" nzLabel="单选题"></nz-option>
                 <nz-option nzValue="multi" nzLabel="不定项选择题"></nz-option>
@@ -156,10 +156,11 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-tree-select nzPlaceHolder="Please select" [(ngModel)]="edit_question_knowledge"
-              [nzNodes]="all_knowledge_info" [nzDefaultExpandAll]="true" nzSize="large" name="knowledge_tree_select"
-              [nzAllowClear]="true" [nzMultiple]="true" (ngModelChange)="onChange($event)">
-            </nz-tree-select>
+            <nz-select [(ngModel)]="edit_question_knowledge" name="question_knowledge"
+              nzSize="large" nzMode="tags" nzPlaceHolder="请选择知识点">
+              <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title" [nzValue]="knowledge.title">
+              </nz-option>
+            </nz-select>
           </nz-form-control>
         </nz-form-item>
         <!--选择题-->
@@ -203,7 +204,7 @@
         <div class="drawer-footer">
           <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
             style="margin-right: 15px;"><span>取消</span></button>
-          <button nz-button type="button" (click)="EditUserInfo()" class="ant-btn ant-btn-primary"
+          <button nz-button type="button" (click)="EditQuestionInfo()" class="ant-btn ant-btn-primary"
             [nzLoading]="edit_question_info_loading"><span>提交</span></button>
         </div>
       </form>

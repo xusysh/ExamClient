@@ -29,24 +29,25 @@
               </button>
               <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
                 (click)="dialog_visible=true">
-                <i nz-icon nzType="usergroup-add"></i>批量导入
+                <i nz-icon nzType="usergroup-add"></i>导入模板
               </button>
             </div>
-            <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
+            <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="paper_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
               <thead (nzSortChange)="sort($event)" nzSingleSort>
                 <tr>
                   <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
                   </th>
                   <th nzWidth="200px" nzCustomFilter>
-                    <b>用户名
+                    <b>试卷名
                       <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                         [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
                         nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                     </b>
                   </th>
-                  <th nzWidth="300px"><b>口令</b></th>
-                  <th nzWidth="180px"><b>所在组</b></th>
+                  <th nzWidth="300px"><b>创建时间</b></th>
+                  <th nzWidth="180px"><b>创建用户</b></th>
+                  <th nzWidth="180px"><b>最后修改时间</b></th>
                   <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
                 </tr>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -63,28 +64,25 @@
                 <tr *ngFor="let data of ajaxTable.data;let i=index">
                   <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
                   <td>
-                    <p nz-paragraph nzCopyable [(nzContent)]="data.userName"></p>
+                    <p nz-paragraph nzCopyable [(nzContent)]="data.title"></p>
                   </td>
                   <td>
-                    <p nz-paragraph nzCopyable [(nzContent)]="data.password"></p>
+                    {{data.createUserId}}
                   </td>
-                  <td nz-popover [nzTitle]="'所在组'" [nzContent]="popoverContentTemplate">
-                    <ng-template #popoverContentTemplate>
-                      <div *ngFor="let group of data.group_list">{{group.group_name}}</div>
-                    </ng-template>
-                    <nz-badge [nzCount]="data.group_list.length">
-                      <span>{{data.group_list.length==0 ? '无':data.group_list[0].group_name+'...'}}</span>
-                      <span>&nbsp;&nbsp;&nbsp;</span>
-                    </nz-badge>
+                  <td>
+                    {{data.createTime}}
+                  </td>
+                  <td>
+                    {{data.lastModifiedTime==null?data.createTime:data.lastModifiedTime}}
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="CheckStudentInfo(i)" nzShape="circle"
-                      nz-tooltip nzTitle="编辑">
+                      nz-tooltip nzTitle="编辑/查看详情">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
-                      nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeleteUser(i)" nz-tooltip nzTitle="删除">
+                      nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeletePaper(i)" nz-tooltip nzTitle="删除">
                       <i nz-icon nzType="delete"></i>
                     </button>
                   </td>
@@ -112,42 +110,7 @@
         </nz-modal>
         <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
           [nzWidth]="500">
-          <form nz-form>
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>用户名</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="edit_user_name=='' ? 'error':'validating'"
-                nzErrorTip="用户名不能为空!">
-                <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>密码</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="edit_password=='' ? 'error':'validating'"
-                nzErrorTip="密码不能为空！">
-                <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24">所在考生组</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-select [(ngModel)]="edit_group_list" (ngModelChange)="EditGroupChange()" name="question_answer"
-                  nzSize="large" nzMode="tags" nzPlaceHolder="请选择组" (nzOpenChange)="GroupSelectOpened($event)"
-                  [compareWith]="compareFn">
-                  <nz-option *ngIf="group_loading" nzDisabled nzCustomContent>
-                    <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
-                  </nz-option>
-                  <nz-option *ngFor="let group of all_group_info" [nzLabel]="group.group_name" [nzValue]="group">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <div class="drawer-footer">
-              <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
-                style="margin-right: 15px;"><span>取消</span></button>
-              <button nz-button type="button" (click)="EditUserInfo()" class="ant-btn ant-btn-primary"
-                [nzLoading]="edit_user_info_loading"><span>提交</span></button>
-            </div>
-          </form>
+          <!--todo:显示试卷详情-->
         </nz-drawer>
       </nz-content>
     </nz-layout>

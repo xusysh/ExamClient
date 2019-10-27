@@ -4,6 +4,7 @@ import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse, HttpHe
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
+import { MyServerResponse } from '../../login/login.component';
 
 @Component({
   selector: 'app-check-student',
@@ -42,10 +43,6 @@ export class CheckStudentComponent implements OnInit {
   group_loading: boolean;
   all_group_info:Array<object> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
-
-  //假数据
-  public users_group_list = [['产品开发科', '招投标项目组', '考试系统小组'], ['需求分析科'], ['产品开发科', '人工智能小组'],
-  ['鑫源融信公司', '招投标项目组'], ['运营支持科', '考试系统小组', '微服务小组']];
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
@@ -300,11 +297,6 @@ export class CheckStudentComponent implements OnInit {
 
 }
 
-export interface MyServerResponse {
-  status: number;
-  msg: string;
-  data: any
-}
 
 interface UserInfo {
   id: number,
