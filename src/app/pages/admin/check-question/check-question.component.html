@@ -22,7 +22,7 @@
             <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
           </button>
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-            (click)="AddQuestionInfo()">
+            (click)="CheckQuestionInfo(-1)">
             <i nz-icon nzType="user-add"></i>添加试题
           </button>
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
@@ -76,7 +76,7 @@
                 {{data.description}}
               </td>
 
-              <td nz-popover [nzTitle]="'选项'" [nzContent]="popoverContentTemplate">
+              <td nz-popover [nzTitle]="'选项详情'" [nzContent]="popoverContentTemplate">
                 <ng-template #popoverContentTemplate>
                   <div *ngFor="let option of data.options;let i=index;">{{GetOptionLabel(i)+option.content}}</div>
                 </ng-template>
@@ -86,7 +86,17 @@
                 </nz-badge>
               </td>
               <td>
-                {{GetAnswer(i)}}
+                <div *ngIf="data.type!='subjective'">{{GetAnswer(i)}}</div>
+                <div *ngIf="data.type=='subjective'" nz-popover [nzTitle]="'答案详情'" [nzContent]="popoverContentTemplate">
+                  <ng-template #popoverContentTemplate>
+                    <div [innerHtml]="data.answer[0].content"></div>
+                  </ng-template>
+                  <nz-badge nzDot>
+                    <span>
+                      {{GetAnswer(i)}}&nbsp;
+                    </span>
+                  </nz-badge>
+                </div>
               </td>
               <td>
                 <button nz-button nzSize="small" nzType="primary" (click)="CheckQuestionInfo(i)" nzShape="circle"
@@ -156,9 +166,10 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select [(ngModel)]="edit_question_knowledge" name="question_knowledge"
-              nzSize="large" nzMode="tags" nzPlaceHolder="请选择知识点">
-              <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title" [nzValue]="knowledge.title">
+            <nz-select [(ngModel)]="edit_question_knowledge" name="question_knowledge" nzSize="large" nzMode="tags"
+              nzPlaceHolder="请选择知识点">
+              <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title"
+                [nzValue]="knowledge.title">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -180,7 +191,7 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="参考答案不能为空！">
               <nz-select [(ngModel)]="edit_question_answer" (ngModelChange)="test()" name="question_answer"
-                nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn" 
+                nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn"
                 [nzMaxMultipleCount]="edit_question_type=='multi'?edit_question_options.length:1">
                 <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.content" [nzValue]="option">
                 </nz-option>

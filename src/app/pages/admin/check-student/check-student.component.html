@@ -62,7 +62,7 @@
                   <td>
                     <p nz-paragraph nzCopyable [(nzContent)]="data.password"></p>
                   </td>
-                  <td nz-popover [nzTitle]="'所在组'" [nzContent]="popoverContentTemplate">
+                  <td nz-popover [nzTitle]="'所在考生组详情'" [nzContent]="popoverContentTemplate">
                     <ng-template #popoverContentTemplate>
                       <div *ngFor="let group of data.group_list">{{group.group_name}}</div>
                     </ng-template>

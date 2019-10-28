@@ -129,18 +129,28 @@ export class CheckQuestionComponent implements OnInit {
     this.UpdateTableData(true);
   }
 
-  //todo：拷贝对象
   CheckQuestionInfo(index: number): void {
-    this.current_select_question = (this.page_index - 1) * this.page_size + index;
-    this.edit_question_id = this.question_info_list[this.current_select_question].id;
-    this.edit_question_type = this.question_info_list[this.current_select_question].type;
-    this.edit_question_content = this.question_info_list[this.current_select_question].content;
-    this.edit_question_description = this.question_info_list[this.current_select_question].description;
-    this.edit_question_options = this.question_info_list[this.current_select_question].options;
-    this.edit_question_answer = this.question_info_list[this.current_select_question].answer;
-    this.edit_question_knowledge = this.question_info_list[this.current_select_question].knowledge;
-    this.drawer_visible = true;
+    if(index == -1) {
+      this.edit_question_id = 0;
+      this.edit_question_type = 'single';
+      this.edit_question_content = '';
+      this.edit_question_description = '';
+      this.edit_question_options = [];
+      this.edit_question_answer = [];
+      this.edit_question_knowledge = [];
+    }
+    else {
+      this.current_select_question = (this.page_index - 1) * this.page_size + index;
+      this.edit_question_id = this.question_info_list[this.current_select_question].id;
+      this.edit_question_type = this.question_info_list[this.current_select_question].type;
+      this.edit_question_content = this.question_info_list[this.current_select_question].content;
+      this.edit_question_description = this.question_info_list[this.current_select_question].description;
+      this.edit_question_options = this.question_info_list[this.current_select_question].options;
+      this.edit_question_answer = this.question_info_list[this.current_select_question].answer;
+      this.edit_question_knowledge = this.question_info_list[this.current_select_question].knowledge;
+    }
     this.UpdateKnowledgeInfo();
+    this.drawer_visible = true;
   }
 
   test() {
@@ -169,6 +179,8 @@ export class CheckQuestionComponent implements OnInit {
   EditQuestionInfo(): void {
     this.edit_question_info_loading = true;
     this.edit_question_id = this.question_info_list[this.current_select_question].id;
+    if(this.edit_question_type == 'subjective') 
+      this.edit_question_options = []
     let question_edit_info:UpdateQuestionInfo = {
       id: this.edit_question_id,
       type: this.edit_question_type,
@@ -182,16 +194,21 @@ export class CheckQuestionComponent implements OnInit {
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '试题编辑失败:' + response.msg);
+          this.edit_question_info_loading = false;
+          this.drawer_visible = false;
         }
         else {
           this.message.create('success', '试题 ' + this.edit_question_content + ' 编辑成功');
+          this.edit_question_info_loading = false;
+          this.drawer_visible = false;
           this.UpdateTableData();
         }
       }, error => {
         this.message.create('error', '试题编辑失败：连接服务器失败');
+        this.edit_question_info_loading = false;
+        this.drawer_visible = false;
       });
-    this.edit_question_info_loading = false;
-    this.drawer_visible = false;
+
   }
 
   //删除单个试题
@@ -217,16 +234,6 @@ export class CheckQuestionComponent implements OnInit {
         this.message.create('error', '用户删除失败：连接服务器失败');
       });
     this.drawer_visible = false;
-  }
-
-  AddQuestionInfo(): void {
-    this.edit_question_id = 0;
-    this.edit_question_type = 'single'
-    this.edit_question_content = '';
-    this.edit_question_description = '';
-    this.edit_question_options = [];
-    this.edit_question_answer = [];
-    this.drawer_visible = true;
   }
 
   DrawerClose(): void {
@@ -354,7 +361,10 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   TypeSelectChanged(event:string) {
-    this.edit_question_answer = []
+    if(event != 'subjective')
+      this.edit_question_answer = [];
+    else
+      this.edit_question_answer = [{id:0,content:''}]
   }
 
 }
