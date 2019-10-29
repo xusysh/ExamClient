@@ -319,8 +319,8 @@ export class GeneratePaperComponent implements OnInit {
         let all_question_list: Array<PaperQuestionInfo> = []
         for (let i = 0; i < this.categorys.length; i++) {
           let question_list:Array<PaperQuestionInfo> = this.category_to_questions.get(this.categorys[i]);
-          for (let i = 0; i <question_list.length;i++)
-            question_list[i].category_content = this.categorys[i];
+          for (let j = 0;  j<question_list.length;j++)
+            question_list[j].category_content = this.categorys[i];
           all_question_list.push(...question_list);
         }
         let new_paper_info: PaperInfo = {
