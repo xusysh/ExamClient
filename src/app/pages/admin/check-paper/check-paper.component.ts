@@ -5,6 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-check-paper',
@@ -30,7 +31,7 @@ export class CheckPaperComponent implements OnInit {
   public dialog_ok_loading: boolean = false;
   public is_allDisplay_data_checked = false;
   public is_indeterminate = false;
-  public edit_paper_id: number = 0;
+  public edit_paper_code: string = '';
 
   public user_group_tags = [];
   public inputVisible = false;
@@ -44,7 +45,7 @@ export class CheckPaperComponent implements OnInit {
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) { }
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService,private router:Router) { }
 
   ngOnInit(): void {
     this.UpdateTableData();
@@ -77,23 +78,11 @@ export class CheckPaperComponent implements OnInit {
     this.UpdateTableData(true);
   }
 
-  CheckStudentInfo(index: number): void {
-    if(index == -1) {
-      this.edit_paper_id = 0;
-
-    }
-    else {
-      this.current_select_paper = (this.page_index - 1) * this.page_size + index;
-      this.edit_paper_id = this.paper_info_list[this.current_select_paper].id;
-
-    }
-    this.drawer_visible = true;
-//    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
-  //  this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
-  }
-
-  EditPaperInfo(): void {
-   
+  EditPaper(index: number): void {
+    this.current_select_paper = (this.page_index - 1) * this.page_size + index;
+    this.edit_paper_code = this.paper_info_list[this.current_select_paper].paperCode;
+    sessionStorage.setItem('paper_code',this.edit_paper_code);
+    this.router.navigateByUrl("admin/generate-paper");
   }
 
   //删除单个试卷
@@ -258,12 +247,16 @@ export class CheckPaperComponent implements OnInit {
       }
     );
   };
+
+  GeneratePaper() {
+    this.router.navigateByUrl("admin/generate-paper");
+  }
   
 }
 
 interface PaperBaseInfo {
   id: number,
-  paperCode: 201998172429,
+  paperCode: string,
   createTime:string,
   lastModifiedTime: string,
   createUserId: number,

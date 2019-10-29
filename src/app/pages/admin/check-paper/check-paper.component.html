@@ -24,7 +24,7 @@
                 <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
               </button>
               <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-                (click)="CheckStudentInfo(-1)">
+                (click)="GeneratePaper()">
                 <i nz-icon nzType="user-add"></i>添加试卷
               </button>
               <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
@@ -76,7 +76,7 @@
                     {{data.lastModifiedTime==null?data.createTime:data.lastModifiedTime}}
                   </td>
                   <td>
-                    <button nz-button nzSize="small" nzType="primary" (click)="CheckStudentInfo(i)" nzShape="circle"
+                    <button nz-button nzSize="small" nzType="primary" (click)="EditPaper(i)" nzShape="circle"
                       nz-tooltip nzTitle="编辑/查看详情">
                       <i nz-icon nzType="edit"></i>
                     </button>

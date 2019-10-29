@@ -33,13 +33,12 @@ export class GeneratePaperComponent implements OnInit {
   new_category_str: string = '';
   edit_category_flags: Array<boolean> = new Array<boolean>();
 
-
   category_to_questions = new Map<string, Array<PaperQuestionInfo>>();
   paper_question_scores: Array<string> = [];
 
   selected_questions = []
   confirm_modal: NzModalRef;
-  submit_loading:boolean = false;
+  submit_loading: boolean = false;
 
   ques_types = [
     { label: '单选题', value: 'single' },
@@ -80,6 +79,47 @@ export class GeneratePaperComponent implements OnInit {
     private message: NzMessageService, private modal: NzModalService) {
     this.GetKnowledge();
     this.GetAllQuestions();
+    var cur_paper_code = sessionStorage.getItem('paper_code')
+    if (cur_paper_code != null) {
+      let paper_req = {
+        paper_code: cur_paper_code
+      }
+      this.http_client.post<MyServerResponse>(this.base_url + 'paper/single', paper_req).subscribe(
+        response => {
+          if (response.status != 200) {
+            this.message.create('error', '试卷信息获取失败：' + response.msg);
+            return;
+          }
+          let paper_info: ServerPaperInfo = response.data;
+          this.exam_name = paper_info.title;
+          this.categorys = []
+          for (let i = 0; i < paper_info.categoryList.length; i++) {
+            let category_name = paper_info.categoryList[i].categoryContent;
+            let category_question_list = paper_info.categoryList[i].questionList;
+            this.categorys.push(category_name);
+            let question_list: Array<PaperQuestionInfo> = []
+            for (let i = 0; i < category_question_list.length; i++) {
+              let question: PaperQuestionInfo = {
+                id: category_question_list[i].ques_id,
+                type: category_question_list[i].type,
+                score: category_question_list[i].score,
+                description: category_question_list[i].description,
+                content: category_question_list[i].content,
+                must_or_not: 0,
+                category_content: category_name,
+                option_list: JSON.parse(category_question_list[i].options),
+                answer_list: JSON.parse(category_question_list[i].defAnswer)
+              }
+              question_list.push(question)
+            }
+            this.category_to_questions.set(category_name, question_list)
+          }
+          this.message.create('success', '试卷信息获取成功');
+        },
+        error => {
+          this.message.create('error', '试卷信息获取失败：连接服务器失败');
+        });
+    }
   }
 
   ngOnInit(): void {
@@ -200,7 +240,7 @@ export class GeneratePaperComponent implements OnInit {
     }
     var question = this.all_filtered_questions[index];
     let paper_question_info: PaperQuestionInfo = {
-      id:question.id,
+      id: question.id,
       type: question.type,
       score: current_score,
       description: question.description,
@@ -269,11 +309,11 @@ export class GeneratePaperComponent implements OnInit {
       //todo:管理员用户id
       //todo:等待关闭
       nzOnOk: () => {
-/*
-        new Promise((resolve, reject) => {
-          
-        }).catch(() => console.log('Oops errors!'))
-    */    
+        /*
+                new Promise((resolve, reject) => {
+                  
+                }).catch(() => console.log('Oops errors!'))
+            */
         let all_question_list: Array<PaperQuestionInfo> = []
         for (let i = 0; i < this.categorys.length; i++) {
           let question_list = this.category_to_questions.get(this.categorys[i]);
@@ -282,7 +322,7 @@ export class GeneratePaperComponent implements OnInit {
         let new_paper_info: PaperInfo = {
           title: this.exam_name,
           description: '',
-          paper_code:'',
+          paper_code: '',
           user_id: 1,
           question_list: all_question_list
         }
@@ -331,7 +371,7 @@ export class GeneratePaperComponent implements OnInit {
 }
 
 interface PaperQuestionInfo {
-  id:number,
+  id: number,
   type: string,
   score: number,
   description: string,
@@ -345,7 +385,7 @@ interface PaperQuestionInfo {
 interface PaperInfo {
   title: string,
   description: string,
-  paper_code:string,
+  paper_code: string,
   user_id: 1,
   question_list: Array<PaperQuestionInfo>
 }
@@ -354,4 +394,32 @@ interface QuestionFilter {
   ques_name_filter: Array<string>,
   ques_knowledge_filter: Array<string>,
   ques_type_filter: Array<string>
+}
+
+interface ServerPaperInfo {
+  paperCode: string,
+  title: string,
+  paperDescription: string,
+  createTime: string,
+  lastModifiedTime: string,
+  createUserId: number,
+  categoryList: Array<ServerPaperCategoryInfo>
+}
+
+interface ServerPaperCategoryInfo {
+  paperCode: string,
+  categoryContent: string,
+  questionList: Array<ServerPaperQuestionInfo>
+}
+
+interface ServerPaperQuestionInfo {
+  ques_id: number,
+  score: number,
+  type: string,
+  content: string,
+  description: string,
+  mustOrNot: number,
+  options: any,
+  defAnswer: any,
+  knowledge: Array<string>
 }
