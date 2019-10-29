@@ -154,7 +154,6 @@ export class CheckStudentComponent implements OnInit {
       }, error => {
         this.message.create('error', '用户删除失败：连接服务器失败');
       });
-    this.drawer_visible = false;
   }
 
 

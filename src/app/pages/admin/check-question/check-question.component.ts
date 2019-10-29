@@ -5,6 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin, from } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component'
+import { NzTreeNode ,NzTreeComponent} from 'ng-zorro-antd';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 @Component({
@@ -44,8 +45,16 @@ export class CheckQuestionComponent implements OnInit {
   public inputValue = '';
   public edit_question_info_loading = false;
 
+  //知识点管理
+  public knowledge_loading = false;
+  public checked_knowledge_id:Array<number> = [];
+  public edit_knowledge_name:string = '';
+  public add_new_knowledge:boolean = false;
+  public edit_knowledge_dic:object = {};
+  public edit_knowledge_flag_dic:object = {};
+
   public current_select_question: number = 0;
-  public all_knowledge_info: Array<object> = [];
+  public all_knowledge_info: Array<any> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
   //简答题编辑器和内容
   public editor = ClassicEditor;
@@ -56,17 +65,15 @@ export class CheckQuestionComponent implements OnInit {
     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
   };
 
-  //假数据
-  public users_group_list = [['产品开发科', '招投标项目组', '考试系统小组'], ['需求分析科'], ['产品开发科', '人工智能小组'],
-  ['鑫源融信公司', '招投标项目组'], ['运营支持科', '考试系统小组', '微服务小组']];
-
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
+  @ViewChild('knowledge_tree',{static: false}) treeElement:NzTreeComponent;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
     @Inject('BASE_URL') private base_url: string, private message: NzMessageService) {
   }
 
   ngOnInit(): void {
     this.UpdateTableData();
+    this.UpdateKnowledgeInfo();
   }
 
   sort(sort: { key: string; value: string }): void {
@@ -149,22 +156,57 @@ export class CheckQuestionComponent implements OnInit {
       this.edit_question_answer = this.question_info_list[this.current_select_question].answer;
       this.edit_question_knowledge = this.question_info_list[this.current_select_question].knowledge;
     }
-    this.UpdateKnowledgeInfo();
     this.drawer_visible = true;
   }
 
-  test() {
-    console.log(this.edit_question_answer);
+  KnowledgeCheckChanged(event:any) {
+  //  console.log(this.edit_question_answer)
+    let check_node_list = this.treeElement.getCheckedNodeList();
+    this.checked_knowledge_id = [];
+    for(let i=0;i< check_node_list.length; i++) 
+      this.checked_knowledge_id.push(parseInt(check_node_list[i].key));
+  }
+
+  DeleteKnowledge() {
+    let knowledge_delete_info = {
+      id: this.checked_knowledge_id
+    }
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: knowledge_delete_info
+    };
+    this.http_client.delete<MyServerResponse>(this.base_url + 'keypoint/del', httpOptions).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '知识点删除失败:' + response.msg);
+        }
+        else {
+          this.message.create('success', '知识点删除成功');
+          this.UpdateKnowledgeInfo();
+        }
+      }, error => {
+        this.message.create('error', '知识点删除失败：连接服务器失败');
+      });
   }
 
   UpdateKnowledgeInfo() {
+    this.add_new_knowledge = false;
+    this.knowledge_loading = true;
     this.all_knowledge_info = []
     this.http_client.get<MyServerResponse>(this.base_url + 'keypoint/all').subscribe(
       response => {
         this.all_knowledge_info = response.data;
+        this.edit_knowledge_dic = {};
+        this.edit_knowledge_flag_dic = {};
+        for (let i = 0; i <this.all_knowledge_info.length;i++) {
+          this.edit_knowledge_dic[this.all_knowledge_info[i].key] =  this.all_knowledge_info[i].title;
+          this.edit_knowledge_flag_dic[this.all_knowledge_info[i].key] = false;
+        }
+        this.knowledge_loading = false;
       },
       error => {
         this.message.create('error', '知识点信息获取失败：连接服务器失败');
+        this.knowledge_loading = false;
       });
   }
 
@@ -190,7 +232,7 @@ export class CheckQuestionComponent implements OnInit {
       answer_list: this.edit_question_answer,
       knowledge_list:this.edit_question_knowledge
     }
-    this.http_client.post<MyServerResponse>(this.base_url + '/question/single', question_edit_info).
+    this.http_client.post<MyServerResponse>(this.base_url + 'question/single', question_edit_info).
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '试题编辑失败:' + response.msg);
@@ -211,7 +253,7 @@ export class CheckQuestionComponent implements OnInit {
 
   }
 
-  //删除单个试题
+  //todo:删除单个试题
   DeleteUser(index: number): void {
     this.current_select_question = (this.page_index - 1) * this.page_size + index;
     let question_delete_info = {
@@ -367,6 +409,34 @@ export class CheckQuestionComponent implements OnInit {
       this.edit_question_answer = [{id:0,content:''}]
   }
 
+  EditKnowledgeInfo(knowledge_id:string,knowledge_name:string=null) {
+    if(knowledge_id != '') 
+      this.edit_knowledge_name = knowledge_name;
+    let knowledge_info:KnowledgeInfo = {
+      id: knowledge_id,
+      name:this.edit_knowledge_name,
+      description: this.edit_knowledge_name,
+      level: 1,
+      parent_id:0
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'keypoint/single', knowledge_info).
+    subscribe(response => {
+      if (response.status != 200) {
+        this.message.create('error', '知识点编辑失败:' + response.msg);
+        this.add_new_knowledge = false;
+      }
+      else {
+        this.message.create('success', '知识点编辑成功');
+        this.add_new_knowledge = false;
+        this.UpdateKnowledgeInfo();
+      }
+    }, error => {
+      this.message.create('error', '知识点编辑失败：连接服务器失败');
+      this.edit_question_info_loading = false;
+      this.add_new_knowledge = false;
+    });
+  }
+
 }
 
 export interface QuestionInfo {
@@ -397,4 +467,12 @@ interface Option {
 interface Answer {
   id: number,
   content: string
+}
+
+interface KnowledgeInfo {
+  id: string,
+  name: string,
+  description: string,
+  level: number,
+  parent_id: number
 }
