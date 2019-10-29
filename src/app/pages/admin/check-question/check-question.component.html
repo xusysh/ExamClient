@@ -132,7 +132,7 @@
       </div>
     </nz-modal>
     <nz-modal [(nzVisible)]="knowledge_dialog_visible" nzTitle="知识点管理" (nzOnCancel)="knowledge_dialog_visible = false;"
-      (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
+      (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading" [nzWidth]="400">
       <div>
         <nz-skeleton [nzLoading]="knowledge_loading" [nzActive]="true">
           <button nz-button style="margin-left: 20px;margin-right: 10px;margin-bottom:8px"
