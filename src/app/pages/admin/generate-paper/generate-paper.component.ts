@@ -17,6 +17,8 @@ import { summaryFileName } from '@angular/compiler/src/aot/util';
 
 export class GeneratePaperComponent implements OnInit {
 
+  paper_info: ServerPaperInfo = null;
+
   search_value = '';
   selected_values = null;
 
@@ -80,46 +82,46 @@ export class GeneratePaperComponent implements OnInit {
     this.GetKnowledge();
     this.GetAllQuestions();
     var cur_paper_code = sessionStorage.getItem('paper_code')
-    if (cur_paper_code != null) {
-      let paper_req = {
-        paper_code: cur_paper_code
-      }
-      this.http_client.post<MyServerResponse>(this.base_url + 'paper/single', paper_req).subscribe(
-        response => {
-          if (response.status != 200) {
-            this.message.create('error', '试卷信息获取失败：' + response.msg);
-            return;
-          }
-          let paper_info: ServerPaperInfo = response.data;
-          this.exam_name = paper_info.title;
-          this.categorys = []
-          for (let i = 0; i < paper_info.categoryList.length; i++) {
-            let category_name = paper_info.categoryList[i].categoryContent;
-            let category_question_list = paper_info.categoryList[i].questionList;
-            this.categorys.push(category_name);
-            let question_list: Array<PaperQuestionInfo> = []
-            for (let i = 0; i < category_question_list.length; i++) {
-              let question: PaperQuestionInfo = {
-                id: category_question_list[i].ques_id,
-                type: category_question_list[i].type,
-                score: category_question_list[i].score,
-                description: category_question_list[i].description,
-                content: category_question_list[i].content,
-                must_or_not: 0,
-                category_content: category_name,
-                option_list: JSON.parse(category_question_list[i].options),
-                answer_list: JSON.parse(category_question_list[i].defAnswer)
-              }
-              question_list.push(question)
-            }
-            this.category_to_questions.set(category_name, question_list)
-          }
-          this.message.create('success', '试卷信息获取成功');
-        },
-        error => {
-          this.message.create('error', '试卷信息获取失败：连接服务器失败');
-        });
+    if (cur_paper_code == null || cur_paper_code == '') return;
+
+    let paper_req = {
+      paper_code: cur_paper_code
     }
+    this.http_client.post<MyServerResponse>(this.base_url + 'paper/single', paper_req).subscribe(
+      response => {
+        if (response.status != 200) {
+          this.message.create('error', '试卷信息获取失败：' + response.msg);
+          return;
+        }
+        this.paper_info = response.data;
+        this.exam_name = this.paper_info.title;
+        this.categorys = []
+        for (let i = 0; i < this.paper_info.categoryList.length; i++) {
+          let category_name = this.paper_info.categoryList[i].categoryContent;
+          let category_question_list = this.paper_info.categoryList[i].questionList;
+          this.categorys.push(category_name);
+          let question_list: Array<PaperQuestionInfo> = []
+          for (let i = 0; i < category_question_list.length; i++) {
+            let question: PaperQuestionInfo = {
+              id: category_question_list[i].ques_id,
+              type: category_question_list[i].type,
+              score: category_question_list[i].score,
+              description: category_question_list[i].description,
+              content: category_question_list[i].content,
+              must_or_not: 0,
+              category_content: category_name,
+              option_list: JSON.parse(category_question_list[i].options),
+              answer_list: JSON.parse(category_question_list[i].defAnswer)
+            }
+            question_list.push(question)
+          }
+          this.category_to_questions.set(category_name, question_list)
+        }
+        this.message.create('success', '试卷信息获取成功');
+      },
+      error => {
+        this.message.create('error', '试卷信息获取失败：连接服务器失败');
+      });
   }
 
   ngOnInit(): void {
@@ -322,20 +324,20 @@ export class GeneratePaperComponent implements OnInit {
         let new_paper_info: PaperInfo = {
           title: this.exam_name,
           description: '',
-          paper_code: '',
+          paper_code: this.paper_info==null?'':this.paper_info.paperCode,
           user_id: 1,
           question_list: all_question_list
         }
         this.http_client.post<MyServerResponse>(this.base_url + "paper/new", new_paper_info).
           subscribe(response => {
             if (response.status == 200) {
-              this.message.create('success', '添加试卷成功');
+              this.message.create('success', '编辑试卷成功');
             }
             else {
-              this.message.create('error', '添加试卷失败:' + response.msg);
+              this.message.create('error', '编辑试卷失败:' + response.msg);
             }
           }, error => {
-            this.message.create('error', '添加试卷失败：连接服务器失败');
+            this.message.create('error', '编辑试卷失败：连接服务器失败');
           });
       }
     });

@@ -249,6 +249,7 @@ export class CheckPaperComponent implements OnInit {
   };
 
   GeneratePaper() {
+    sessionStorage.setItem('paper_code','');
     this.router.navigateByUrl("admin/generate-paper");
   }
   

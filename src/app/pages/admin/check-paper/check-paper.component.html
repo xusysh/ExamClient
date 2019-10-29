@@ -45,9 +45,9 @@
                         nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                     </b>
                   </th>
-                  <th nzWidth="300px"><b>创建时间</b></th>
                   <th nzWidth="180px"><b>创建用户</b></th>
-                  <th nzWidth="180px"><b>最后修改时间</b></th>
+                  <th nzWidth="220px"><b>创建时间</b></th>
+                  <th nzWidth="220px"><b>最后修改时间</b></th>
                   <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
                 </tr>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -67,7 +67,7 @@
                     <p nz-paragraph nzCopyable [(nzContent)]="data.title"></p>
                   </td>
                   <td>
-                    {{data.createUserId}}
+                    {{data.userName}}
                   </td>
                   <td>
                     {{data.createTime}}
