@@ -32,6 +32,7 @@ export class CheckQuestionComponent implements OnInit {
   public is_allDisplay_data_checked = false;
   public is_indeterminate = false;
 
+  public new_question:boolean = false;
   public edit_question_id: number = 0;
   public edit_question_type: string = '';
   public edit_question_content: string = '';
@@ -138,7 +139,8 @@ export class CheckQuestionComponent implements OnInit {
 
   CheckQuestionInfo(index: number): void {
     if(index == -1) {
-      this.edit_question_id = 0;
+      this.new_question = true;
+      this.edit_question_id = null;
       this.edit_question_type = 'single';
       this.edit_question_content = '';
       this.edit_question_description = '';
@@ -220,7 +222,8 @@ export class CheckQuestionComponent implements OnInit {
 
   EditQuestionInfo(): void {
     this.edit_question_info_loading = true;
-    this.edit_question_id = this.question_info_list[this.current_select_question].id;
+    if(!this.new_question)
+      this.edit_question_id = this.question_info_list[this.current_select_question].id;
     if(this.edit_question_type == 'subjective') 
       this.edit_question_options = []
     let question_edit_info:UpdateQuestionInfo = {
