@@ -37,6 +37,7 @@ export class GeneratePaperComponent implements OnInit {
 
   category_to_questions = new Map<string, Array<PaperQuestionInfo>>();
   paper_question_scores: Array<string> = [];
+  edit_category_name:string = '';
 
   selected_questions = []
   confirm_modal: NzModalRef;
@@ -261,6 +262,15 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   EditCateGoryDone(index: number) {
+    if(this.categorys.indexOf(this.edit_category_name) != -1 && this.categorys[index] != this.edit_category_name) {
+      this.message.warning('与其他大题名重复');
+      return;
+    }
+    if (!this.category_to_questions.has(this.edit_category_name) && this.category_to_questions.has(this.categorys[index])) {
+      this.category_to_questions.set(this.edit_category_name, this.category_to_questions.get(this.categorys[index]));
+      this.category_to_questions.delete(this.categorys[index]);
+    }
+    this.categorys[index] = this.edit_category_name;     
     this.edit_category_flags[index] = false;
   }
 
@@ -292,12 +302,6 @@ export class GeneratePaperComponent implements OnInit {
 
   test(i) {
     console.log(this.categorys[i]);
-  }
-
-  CategoryNameChanged(old_val, new_val) {
-    if (!this.category_to_questions.has(old_val)) return;
-    this.category_to_questions.set(new_val, this.category_to_questions.get(old_val));
-    this.category_to_questions.delete(old_val);
   }
 
   drop(list: Array<any>, event: CdkDragDrop<string[]>) {
