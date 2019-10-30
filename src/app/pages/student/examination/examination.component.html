@@ -81,18 +81,18 @@
           </nz-layout>
 
           <nz-steps nzType="navigation" nzSize="small" [nzCurrent]="current_category">
-            <nz-step *ngFor="let category of categorys;let i = index" [nzTitle]="category"
+            <nz-step *ngFor="let category of student_paper_info.categoryList;let i = index" [nzTitle]="category.categoryContent"
               [nzStatus]="current_category > i ? 'finish':(current_category == i?'process':'wait')"></nz-step>
           </nz-steps>
           <nz-divider></nz-divider>
 
           <div style="width: 100%;">
-            <p style="font-weight:bold;font-size: 125%">
+            <div style="font-weight:bold;font-size: 125%">
               [{{GetTypeStr()}}]&nbsp;
               {{current_question+1}}.
               {{questions[current_category].questions[current_question].content}}
-              {{questions[current_category].questions[current_question].score}}
-            </p>
+              （{{questions[current_category].questions[current_question].score}}分）
+            </div>
             <!--pre标签，代码换行的话会影响显示内容，所以都写在一行了-->
             <pre
               *ngIf="questions[current_category].questions[current_question].description!=''"><span style="font-weight:bold;font-size: 120%">{{questions[current_category].questions[current_question].description}}</span></pre>
@@ -147,34 +147,12 @@
           <ul nz-menu nzMode="inline">
             <li nz-submenu nzOpen nzTitle="答题卡" nzIcon="reconciliation">
               <ul>
-                <li nz-submenu nzOpen [(nzOpen)]="openMap.sub1" (nzOpenChange)="openHandler('sub1')" nzTitle="数据结构">
-                  <ul>
-                    <li nz-menu-item>第1小题</li>
-                    <li nz-menu-item>第2小题</li>
-                  </ul>
-                </li>
-                <li nz-submenu [(nzOpen)]="openMap.sub2" (nzOpenChange)="openHandler('sub2')" nzTitle="计算机组成原理">
-                  <ul>
-                    <li nz-menu-item>第1小题</li>
-                    <li nz-menu-item>第2小题</li>
-                    <li nz-menu-item>第3小题</li>
-                    <li nz-menu-item>第4小题</li>
-                    <li nz-menu-item>第5小题</li>
-                    <li nz-menu-item>第6小题</li>
-                  </ul>
-                </li>
-
-                <li nz-submenu [(nzOpen)]="openMap.sub3" (nzOpenChange)="openHandler('sub3')" nzTitle="计算机网络">
-                  <ul>
-                    <li nz-menu-item>第1小题</li>
-                    <li nz-menu-item>第2小题</li>
-                  </ul>
-                </li>
-
-                <li nz-submenu [(nzOpen)]="openMap.sub4" (nzOpenChange)="openHandler('sub4')" nzTitle="数据库原理">
-                  <ul>
-                    <li nz-menu-item>第1小题</li>
-                    <li nz-menu-item>第2小题</li>
+                <li nz-submenu *ngFor="let category of student_paper_info.categoryList;let i=index;" [nzTitle]="category.categoryContent">
+                  <ul *ngIf="category.questionList != null && category.questionList != []">
+                    <li nz-menu-item *ngFor="let question of category.questionList;let j=index;"
+                      (click)="current_category=i;current_question=j;">
+                      第{{j+1}}题
+                    </li>
                   </ul>
                 </li>
               </ul>

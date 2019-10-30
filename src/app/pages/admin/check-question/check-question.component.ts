@@ -435,6 +435,7 @@ export class CheckQuestionComponent implements OnInit {
       this.edit_question_info_loading = false;
       this.add_new_knowledge = false;
     });
+    this.edit_knowledge_name = '';
   }
 
 }
