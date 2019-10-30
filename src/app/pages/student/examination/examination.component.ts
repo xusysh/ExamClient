@@ -15,8 +15,16 @@ import { HttpClient } from '@angular/common/http';
 
 export class ExaminationComponent implements OnInit {
 
-  public get_paper_loading:boolean = false;
-  public student_paper_info:ServerStudentPaperInfo = null;
+  public get_paper_loading: boolean = false;
+  public student_paper_info: ServerStudentPaperInfo = {
+    paperCode: '',
+    title: '',
+    paperDescription: '',
+    createTime: '',
+    lastModifiedTime: '',
+    createUserId: 0,
+    categoryList: []
+  };
 
   //当前页
   public page_index_char: string = '';
@@ -30,136 +38,16 @@ export class ExaminationComponent implements OnInit {
   public current_category: number = 0;
   //当前选择的题目
   public current_question: number = 0;
-  //题目
-  questions = [
-    {
-      'field_name': '数据结构',
-      'questions': [
-        {
-          'type': 'multi',
-          'answer': ['A', 'B'],
-          'score': 10.0,
-          'content': '时间复杂度为O(nlog2n)的排序算法有（          ）',
-          'description': '',
-          'options': ['A.快速排序', 'B.堆排序', 'C.冒泡排序', 'D.折半插入排序']
-        },
-        {
-          'type': 'single',
-          'answer': ['A'],
-          'score': 10.0,
-          'content': '若入栈序列为A B C D E F，且进栈和出栈可以穿插进行，则不可能的输出序列为',
-          'description': '',
-          'options': [
-            'A.BCEAFD',
-            'B.DCBAEF',
-            'C.CBDAFE',
-            'D.BDCAEF'
-          ]
-        },
-        {
-          'type': 'single',
-          'answer': ['D'],
-          'score': 10.0,
-          'content': '若某表最常用的操作是在最后一个结点之后插入一个节点或删除最后一二个结点，则采用（）省运算时间。',
-          'description': '',
-          'options': [
-            'A.单链表',
-            'B.双链表',
-            'C.单循环链表',
-            'D.带头结点的双循环链表'
-          ]
-        },
-        {
-          'type': 'single',
-          'score': 10.0,
-          'answer': ['D'],
-          'content': '对于int *pa[5] ;的描述，正确的是（    ）',
-          'description': '',
-          'options': [
-            "A.pa是一个指向数组的指针，所指向的数组是5个int型元素",
-            "B.pa是一个指向某个数组第5个元素的指针，该元素是int型变量",
-            "C.pa[5]表示某个数组第5个元素的值",
-            "D.pa是一个具有5个元素的指针数组，每个元素是一个int型指针"
-          ]
-        }
-      ]
-    },
-    {
-      'field_name': '计算机组成原理',
-      'questions': [
-        {
-          'type': 'single',
-          'score': 10.0,
-          'answer': ['A'],
-          'content': '下列关于RISC的叙述中，错误的是（）。',
-          'description': '',
-          'options': [
-            'A.RISC普遍采用微程序控制器',
-            'B.RISC大多数指令在一个时钟周期内完成',
-            'C.RISC的内部通用寄存器数量相对CISC多',
-            'D.RISC的指令数、寻址方式和指令格式种类相对CISC少'
-          ]
-        },
-        {
-          'type': 'single',
-          'answer': ['A'],
-          'score': 10.0,
-          'content': '指出下列代码的缺陷（      ）。',
-          'description': 'float   f[10];\n\
-  // 假设这里有对f进行初始化的代码\n\
-  ….\n\
-  //for循环需要遍历f中所有元素\n\
-  for(int i = 0; i < 10;)\n\
-  {\n\
-  if( f[++i] == 0 )\n\
-  break;\n\
-  }',
-          'options': [
-            'A.for(int i = 0; i < 10;)这一行写错了',
-            'B.f是float型数据直接做相等判断有风险',
-            'C.f[++i]应该是f[i++]',
-            'D.没有缺陷']
-        },
-        {
-          'type': 'subjective',
-          'answer': [''],
-          'score': 10.0,
-          'content': '请简述操作系统中进程之间的通信方式',
-          'description': '',
-          'options': ['']
-        },
-        {
-          'type': 'judge',
-          'answer': ['A'],
-          'score': 10.0,
-          'content': '判断下面的描述是否正确（）',
-          'description': '继承抽象类的派生类可以被声明对像，不需要实现基类中全部纯虚函数，只需要实现在派生类中用到的纯虚函数',
-          'options': ['A.正确', 'B.错误']
-        }
-      ]
-    },
-    {
-      'field_name': '操作系统',
-      'questions': []
-    },
-    {
-      'field_name': '计算机网络',
-      'questions': []
-    },
-    {
-      'field_name': '数据库原理',
-      'questions': []
-    }
-  ]
+
   //当前选中的单选项
   public radio_value: string = String.fromCharCode(0x41);
   //当前选中的多选项
-  public checkbox_values = new Array<boolean>(this.questions[this.current_category].questions[this.current_question].options.length);
+  public checkbox_values: Array<boolean> = [];
   //控制选择框不同状态的背景色
-  public option_bgcolor: Array<string> = new Array<string>(this.questions[this.current_category].questions[this.current_question].options.length);
+  public option_bgcolor: Array<string> = [];
   public option_default_bgcolor: string = '#FFFFFF';
   //选项颜色
-  public option_bdcolor: Array<string> = new Array<string>(this.questions[this.current_category].questions[this.current_question].options.length);
+  public option_bdcolor: Array<string> = [];
   public option_default_bdcolor: string = '#d4d4d4';
   //简答题编辑器和内容
   public editor = ClassicEditor;
@@ -181,12 +69,10 @@ export class ExaminationComponent implements OnInit {
   }
 
   constructor(private router: Router, private message: NzMessageService,
-    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,) {
-    this.updateRadioStatus();
-    this.updateCheckboxStatus();
-    sessionStorage.setItem('paper_code','20191008193539');
-    sessionStorage.setItem('exam_id','3');
-    sessionStorage.setItem('userid','5');
+    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, ) {
+    sessionStorage.setItem('paper_code', '20191008193539');
+    sessionStorage.setItem('exam_id', '3');
+    sessionStorage.setItem('userid', '5');
     this.GetPaperInfo();
   }
 
@@ -199,7 +85,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   GetTypeStr(): string {
-    let type = this.questions[this.current_category].questions[this.current_question].type;
+    let type = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].type;
     switch (type) {
       case 'single': return '单选题';
       case 'multi': return '不定项选择题';
@@ -214,7 +100,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   updateRadioStatus() {
-    let options = this.questions[this.current_category].questions[this.current_question].options;
+    let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
       if (this.radio_value.charCodeAt(0) == 0x41 + i) {
         this.option_bdcolor[i] = '#0099FF';
@@ -228,7 +114,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   updateCheckboxStatus() {
-    let options = this.questions[this.current_category].questions[this.current_question].options;
+    let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
       if (this.checkbox_values[i] == true) {
         this.option_bdcolor[i] = '#0099FF';
@@ -249,26 +135,43 @@ export class ExaminationComponent implements OnInit {
   GetPaperInfo() {
     this.get_paper_loading = true;
     let user_paper_check_info = {
-      paper_code:sessionStorage.getItem('paper_code'),
-      exam_id:sessionStorage.getItem('exam_id'),
-      stu_id:sessionStorage.getItem('userid')
+      paper_code: sessionStorage.getItem('paper_code'),
+      exam_id: sessionStorage.getItem('exam_id'),
+      stu_id: sessionStorage.getItem('userid')
     }
-    this.http_client.post<MyServerResponse>(this.base_url +'spi/stupaper', user_paper_check_info).
-    subscribe(response => {
-      if(response.status!=200) {
-        this.message.create('error', '获取试卷信息失败:'+response.msg);
-        this.get_paper_loading=false;
-      }
-      else {
-        this.student_paper_info = response.data;
-        this.exam_name = this.student_paper_info.title;
-        this.message.create('success', '获取试卷信息成功');
-        this.get_paper_loading=false;
-      }
-    }, error => {
-      this.message.create('error', '获取试卷信息失败：连接服务器失败');
-      this.get_paper_loading=false;
-    });  }
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stupaper', user_paper_check_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '获取试卷信息失败:' + response.msg);
+          this.get_paper_loading = false;
+        }
+        else {
+          this.student_paper_info = response.data;
+          this.exam_name = this.student_paper_info.title;
+          for (let i = 0; i < this.student_paper_info.categoryList.length; i++) {
+            for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
+              let question = this.student_paper_info.categoryList[i].questionList[j];
+              question.options = JSON.parse(question.options);
+            }
+          }
+          this.message.create('success', '获取试卷信息成功');
+          this.updateRadioStatus();
+          this.updateCheckboxStatus();
+          this.get_paper_loading = false;
+        }
+      }, error => {
+        this.message.create('error', '获取试卷信息失败：连接服务器失败');
+        this.get_paper_loading = false;
+      });
+  }
+
+  SwitchQuestion(i: number, j: number) {
+    this.checkbox_values = new Array<boolean>(this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options.length);
+    this.option_bgcolor = new Array<string>(this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options.length);
+    this.option_bdcolor = new Array<string>(this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options.length);
+    this.current_category = i;
+    this.current_question = j;
+  }
 
 }
 
@@ -279,20 +182,20 @@ interface ServerStudentPaperInfo {
   createTime: string,
   lastModifiedTime: string,
   createUserId: number,
-  categoryList:Array<CategoryInfo> 
+  categoryList: Array<CategoryInfo>
 }
 
 interface CategoryInfo {
   paperCode: string,
   categoryContent: string,
-  questionList: Array<QuestionInfo>  
+  questionList: Array<QuestionInfo>
 }
 
 interface QuestionInfo {
   score: number,
   ques_id: number,
-  options: string,
-  student_answer: string,
+  options: any,
+  student_answer: any,
   description: string,
   type: string,
   content: string,
@@ -300,11 +203,11 @@ interface QuestionInfo {
 }
 
 interface AnswerInfo {
-  id:number,
+  id: number,
   content: string
 }
 
 interface OptionInfo {
-  id:number,
+  id: number,
   content: string
 }
