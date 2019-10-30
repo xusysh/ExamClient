@@ -100,6 +100,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   updateRadioStatus() {
+    //todo:保存答题情况
     let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
       if (this.radio_value.charCodeAt(0) == 0x41 + i) {
@@ -114,6 +115,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   updateCheckboxStatus() {
+    //todo:保存答题情况
     let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
       if (this.checkbox_values[i] == true) {
