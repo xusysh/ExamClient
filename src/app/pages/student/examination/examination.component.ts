@@ -40,15 +40,16 @@ export class ExaminationComponent implements OnInit {
   public current_question: number = 0;
 
   //当前选中的单选项
-  public radio_value: string = String.fromCharCode(0x41);
+//  public radio_value: string = String.fromCharCode(0x41);
   //当前选中的多选项
-  public checkbox_values: Array<boolean> = [];
+//  public checkbox_values: Array<boolean> = [];
   //控制选择框不同状态的背景色
-  public option_bgcolor: Array<string> = [];
+//  public option_bgcolor: Array<string> = [];
   public option_default_bgcolor: string = '#FFFFFF';
   //选项颜色
-  public option_bdcolor: Array<string> = [];
+//  public option_bdcolor: Array<string> = [];
   public option_default_bdcolor: string = '#d4d4d4';
+
   //简答题编辑器和内容
   public editor = ClassicEditor;
   public editor_data = '';
@@ -100,31 +101,31 @@ export class ExaminationComponent implements OnInit {
   }
 
   updateRadioStatus() {
-    //todo:保存答题情况
+    let question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
     let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
-      if (this.radio_value.charCodeAt(0) == 0x41 + i) {
-        this.option_bdcolor[i] = '#0099FF';
-        this.option_bgcolor[i] = this.option_default_bgcolor;
+      if (question['radio_value'].charCodeAt(0) == 0x41 + i) {
+        question['option_bdcolor'][i] = '#0099FF';
+        question['option_bgcolor'][i] = this.option_default_bgcolor;
       }
       else {
-        this.option_bgcolor[i] = this.option_default_bgcolor;
-        this.option_bdcolor[i] = this.option_default_bdcolor;
+        question['option_bgcolor'][i] = this.option_default_bgcolor;
+        question['option_bdcolor'][i] = this.option_default_bdcolor;
       }
     }
   }
 
   updateCheckboxStatus() {
-    //todo:保存答题情况
+    let question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
     let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
-      if (this.checkbox_values[i] == true) {
-        this.option_bdcolor[i] = '#0099FF';
-        this.option_bgcolor[i] = this.option_default_bgcolor;
+      if (question['checkbox_values'][i] == true) {
+        question['option_bdcolor'][i] = '#0099FF';
+        question['option_bgcolor'][i] = this.option_default_bgcolor;
       }
       else {
-        this.option_bgcolor[i] = this.option_default_bgcolor;
-        this.option_bdcolor[i] = this.option_default_bdcolor;
+        question['option_bgcolor'][i] = this.option_default_bgcolor;
+        question['option_bdcolor'][i] = this.option_default_bdcolor;
       }
     }
   }
@@ -154,11 +155,20 @@ export class ExaminationComponent implements OnInit {
             for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
               let question = this.student_paper_info.categoryList[i].questionList[j];
               question.options = JSON.parse(question.options);
+              if(question.type == 'subjective') {
+                question['editor_value'] = '';
+              }
+              else {
+                question['option_bgcolor'] = new Array<string>(question.options.length);
+                question['option_bdcolor'] = new Array<string>(question.options.length);
+                if(question.type == 'multi')  
+                  question['checkbox_values'] = new Array<boolean>(question.options.length);
+                else
+                  question['radio_value'] = '';
+              }
             }
           }
           this.message.create('success', '获取试卷信息成功');
-          this.updateRadioStatus();
-          this.updateCheckboxStatus();
           this.get_paper_loading = false;
         }
       }, error => {
@@ -168,11 +178,28 @@ export class ExaminationComponent implements OnInit {
   }
 
   SwitchQuestion(i: number, j: number) {
-    this.checkbox_values = new Array<boolean>(this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options.length);
-    this.option_bgcolor = new Array<string>(this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options.length);
-    this.option_bdcolor = new Array<string>(this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options.length);
     this.current_category = i;
     this.current_question = j;
+  }
+
+  PrevQuestion() {
+    if(this.current_question == 0) {
+      if(this.current_category != 0) {
+        this.current_category--;
+        this.current_question = this.student_paper_info.categoryList[this.current_category].questionList.length - 1;
+      }
+    }
+    else this.current_question--;
+  }
+
+  NextQuestion() {
+    if(this.current_question == this.student_paper_info.categoryList[this.current_category].questionList.length - 1) {
+      if(this.current_category != this.student_paper_info.categoryList.length - 1) {
+        this.current_category++;
+        this.current_question = 0;
+      }
+    }
+    else this.current_question++;
   }
 
 }

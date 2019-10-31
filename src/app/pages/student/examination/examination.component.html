@@ -99,12 +99,12 @@
             <!---单选题-->
             <nz-radio-group *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='single'||
               student_paper_info.categoryList[current_category].questionList[current_question].type=='judge'" style="width: 100%;"
-              [(ngModel)]="radio_value" (ngModelChange)="updateRadioStatus()">
+              [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].radio_value" (ngModelChange)="updateRadioStatus()">
               <label nz-radio
                 *ngFor="let option of student_paper_info.categoryList[current_category].questionList[current_question].options;let i = index"
-                class="option-radio" (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'"
+                class="option-radio" (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
                 (mouseleave)="updateRadioStatus()" [nzValue]="GetValue(i)"
-                [ngStyle]="{'background-color': option_bgcolor[i],'border-color':option_bdcolor[i]}">
+                [ngStyle]="{'background-color': student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i],'border-color':student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]}">
                 {{option.content}}
               </label>
             </nz-radio-group>
@@ -112,16 +112,17 @@
             <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='multi'" style="width: 100%;">
               <label nz-checkbox
                 *ngFor="let option of student_paper_info.categoryList[current_category].questionList[current_question].options;let i = index"
-                [(ngModel)]="checkbox_values[i]" class="option-checkbox"
-                (mouseenter)="option_bgcolor[i]='#f5f5f5';option_bdcolor[i]='#333'"
+                [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].checkbox_values[i]" class="option-checkbox"
+                (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
                 (mouseleave)="updateCheckboxStatus()"
-                [ngStyle]="{'background-color': option_bgcolor[i],'border-color':option_bdcolor[i]}">
+                [ngStyle]="{'background-color': student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i],'border-color':student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]}">
                 {{option.content}}
               </label>
             </div>
             <!--简答题-->
-            <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'" style="width: 100%;">
-                <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="editor_data" (ngModelChange)="limit()">
+            <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'" 
+              style="width: 100%;margin-top:15px">
+                <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_data" (ngModelChange)="limit()">
                 </ckeditor>
             </div>
           </div>
@@ -137,13 +138,13 @@
             </nz-sider>
             <nz-sider style="background-color:#FFFFFF;">
               <nz-button-group>
-                <button nz-button nzType="primary"><i nz-icon nzType="left"></i>上一题</button>
-                <button nz-button nzType="primary">下一题<i nz-icon nzType="right"></i></button>
+                <button nz-button nzType="primary" (click)="PrevQuestion()"><i nz-icon nzType="left"></i>上一题</button>
+                <button nz-button nzType="primary" (click)="NextQuestion()">下一题<i nz-icon nzType="right"></i></button>
               </nz-button-group>
             </nz-sider>
           </nz-layout>
         </nz-content>
-        <nz-sider (click)="test()" [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
+        <nz-sider [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
           <ul nz-menu nzMode="inline">
             <li nz-submenu nzOpen nzTitle="答题卡" nzIcon="reconciliation">
               <ul>
