@@ -2,7 +2,7 @@ import { Component, OnInit, Injectable, Inject, ViewChild, ElementRef } from '@a
 
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { Router } from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { MyServerResponse } from '../../login/login.component';
 import { HttpClient } from '@angular/common/http';
 
@@ -40,14 +40,14 @@ export class ExaminationComponent implements OnInit {
   public current_question: number = 0;
 
   //当前选中的单选项
-//  public radio_value: string = String.fromCharCode(0x41);
+  //  public radio_value: string = String.fromCharCode(0x41);
   //当前选中的多选项
-//  public checkbox_values: Array<boolean> = [];
+  //  public checkbox_values: Array<boolean> = [];
   //控制选择框不同状态的背景色
-//  public option_bgcolor: Array<string> = [];
+  //  public option_bgcolor: Array<string> = [];
   public option_default_bgcolor: string = '#FFFFFF';
   //选项颜色
-//  public option_bdcolor: Array<string> = [];
+  //  public option_bdcolor: Array<string> = [];
   public option_default_bdcolor: string = '#d4d4d4';
 
   //简答题编辑器和内容
@@ -59,7 +59,7 @@ export class ExaminationComponent implements OnInit {
     // 工具栏
     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo'],
   };
-
+  confirm_modal: NzModalRef;
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
   public elem_height_str: string = '500px';
@@ -70,10 +70,10 @@ export class ExaminationComponent implements OnInit {
   }
 
   constructor(private router: Router, private message: NzMessageService,
-    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, ) {
+    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
     sessionStorage.setItem('paper_code', '20191008193539');
     sessionStorage.setItem('exam_id', '3');
-    sessionStorage.setItem('userid', '5');
+    sessionStorage.setItem('userid', '11');
     this.GetPaperInfo();
   }
 
@@ -103,6 +103,11 @@ export class ExaminationComponent implements OnInit {
   updateRadioStatus() {
     let question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
     let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
+    if(question['radio_value'] == '' || question['radio_value'] == null) {
+      question['option_bdcolor'].fill(this.option_default_bdcolor);
+      question['option_bgcolor'].fill(this.option_default_bgcolor);
+      return;
+    }
     for (let i = 0; i < options.length; i++) {
       if (question['radio_value'].charCodeAt(0) == 0x41 + i) {
         question['option_bdcolor'][i] = '#0099FF';
@@ -155,21 +160,37 @@ export class ExaminationComponent implements OnInit {
             for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
               let question = this.student_paper_info.categoryList[i].questionList[j];
               question.options = JSON.parse(question.options);
-              if(question.type == 'subjective') {
+              if(question.student_answer == ""|| question.student_answer == null)
+                question.student_answer = []
+              else
+                question.student_answer = JSON.parse(question.student_answer);
+              if (question.type == 'subjective') {
+                if(question.student_answer.length > 0)
+                  question['editor_value'] = question.student_answer[0].content;
+                else
                 question['editor_value'] = '';
               }
               else {
                 question['option_bgcolor'] = new Array<string>(question.options.length);
                 question['option_bdcolor'] = new Array<string>(question.options.length);
-                if(question.type == 'multi')  
-                  question['checkbox_values'] = new Array<boolean>(question.options.length);
-                else
-                  question['radio_value'] = '';
+                if (question.type == 'multi') {
+                  question['checkbox_values'] = new Array<boolean>(question.options.length).fill(false);
+                  for(let ans_obj of question.student_answer) {
+                    question['checkbox_values'][ans_obj.id] = true;
+                  }
+                }
+                else {
+                  if(question.student_answer.length > 0)
+                    question['radio_value'] = String.fromCharCode(question.student_answer[0].id+0x41);
+                  else
+                    question['radio_value'] = '';
+                }
               }
             }
           }
           this.message.create('success', '获取试卷信息成功');
           this.get_paper_loading = false;
+          this.SwitchQuestion(0,0);
         }
       }, error => {
         this.message.create('error', '获取试卷信息失败：连接服务器失败');
@@ -180,11 +201,18 @@ export class ExaminationComponent implements OnInit {
   SwitchQuestion(i: number, j: number) {
     this.current_category = i;
     this.current_question = j;
+    let current_question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if(current_question.type == 'multi') {
+      this.updateCheckboxStatus();
+    }
+    else if(current_question.type != 'subjective') {
+      this.updateRadioStatus();
+    }
   }
 
   PrevQuestion() {
-    if(this.current_question == 0) {
-      if(this.current_category != 0) {
+    if (this.current_question == 0) {
+      if (this.current_category != 0) {
         this.current_category--;
         this.current_question = this.student_paper_info.categoryList[this.current_category].questionList.length - 1;
       }
@@ -193,13 +221,93 @@ export class ExaminationComponent implements OnInit {
   }
 
   NextQuestion() {
-    if(this.current_question == this.student_paper_info.categoryList[this.current_category].questionList.length - 1) {
-      if(this.current_category != this.student_paper_info.categoryList.length - 1) {
+    if (this.current_question == this.student_paper_info.categoryList[this.current_category].questionList.length - 1) {
+      if (this.current_category != this.student_paper_info.categoryList.length - 1) {
         this.current_category++;
         this.current_question = 0;
       }
     }
     else this.current_question++;
+  }
+
+  ShowSubmitConfirm() {
+    this.confirm_modal = this.modal.confirm({
+      nzTitle: '是否提交考试答案?',
+      nzContent: '',
+      //todo:等待关闭
+      nzOnOk: () => {
+        let user_question_answer_info = [];
+        for (var category of this.student_paper_info.categoryList) {
+          for (let question of category.questionList) {
+            question.student_answer = []
+            if (question.type == 'subjective') {
+              question.student_answer.push({
+                id:0,
+                content:question['editor_value']
+              });
+            }
+            else {
+              if (question.type == 'multi') {
+                question.student_answer = [];
+                for(let i = 0; i <question['checkbox_values'].length;i++) {
+                  if(question['checkbox_values'][i]==0) {
+                    question.student_answer.push({
+                      id:i,
+                      content:question.options[i]
+                    });
+                  }
+                }
+              }
+              else {
+                question.student_answer = [];
+                let index = question['radio_value'].charCodeAt(0)-0x41;
+                question.student_answer.push({
+                  id:index,
+                  content:question.options[index]
+                });
+              }
+            }
+            let submit_question: QuestionUpdateInfo = {
+              id: question.ques_id,
+              content: question.content,
+              type: question.type,
+              description: question.description,
+              total_point: question.score,
+              stamp: question.stamp,
+              mustOrNot: 0,
+              student_answer: question.student_answer
+            }
+            user_question_answer_info.push(submit_question)
+          }
+        }
+        let user_paper_answer_info: UserPaperAnswerInfo = {
+          paper_code: sessionStorage.getItem('paper_code'),
+          exam_id: sessionStorage.getItem('exam_id'),
+          student_id: sessionStorage.getItem('userid'),
+          end_flag: 1,
+          paper_status: user_question_answer_info
+        }
+        this.http_client.post<MyServerResponse>(this.base_url + '/spi/do', user_paper_answer_info).
+          subscribe(response => {
+            if (response.status != 200) {
+              this.message.create('error', '提交试卷信息失败:' + response.msg);
+              this.get_paper_loading = false;
+            }
+            else {
+              this.message.create('success', '提交试卷信息成功');
+              this.get_paper_loading = false;
+            }
+          }, error => {
+            this.message.create('error', '提交试卷信息失败：连接服务器失败');
+            this.get_paper_loading = false;
+          });
+
+      }
+    });
+  }
+
+  AutoSave() {
+
   }
 
 }
@@ -228,7 +336,19 @@ interface QuestionInfo {
   description: string,
   type: string,
   content: string,
-  mustOrNot: 0
+  mustOrNot: 0,
+  stamp: number
+}
+
+interface QuestionUpdateInfo {
+  id: number,
+  content: string,
+  type: string,
+  description: string,
+  total_point: number,
+  stamp: number
+  mustOrNot: number,
+  student_answer: Array<AnswerInfo>
 }
 
 interface AnswerInfo {
@@ -239,4 +359,12 @@ interface AnswerInfo {
 interface OptionInfo {
   id: number,
   content: string
+}
+
+interface UserPaperAnswerInfo {
+  exam_id: string,
+  paper_code: string,
+  student_id: string,
+  end_flag: number,
+  paper_status: Array<QuestionUpdateInfo>
 }

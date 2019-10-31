@@ -81,7 +81,8 @@
           </nz-layout>
 
           <nz-steps *ngIf="!get_paper_loading" nzType="navigation" nzSize="small" [nzCurrent]="current_category">
-            <nz-step *ngFor="let category of student_paper_info.categoryList;let i = index" [nzTitle]="category.categoryContent"
+            <nz-step *ngFor="let category of student_paper_info.categoryList;let i = index"
+              [nzTitle]="category.categoryContent"
               [nzStatus]="current_category > i ? 'finish':(current_category == i?'process':'wait')"></nz-step>
           </nz-steps>
           <nz-divider></nz-divider>
@@ -98,21 +99,26 @@
               *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].description!=''"><span style="font-weight:bold;font-size: 120%">{{tudent_paper_info.categoryList[current_category].questionList[current_question].description}}</span></pre>
             <!---单选题-->
             <nz-radio-group *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='single'||
-              student_paper_info.categoryList[current_category].questionList[current_question].type=='judge'" style="width: 100%;"
-              [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].radio_value" (ngModelChange)="updateRadioStatus()">
+              student_paper_info.categoryList[current_category].questionList[current_question].type=='judge'"
+              style="width: 100%;"
+              [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].radio_value"
+              (ngModelChange)="updateRadioStatus()">
               <label nz-radio
                 *ngFor="let option of student_paper_info.categoryList[current_category].questionList[current_question].options;let i = index"
-                class="option-radio" (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
+                class="option-radio"
+                (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
                 (mouseleave)="updateRadioStatus()" [nzValue]="GetValue(i)"
                 [ngStyle]="{'background-color': student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i],'border-color':student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]}">
                 {{option.content}}
               </label>
             </nz-radio-group>
             <!--多选题，checkbox-gruop无法修改单个选项的样式，所以只能手动统计checkbox-->
-            <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='multi'" style="width: 100%;">
+            <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='multi'"
+              style="width: 100%;">
               <label nz-checkbox
                 *ngFor="let option of student_paper_info.categoryList[current_category].questionList[current_question].options;let i = index"
-                [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].checkbox_values[i]" class="option-checkbox"
+                [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].checkbox_values[i]"
+                class="option-checkbox"
                 (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
                 (mouseleave)="updateCheckboxStatus()"
                 [ngStyle]="{'background-color': student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i],'border-color':student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]}">
@@ -120,21 +126,30 @@
               </label>
             </div>
             <!--简答题-->
-            <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'" 
+            <div
+              *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'"
               style="width: 100%;margin-top:15px">
-                <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_data" (ngModelChange)="limit()">
-                </ckeditor>
+              <ckeditor [editor]="editor" [config]="editor_config"
+                [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_value"
+                (ngModelChange)="limit()">
+              </ckeditor>
             </div>
           </div>
 
-          <nz-layout style="margin-top: 15px">
+          <nz-layout *ngIf="!get_paper_loading" style="margin-top: 15px">
             <nz-content style="background-color:#FFFFFF;">
-
-              <button nz-button nzType="primary" [nzSize]="size" style="margin-left: 15px"><i nz-icon
-                  nzType="pushpin"></i>标记本题</button>
+              <button nz-button nzType="primary" [nzSize]="size" style="margin-left: 15px"
+                (click)="student_paper_info.categoryList[current_category].questionList[current_question].stamp==0?
+                student_paper_info.categoryList[current_category].questionList[current_question].stamp=1:
+                student_paper_info.categoryList[current_category].questionList[current_question].stamp=0">
+                <i nz-icon nzType="pushpin">
+                </i>{{student_paper_info.categoryList[current_category].questionList[current_question].stamp==0?'标记本题':'取消标记'}}
+              </button>
             </nz-content>
             <nz-sider style="background-color:#FFFFFF;">
-              <button nz-button nzType="danger" style="float: right;margin-right: 20px">交卷</button>
+              <button nz-button nzType="danger" style="float: right;margin-right: 20px" (click)="ShowSubmitConfirm()">
+                交卷
+              </button>
             </nz-sider>
             <nz-sider style="background-color:#FFFFFF;">
               <nz-button-group>
@@ -148,11 +163,17 @@
           <ul nz-menu nzMode="inline">
             <li nz-submenu nzOpen nzTitle="答题卡" nzIcon="reconciliation">
               <ul>
-                <li nz-submenu *ngFor="let category of student_paper_info.categoryList;let i=index;" [nzTitle]="category.categoryContent">
+                <li nz-submenu *ngFor="let category of student_paper_info.categoryList;let i=index;"
+                  [nzTitle]="category.categoryContent">
                   <ul *ngIf="category.questionList != null && category.questionList != []">
-                    <li nz-menu-item *ngFor="let question of category.questionList;let j=index;"
-                      (click)="SwitchQuestion(i,j)">
-                      第{{j+1}}题
+                    <li nz-menu-item [nzSelected]="i==current_category&&j==current_question"
+                      *ngFor="let question of category.questionList;let j=index;" (click)="SwitchQuestion(i,j)">
+                      <span *ngIf="question.stamp==0">
+                        第{{j+1}}题&nbsp;
+                      </span>
+                      <nz-badge *ngIf="question.stamp==1" nzDot>
+                        第{{j+1}}题&nbsp;
+                      </nz-badge>
                     </li>
                   </ul>
                 </li>
