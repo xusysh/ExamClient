@@ -319,7 +319,7 @@ export class ExaminationComponent implements OnInit {
       if(old_val - this.deadline > 60000)
         this.SubmitAnswer(1);
       setTimeout(() => {
-        this.CheckExamStatus(this.deadline)
+        this.CheckExamStatus(old_val)
       }, 1000);
     }
     else {
