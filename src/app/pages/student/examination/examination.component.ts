@@ -328,7 +328,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   EndStudentExam() {
-    this.SubmitAnswer(0);
+    this.SubmitAnswer(1);
   }
 
 }
