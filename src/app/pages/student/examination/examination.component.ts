@@ -67,6 +67,7 @@ export class ExaminationComponent implements OnInit {
   ngAfterViewInit(): void {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
     this.elem_height_str = Math.ceil(this.canvas_height * 0.85).toString() + 'px';
+    this.CheckExamStatus(this.deadline);
   }
 
   constructor(private router: Router, private message: NzMessageService,
@@ -236,7 +237,16 @@ export class ExaminationComponent implements OnInit {
       nzContent: '',
       //todo:等待关闭
       nzOnOk: () => {
-        let user_question_answer_info = [];
+        this.EndStudentExam();
+      }
+    });
+  }
+
+  SubmitAnswer(end_flag: number) {
+    var msg = '';
+    if(end_flag == 0) msg = '提交';
+    else msg = '自动保存';
+    let user_question_answer_info = [];
         for (var category of this.student_paper_info.categoryList) {
           for (let question of category.questionList) {
             question.student_answer = []
@@ -284,30 +294,41 @@ export class ExaminationComponent implements OnInit {
           paper_code: sessionStorage.getItem('paper_code'),
           exam_id: sessionStorage.getItem('exam_id'),
           student_id: sessionStorage.getItem('userid'),
-          end_flag: 1,
+          end_flag: end_flag,
           paper_status: user_question_answer_info
         }
         this.http_client.post<MyServerResponse>(this.base_url + '/spi/do', user_paper_answer_info).
           subscribe(response => {
             if (response.status != 200) {
-              this.message.create('error', '提交试卷信息失败:' + response.msg);
+              this.message.create('error', msg+'试卷信息失败:' + response.msg);
               this.get_paper_loading = false;
             }
             else {
-              this.message.create('success', '提交试卷信息成功');
+              this.message.create('success', msg+'试卷信息成功');
               this.get_paper_loading = false;
             }
           }, error => {
-            this.message.create('error', '提交试卷信息失败：连接服务器失败');
+            this.message.create('error', msg+'试卷信息失败：连接服务器失败');
             this.get_paper_loading = false;
           });
 
-      }
-    });
   }
 
-  AutoSave() {
+  CheckExamStatus(old_val:number) {
+    if(this.deadline > 0) {
+      if(old_val - this.deadline > 60000)
+        this.SubmitAnswer(1);
+      setTimeout(() => {
+        this.CheckExamStatus(this.deadline)
+      }, 1000);
+    }
+    else {
+      this.EndStudentExam();
+    }
+  }
 
+  EndStudentExam() {
+    this.SubmitAnswer(0);
   }
 
 }
