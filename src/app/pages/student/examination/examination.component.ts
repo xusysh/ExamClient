@@ -39,6 +39,8 @@ export class ExaminationComponent implements OnInit {
   public hour = 0;
   public min = 0;
   public sec =0;
+  //todo:获取考生进场时间（毫秒时间戳）和剩余时间（毫秒）
+
   //大题列表
   public categorys: Array<string> = ["数据结构", "计算机组成原理", "计算机网络", "数据库原理"];
   //当前所在的大题
@@ -103,7 +105,6 @@ export class ExaminationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   GetValue(i: number): string {
