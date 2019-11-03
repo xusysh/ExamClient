@@ -24,7 +24,7 @@
               <h1 style="text-align: center">{{exam_name}}</h1>
             </nz-content>
             <nz-sider style="background-color:#FFFFFF">
-              <i nz-icon style="font-size: 40px;margin-top: 2px; float: left;">
+              <i nz-icon style="font-size: 40px;margin-top: 2px; float: left;margin-right:5px">
                 <svg>
                   <path
                     d="M512 912.695652c221.295304 0 400.695652-179.400348 400.695652-400.695652S733.295304 111.304348 512 111.304348 111.304348 290.704696 111.304348 512s179.400348 400.695652 400.695652 400.695652z"
@@ -76,7 +76,7 @@
                     fill="#005CB9" p-id="7372"></path>
                 </svg>
               </i>
-              <nz-countdown nzSize="small" [nzValue]="deadline"></nz-countdown>
+              <span style="font-weight:400;font-size:200%">{{hour | number:'2.0'}}:{{min | number:'2.0'}}:{{sec | number:'2.0'}}</span>
             </nz-sider>
           </nz-layout>
 
