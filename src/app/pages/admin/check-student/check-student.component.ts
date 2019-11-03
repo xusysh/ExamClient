@@ -23,6 +23,7 @@ export class CheckStudentComponent implements OnInit {
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
   public student_info_list: Array<UserInfo> = [];
+  public all_studnets:Array<object> = [];
 
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
@@ -33,6 +34,7 @@ export class CheckStudentComponent implements OnInit {
   public edit_user_name: string = '';
   public edit_password: string = '';
   public edit_group_list: Array<object> = [];
+  public edit_group_student_list :Array<object> = [];
 
   public user_group_tags = [];
   public inputVisible = false;
@@ -40,9 +42,10 @@ export class CheckStudentComponent implements OnInit {
   public edit_user_info_loading = false;
 
   current_select_user: number = 0;
-  group_loading: boolean;
+  user_group_loading: boolean;
   all_group_info:Array<object> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
+  compareFn_stu = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
@@ -50,6 +53,16 @@ export class CheckStudentComponent implements OnInit {
 
   ngOnInit(): void {
     this.UpdateTableData();
+    this.UpdateGroupInfo();
+  }
+
+  @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
+  public canvas_height: number = 0;
+  public elem_height_str: string = '500px';
+
+  ngAfterViewInit(): void {
+    this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
+    this.elem_height_str = Math.ceil(this.canvas_height * 0.85).toString() + 'px';
   }
 
   sort(sort: { key: string; value: string }): void {
@@ -66,6 +79,7 @@ export class CheckStudentComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
       response => {
         this.student_info_list = response.data;
+        this.GetAllStudents();
         this.loading = false;
       },
       error => {
@@ -172,11 +186,21 @@ export class CheckStudentComponent implements OnInit {
   //  console.log(this.edit_group_list);
   }
 
+  GetAllStudents() {
+    this.all_studnets = []
+    for(var student of this.student_info_list) {
+      this.all_studnets.push({
+        id:student.id,
+        user_name:student.userName
+      })
+    }
+  }
+
 	GroupSelectOpened(opened: boolean) {
 		if (opened) {
-      this.group_loading=true;
+      this.user_group_loading=true;
       this.UpdateGroupInfo();
-      this.group_loading=false;
+      this.user_group_loading=false;
     }
 	}
 
@@ -213,6 +237,10 @@ export class CheckStudentComponent implements OnInit {
     }
     this.inputValue = '';
     this.inputVisible = false;
+  }
+
+  EditGroupStudentChange(): void {
+    
   }
 
   DownloadTemplate(): void {
