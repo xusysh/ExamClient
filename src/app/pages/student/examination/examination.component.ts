@@ -260,7 +260,7 @@ export class ExaminationComponent implements OnInit {
               if (question.type == 'multi') {
                 question.student_answer = [];
                 for(let i = 0; i <question['checkbox_values'].length;i++) {
-                  if(question['checkbox_values'][i]==0) {
+                  if(question['checkbox_values'][i]==true) {
                     question.student_answer.push({
                       id:i,
                       content:question.options[i]
