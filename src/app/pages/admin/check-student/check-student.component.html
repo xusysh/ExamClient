@@ -15,7 +15,7 @@
             <div>
               <div style="margin-bottom: 15px;margin-left: 15px">
                 <button style="margin-left: 5px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-                  (click)="UpdateTableData()">
+                  (click)="UpdateTableData();UpdateGroupInfo();">
                   <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
                 </button>
                 <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
@@ -149,13 +149,23 @@
           [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
           <div style="width: 100%;">
             <h2 style="text-align: center">用户组管理</h2>
-            <nz-card style="margin-left: 15px;margin-right:15px" *ngFor="let group of all_group_info"
-              [nzTitle]="group.group_name">
+            <nz-card style="margin-left: 15px;margin-right:15px" *ngFor="let group of all_group_info;let i=index;"
+              [nzTitle]="group.group_name" nzType="inner" [nzExtra]="extraTemplate">
               <nz-select [(ngModel)]="group.students" (ngModelChange)="EditGroupStudentChange()"
                 nzSize="large" nzMode="tags" nzPlaceHolder="请选择学生" [compareWith]="compareFn_stu" style="width: 100%;">
                 <nz-option *ngFor="let student of all_studnets" [nzLabel]="student.user_name" [nzValue]="student">
                 </nz-option>
               </nz-select>
+              <ng-template #extraTemplate>
+                <input nz-input *ngIf="edit_group_name_flags[i]" [(ngModel)]="edit_group_name"
+                  style="width: 80%;margin-bottom: 10px;margin-left: 10px;">
+                <i nz-icon *ngIf="edit_group_name_flags[i]" style="cursor: pointer;margin-left: 10px;" 
+                  (click)="EditGroupNameDone(i)" nzType="check"></i>
+                <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="edit_group_name = all_group_info[i].group_name;edit_group_name_flags[i]=true;"
+                  nzType="edit"></i>
+                <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"
+                  (click)="all_group_info.splice(i,1);edit_group_name_flags.splice(i,1);"></i>
+              </ng-template>
             </nz-card>
           </div>
         </nz-sider>

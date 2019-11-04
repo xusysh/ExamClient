@@ -41,9 +41,12 @@ export class CheckStudentComponent implements OnInit {
   public inputValue = '';
   public edit_user_info_loading = false;
 
+  edit_group_name_flags:Array<boolean> = [];
+  edit_group_name:string = '';
+
   current_select_user: number = 0;
   user_group_loading: boolean;
-  all_group_info:Array<object> = [];
+  all_group_info:Array<GroupInfo> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
   compareFn_stu = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
@@ -243,6 +246,25 @@ export class CheckStudentComponent implements OnInit {
     
   }
 
+  DuplicatedGroupName(group_name:string,index:number) :boolean {
+    for (let i=0;i<this.all_group_info.length;i++) {
+      if(this.all_group_info[i].group_name == group_name && i != index)
+        return true;
+    }
+    return false;
+  }
+
+  EditGroupNameDone(index: number) {
+    if(this.DuplicatedGroupName(this.edit_group_name,index)) {
+      this.message.warning('与其他大题名重复');
+      return;
+    }
+    else {
+      this.all_group_info[index].group_name = this.edit_group_name;
+      this.edit_group_name_flags[index] = false;
+    }
+  }
+
   DownloadTemplate(): void {
     this.is_downloading_template = true;
     this.http_client.get(this.base_url + 'upi/user/template', {
@@ -351,4 +373,15 @@ interface UserEditInfo {
   password: string,
   userType: string,
   group_list:Array<object>
+}
+
+interface GroupInfo {
+  group_id: number,
+  group_name: string,
+  students: Array<GroupUserInfo>
+}
+
+interface GroupUserInfo {
+  user_name: string,
+  id: number
 }
