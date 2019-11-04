@@ -254,8 +254,7 @@ export class CheckExamComponent implements OnInit {
 interface ExamInfo {
   id: number,
   examName: string,
-//  paper_info:PaperBaseInf,
-  paper_code: string,
+  paper_info:PaperBaseInfo,
   beginTime: string,
   endTime: string,
 //  duration: number,

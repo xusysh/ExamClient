@@ -23,6 +23,10 @@
                 (click)="UpdateTableData()">
                 <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
               </button>
+              <button style="margin-left: 15px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
+              (click)="UpdateTableData()">
+              <i nz-icon nzType="plus"></i>添加试卷
+            </button>
             </div>
             <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="paper_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
@@ -30,17 +34,18 @@
                 <tr>
                   <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
                   </th>
-                  <th nzWidth="200px" nzCustomFilter>
+                  <th nzWidth="180px" nzCustomFilter>
                     <b>考试名 
                       <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                         [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
                         nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                     </b>
                   </th>
-                  <th nzWidth="200px"><b>试卷名</b></th>
-                  <th nzWidth="220px"><b>开始时间</b></th>
-                  <th nzWidth="220px"><b>结束时间</b></th>
-                  <th nzWidth="160px"><b>持续时长</b></th>
+                  <th nzWidth="180px"><b>试卷名</b></th>
+                  <th nzWidth="180px"><b>开始时间</b></th>
+                  <th nzWidth="180px"><b>结束时间</b></th>
+                  <th nzWidth="120px"><b>持续时长</b></th>
+                  <th nzWidth="100px"><b>考试状态</b></th>
                   <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
                 </tr>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -57,19 +62,22 @@
                 <tr *ngFor="let data of ajaxTable.data;let i=index">
                   <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
                   <td>
-                    <p nz-paragraph nzCopyable [(nzContent)]="data.title"></p>
+                    <p nz-paragraph nzCopyable [(nzContent)]="data.examName"></p>
                   </td>
                   <td>
-                    <p nz-paragraph nzCopyable [(nzContent)]="data.title"></p>
+                    <p nz-paragraph nzCopyable [(nzContent)]="data.paper_info.title"></p>
                   </td>
                   <td>
-                    {{data.userName}}
+                    {{data.beginTime}}
                   </td>
                   <td>
-                    {{data.createTime}}
+                    {{data.endTime}}
                   </td>
                   <td>
-                    {{data.lastModifiedTime==null?data.createTime:data.lastModifiedTime}}
+                    {{data.duration}}
+                  </td>
+                  <td>
+                    {{data.status}}
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="EditPaper(i)" nzShape="circle"
@@ -89,7 +97,7 @@
         </div>
         <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
           [nzWidth]="500">
-          <!--todo:显示试卷详情-->
+          <!--todo:显示考试详情-->
         </nz-drawer>
       </nz-content>
     </nz-layout>
