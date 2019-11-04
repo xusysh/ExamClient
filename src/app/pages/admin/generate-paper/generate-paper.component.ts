@@ -50,10 +50,11 @@ export class GeneratePaperComponent implements OnInit {
     { label: '简答题', value: 'subjective' }
   ];
 
-  ques_name_filter: Array<string> = []
-  ques_type_filter: Array<string> = []
-  ques_knowledge_filter: Array<string> = []
-  new_ques_name_filter_item_str: string = ''
+  ques_name_filter: Array<string> = [];
+  ques_type_filter: Array<string> = [];
+  ques_knowledge_filter: Array<string> = [];
+  new_ques_name_filter_item_str: string = '';
+  paper_info_loading:boolean = false;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -82,9 +83,11 @@ export class GeneratePaperComponent implements OnInit {
     private message: NzMessageService, private modal: NzModalService) {
     this.GetKnowledge();
     this.GetAllQuestions();
+
     var cur_paper_code = sessionStorage.getItem('paper_code')
     if (cur_paper_code == null || cur_paper_code == '') return;
 
+    this.paper_info_loading = true;
     let paper_req = {
       paper_code: cur_paper_code
     }
@@ -119,6 +122,7 @@ export class GeneratePaperComponent implements OnInit {
           this.category_to_questions.set(category_name, question_list)
         }
         this.message.create('success', '试卷信息获取成功');
+        this.paper_info_loading = false;
       },
       error => {
         this.message.create('error', '试卷信息获取失败：连接服务器失败');
