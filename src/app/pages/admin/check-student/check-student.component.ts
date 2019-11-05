@@ -40,6 +40,7 @@ export class CheckStudentComponent implements OnInit {
   public inputVisible = false;
   public inputValue = '';
   public edit_user_info_loading = false;
+  public group_info_loading = false;
 
   edit_group_name_flags:Array<boolean> = [];
   edit_group_name:string = '';
@@ -175,10 +176,12 @@ export class CheckStudentComponent implements OnInit {
 
 
   UpdateGroupInfo(){
+    this.group_info_loading = true;
     this.all_group_info=[]
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/groupuser/all').subscribe(
       response => {
         this.all_group_info = response.data;
+        this.group_info_loading = false;
       },
       error => {
         this.message.create('error', '用户信息获取失败：连接服务器失败');
@@ -260,8 +263,24 @@ export class CheckStudentComponent implements OnInit {
       return;
     }
     else {
-      this.all_group_info[index].group_name = this.edit_group_name;
-      this.edit_group_name_flags[index] = false;
+      let group_edit_info = {
+        id:this.all_group_info[index].group_id,
+        groupName:this.edit_group_name
+      }
+      this.http_client.post<MyServerResponse>(this.base_url + 'upi/group/single', group_edit_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '组名编辑失败:' + response.msg);
+        }
+        else {
+          this.message.create('success', '组名编辑成功');
+          this.edit_group_name_flags[index] = false;
+          this.UpdateGroupInfo();
+        }
+      }, error => {
+        this.message.create('error', '组名编辑失败：连接服务器失败');
+      });
+
     }
   }
 

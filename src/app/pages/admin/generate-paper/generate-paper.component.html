@@ -33,11 +33,16 @@
         <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,
           'overflow-y':'auto','padding-left':'20px'}">
           <nz-collapse>
-            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false" style="cursor:unset;">
+            <nz-collapse-panel nzHeader="题目列表" [nzActive]="true" [nzShowArrow]="false" style="cursor:unset;"
+              [nzExtra]="ques_filter_info">
+              <ng-template #ques_filter_info><i nz-icon nz-tooltip
+                  nzTitle="试题筛选规则：类型1 || 类型2 ..|| 类型n && 知识点1 || 知识点2 ..|| 知识点n && 题干1 || 题干2 ..|| 题干n"
+                  nzType="info-circle"></i>
+              </ng-template>
               <div style="margin-bottom: 10px;">
                 <strong>试题类型筛选：</strong>
-                <nz-tag *ngFor="let ques_type of ques_types"
-                  nzMode="checkable" style="font-size: 120%;height:30px;padding-top: 3px;" [nzChecked]="false"
+                <nz-tag *ngFor="let ques_type of ques_types" nzMode="checkable"
+                  style="font-size: 120%;height:30px;padding-top: 3px;" [nzChecked]="false"
                   (nzCheckedChange)="QuesTypeFilterChange(ques_type.value,$event)">{{ques_type.label}}</nz-tag>
               </div>
               <div style="margin-bottom: 10px;">
@@ -51,14 +56,13 @@
               <div style="margin-bottom: 10px;">
                 <strong>题干筛选：</strong>
                 <nz-input-group style="width: 30%;" [nzSuffix]="suffixIconSearch">
-                  <input type="text" nz-input placeholder="输入部分题干进行搜索"
-                    [(ngModel)]="new_ques_name_filter_item_str" />
+                  <input type="text" nz-input placeholder="输入部分题干进行搜索" [(ngModel)]="new_ques_name_filter_item_str" />
                 </nz-input-group>
                 <ng-template #suffixIconSearch>
                   <i nz-icon nzType="search" style="cursor: pointer;" (click)="AddQuesNameFilterItem()"></i>
                 </ng-template>
                 <nz-tag *ngFor="let ques_name of ques_name_filter;let i=index;" nzMode="closeable"
-                  (nzOnClose)="ques_name_filter.splice(i,1);GetFilteredQuestions();"  
+                  (nzOnClose)="ques_name_filter.splice(i,1);GetFilteredQuestions();"
                   style="font-size: 110%;font-weight:600; height:30px;padding-top: 3px;margin-left: 8px;margin-top: 5px;">
                   {{ques_name}}
                 </nz-tag>
@@ -162,10 +166,10 @@
               <ng-template #extraTemplate>
                 <input nz-input *ngIf="edit_category_flags[i]" [(ngModel)]="edit_category_name"
                   style="width: 80%;margin-bottom: 10px;margin-left: 10px;">
-                <i nz-icon *ngIf="edit_category_flags[i]" style="cursor: pointer;margin-left: 10px;" 
+                <i nz-icon *ngIf="edit_category_flags[i]" style="cursor: pointer;margin-left: 10px;"
                   (click)="EditCateGoryDone(i)" nzType="check"></i>
-                <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="edit_category_name = categorys[i];edit_category_flags[i]=true;"
-                  nzType="edit"></i>
+                <i nz-icon style="cursor: pointer;margin-left: 10px;"
+                  (click)="edit_category_name = categorys[i];edit_category_flags[i]=true;" nzType="edit"></i>
                 <i nz-icon style="cursor: pointer;margin-left: 10px;" (click)="linefeed=!linefeed"
                   [nzType]="linefeed?'zoom-in':'zoom-out'"></i>
                 <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"
