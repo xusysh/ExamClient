@@ -24,7 +24,8 @@ export class ExaminationComponent implements OnInit {
     createTime: '',
     lastModifiedTime: '',
     createUserId: 0,
-    categoryList: []
+    categoryList: [],
+    leftTime:0
   };
 
   //当前页
@@ -35,7 +36,7 @@ export class ExaminationComponent implements OnInit {
   public exam_end:boolean = false;
   public autosave_interval = 10;
   //考试剩余时间
-  public remain_seconds: number = 35;
+  public remain_seconds: number = 9999;
   public hour = 0;
   public min = 0;
   public sec =0;
@@ -182,6 +183,7 @@ export class ExaminationComponent implements OnInit {
         else {
           this.student_paper_info = response.data;
           this.exam_name = this.student_paper_info.title;
+          this.remain_seconds = Math.round(this.student_paper_info.leftTime / 1000);
           for (let i = 0; i < this.student_paper_info.categoryList.length; i++) {
             for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
               let question = this.student_paper_info.categoryList[i].questionList[j];
@@ -354,6 +356,7 @@ interface ServerStudentPaperInfo {
   lastModifiedTime: string,
   createUserId: number,
   categoryList: Array<CategoryInfo>
+  leftTime:number
 }
 
 interface CategoryInfo {

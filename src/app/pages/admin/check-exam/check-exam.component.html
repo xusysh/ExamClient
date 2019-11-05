@@ -24,11 +24,11 @@
                 <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
               </button>
               <button style="margin-left: 15px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-              (click)="UpdateTableData()">
-              <i nz-icon nzType="plus"></i>添加试卷
+              (click)="AddExam()">
+              <i nz-icon nzType="plus"></i>添加考试
             </button>
             </div>
-            <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="paper_info_list"
+            <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
               <thead (nzSortChange)="sort($event)" nzSingleSort>
                 <tr>
@@ -46,7 +46,7 @@
                   <th nzWidth="180px"><b>结束时间</b></th>
                   <th nzWidth="120px"><b>持续时长</b></th>
                   <th nzWidth="100px"><b>考试状态</b></th>
-                  <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
+                  <th nzWidth="220px" style="align-content: center"><b>操作</b></th>
                 </tr>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <div class="search-box">
@@ -80,9 +80,19 @@
                     {{data.status}}
                   </td>
                   <td>
-                    <button nz-button nzSize="small" nzType="primary" (click)="EditPaper(i)" nzShape="circle"
-                      nz-tooltip nzTitle="编辑/查看详情">
+                    <button nz-button nzSize="small" nzType="primary" (click)="EditExam(i)" nzShape="circle"
+                      nz-tooltip nzTitle="编辑">
                       <i nz-icon nzType="edit"></i>
+                    </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzSize="small" nzType="primary" (click)="CheckExamStudentPapers(i)" nzShape="circle"
+                    nz-tooltip nzTitle="查看学生交卷情况">
+                    <i nz-icon nzType="container"></i>
+                    </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzSize="small" nzType="primary" nzShape="circle"
+                    nz-tooltip nzTitle="开始考试"><!--结束考试-->
+                    <i nz-icon nzType="play-square"></i> <!--close-square-->
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
@@ -97,7 +107,87 @@
         </div>
         <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
           [nzWidth]="500">
-          <!--todo:显示考试详情-->
+          <form nz-form>
+
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考试名称</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="考试名称不能为空!">
+                <input nz-input nzSize="large" name="exam_name" [(ngModel)]="edit_exam_name" />
+              </nz-form-control>
+            </nz-form-item>
+            
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24">试卷</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select [(ngModel)]="edit_question_knowledge" name="exam_paper" nzSize="large" nzMode="tags"
+                  nzPlaceHolder="请选择试卷" (nzOpenChange)="UpdateKnowledgeInfo()" [nzLoading]="knowledge_loading">
+                  <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
+                      <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
+                  </nz-option>
+                  <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title"
+                    [nzValue]="knowledge.title">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24">开始时间</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="开始时间不能为空!">
+                  <nz-date-picker name="exam_start_time"
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  nzPlaceHolder="请选择日期与时刻"
+                  [(ngModel)]="edit_exam_start_time"
+                  (ngModelChange)="onChange($event)"
+                  (nzOnOk)="onOk($event)"
+                ></nz-date-picker>            
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">结束时间</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="结束时间不能为空!">
+                    <nz-date-picker name="exam_end_time"
+                    nzShowTime
+                    nzFormat="yyyy-MM-dd HH:mm:ss"
+                    nzPlaceHolder="请选择日期与时刻"
+                    [(ngModel)]="edit_exam_end_time"
+                    (ngModelChange)="onChange($event)"
+                    (nzOnOk)="onOk($event)"
+                  ></nz-date-picker>       
+                </nz-form-control>
+              </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考试时长</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="考试名称不能为空!">
+                <input nz-input nzSize="large" name="exam_duration" [(ngModel)]="edit_exam_duration" />
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">考生组</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <nz-select [(ngModel)]="edit_group_list" name="exam_student_group"
+                    nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组" (nzOpenChange)="GroupSelectOpened($event)"
+                    [compareWith]="compareFn">
+                    <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
+                      <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
+                    </nz-option>
+                    <nz-option *ngFor="let group of exam_group_info" [nzLabel]="group.group_name" [nzValue]="group">
+                    </nz-option>
+                  </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+
+            <div class="drawer-footer">
+              <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
+                style="margin-right: 15px;"><span>取消</span></button>
+              <button nz-button type="button" (click)="EditExamInfo()" class="ant-btn ant-btn-primary"
+                [nzLoading]="edit_question_info_loading"><span>提交</span></button>
+            </div>
+          </form>
         </nz-drawer>
       </nz-content>
     </nz-layout>

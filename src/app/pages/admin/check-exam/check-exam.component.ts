@@ -24,7 +24,7 @@ export class CheckExamComponent implements OnInit {
   public sortKey: string | null = null;
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
-  public paper_info_list: Array<PaperBaseInfo> = [];
+  public exam_info_list: Array<ExamInfo> = [];
 
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
@@ -33,12 +33,15 @@ export class CheckExamComponent implements OnInit {
   public is_indeterminate = false;
   public edit_paper_code: string = '';
 
-  public user_group_tags = [];
-  public inputVisible = false;
-  public inputValue = '';
-  public edit_paper_info_loading = false;
+  public edit_exam_info_loading = false;
+  public edit_exam_id:number = 0;
+  public edit_exam_name:string = '';
+  public edit_exam_student_group:Array<any> = null;
+  public edit_exam_start_time:Date=null;
+  public edit_exam_end_time:Date=null;
+  public edit_exam_duration_time:number=null;
 
-  current_select_paper: number = 0;
+  current_select_exam: number = 0;
   group_loading: boolean;
   all_group_info:Array<object> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
@@ -63,7 +66,7 @@ export class CheckExamComponent implements OnInit {
     this.loading = true;
     this.http_client.get<MyServerResponse>(this.base_url + 'epi/admin/examlist').subscribe(
       response => {
-        this.paper_info_list = response.data;
+        this.exam_info_list = response.data;
         this.loading = false;
       },
       error => {
@@ -78,18 +81,12 @@ export class CheckExamComponent implements OnInit {
     this.UpdateTableData(true);
   }
 
-  EditPaper(index: number): void {
-    this.current_select_paper = (this.page_index - 1) * this.page_size + index;
-    this.edit_paper_code = this.paper_info_list[this.current_select_paper].paperCode;
-    sessionStorage.setItem('paper_code',this.edit_paper_code);
-    this.router.navigateByUrl("admin/generate-paper");
-  }
 
   //删除单个试卷
   DeletePaper(index: number): void {
-    this.current_select_paper = (this.page_index - 1) * this.page_size + index;
+    this.current_select_exam = (this.page_index - 1) * this.page_size + index;
     let user_delete_info = {
-      id: [this.paper_info_list[this.current_select_paper].id]
+      id: [this.exam_info_list[this.current_select_exam].id]
     }
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -101,7 +98,7 @@ export class CheckExamComponent implements OnInit {
           this.message.create('error', '用户删除失败:' + response.msg);
         }
         else {
-          this.message.create('success', '用户 ' + this.paper_info_list[this.current_select_paper].title + ' 删除成功');
+          this.message.create('success', '用户 ' + this.exam_info_list[this.current_select_exam].examName + ' 删除成功');
           this.UpdateTableData();
         }
       }, error => {
@@ -138,6 +135,41 @@ export class CheckExamComponent implements OnInit {
     this.drawer_visible = false;
   }
 
+  AddExam() {
+
+  }
+
+  EditExam(index: number): void {
+    this.current_select_exam = (this.page_index - 1) * this.page_size + index;
+
+    this.drawer_visible = true;
+  }
+
+  EditExamInfo() {
+
+  }
+
+  CheckExamStudentPapers() {
+
+  }
+
+  GetExamGroupStudents(index:number) {
+    let exam_info = {
+      exam_id:this.exam_info_list[index].id
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'paper/student', exam_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '获取试卷考生组信息失败:' + response.msg);
+        }
+        else {
+          this.message.create('success', '获取试卷考生组信息成功');
+        }
+      }, error => {
+        this.message.create('error', '获取试卷考生组信息失败：连接服务器失败');
+      });
+  }
+
   DialogOKHandle(): void {
     this.dialog_ok_loading = true;
     this.UpdateTableData();
@@ -152,21 +184,6 @@ export class CheckExamComponent implements OnInit {
   }
 
   refreshStatus(): void {
-  }
-
-  showInput(): void {
-    this.inputVisible = true;
-    setTimeout(() => {
-      this.inputElement.nativeElement.focus();
-    }, 10);
-  }
-
-  handleInputConfirm(): void {
-    if (this.inputValue && this.user_group_tags.indexOf(this.inputValue) === -1) {
-      this.user_group_tags = [...this.user_group_tags, this.inputValue];
-    }
-    this.inputValue = '';
-    this.inputVisible = false;
   }
 
   DownloadTemplate(): void {
