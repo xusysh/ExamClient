@@ -110,21 +110,21 @@
             <form nz-form>
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>用户名</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="edit_user_name=='' ? 'error':'validating'"
+                <nz-form-control [nzSm]="15" [nzXs]="24" [nzValidateStatus]="edit_user_name=='' ? 'error':'validating'"
                   nzErrorTip="用户名不能为空!">
                   <input nz-input nzSize="large" name="username" [(ngModel)]="edit_user_name" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>密码</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="edit_password=='' ? 'error':'validating'"
+                <nz-form-control [nzSm]="15" [nzXs]="24" [nzValidateStatus]="edit_password=='' ? 'error':'validating'"
                   nzErrorTip="密码不能为空！">
                   <input nz-input nzSize="large" name="password" [(ngModel)]="edit_password" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24">所在考生组</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-form-control [nzSm]="15" [nzXs]="24">
                   <nz-select [(ngModel)]="edit_group_list" (ngModelChange)="EditGroupChange()" name="question_answer"
                     nzSize="large" nzMode="tags" nzPlaceHolder="请选择组" (nzOpenChange)="GroupSelectOpened($event)"
                     [compareWith]="compareFn">

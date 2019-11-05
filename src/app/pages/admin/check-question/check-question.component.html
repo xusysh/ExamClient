@@ -166,13 +166,13 @@
       <form nz-form>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>题干</nz-form-label>
-          <nz-form-control [nzsm]="15" [nzXs]="24" nzErrorTip="题干不能为空!">
+          <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="题干不能为空!">
             <input nz-input nzSize="large" name="question_content" [(ngModel)]="edit_question_content" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题类型</nz-form-label>
-          <nz-form-control [nzsm]="15" [nzXs]="24" nzErrorTip="试题类型不能为空!">
+          <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="试题类型不能为空!">
             <nz-select [(ngModel)]="edit_question_type" name="question_type" nzSize="large" nzAllowClear
               nzPlaceHolder="选择题目类型" (ngModelChange)="TypeSelectChanged($event)">
               <nz-option-group nzLabel="客观题">
@@ -197,7 +197,7 @@
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
-          <nz-form-control [nzsm]="15" [nzXs]="24">
+          <nz-form-control [nzSm]="15" [nzXs]="24">
             <nz-select [(ngModel)]="edit_question_knowledge" name="question_knowledge" nzSize="large" nzMode="tags"
               nzPlaceHolder="请选择知识点" (nzOpenChange)="UpdateKnowledgeInfo($event)" [nzLoading]="knowledge_loading">
               <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title"
@@ -210,7 +210,7 @@
         <div *ngIf="edit_question_type!='subjective'">
           <nz-form-item *ngFor="let option of edit_question_options;let i = index">
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项{{i+1}}</nz-form-label>
-            <nz-form-control [nzsm]="15" [nzXs]="24" nzErrorTip="选项不能为空！">
+            <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="选项不能为空！">
               <input nz-input nzSize="large" [name]="'question_option'+i" [(ngModel)]="option.content" />
             </nz-form-control>
           </nz-form-item>
@@ -221,7 +221,7 @@
 
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
-            <nz-form-control [nzsm]="15" [nzXs]="24" nzErrorTip="参考答案不能为空！">
+            <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="参考答案不能为空！">
               <nz-select [(ngModel)]="edit_question_answer" (ngModelChange)="test()" name="question_answer"
                 nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn"
                 [nzMaxMultipleCount]="edit_question_type=='multi'?edit_question_options.length:1">
