@@ -111,21 +111,21 @@
 
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考试名称</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="考试名称不能为空!">
+              <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="考试名称不能为空!">
                 <input nz-input nzSize="large" name="exam_name" [(ngModel)]="edit_exam_name" />
               </nz-form-control>
             </nz-form-item>
             
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24">试卷</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
+              <nz-form-control [nzSm]="15" [nzXs]="24">
                 <nz-select [(ngModel)]="edit_question_knowledge" name="exam_paper" nzSize="large" nzMode="tags"
-                  nzPlaceHolder="请选择试卷" (nzOpenChange)="UpdateKnowledgeInfo()" [nzLoading]="knowledge_loading">
+                  nzPlaceHolder="请选择试卷" (nzOpenChange)="UpdatePaperInfo($event)" [nzLoading]="knowledge_loading">
                   <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
                       <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                   </nz-option>
-                  <nz-option *ngFor="let paper of all_paper_info" [nzLabel]="knowledge.title"
-                    [nzValue]="knowledge.title">
+                  <nz-option *ngFor="let paper of all_paper_info" [nzLabel]="paper.title"
+                    [nzValue]="paper">
                   </nz-option>
                 </nz-select>
               </nz-form-control>
@@ -133,49 +133,57 @@
 
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24">开始时间</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="开始时间不能为空!">
+              <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="开始时间不能为空!">
                   <nz-date-picker name="exam_start_time"
                   nzShowTime
                   nzFormat="yyyy-MM-dd HH:mm:ss"
                   nzPlaceHolder="请选择日期与时刻"
                   [(ngModel)]="edit_exam_start_time"
-                  (ngModelChange)="onChange($event)"
-                  (nzOnOk)="onOk($event)"
                 ></nz-date-picker>            
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24">结束时间</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="结束时间不能为空!">
+                <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="结束时间不能为空!">
                     <nz-date-picker name="exam_end_time"
                     nzShowTime
                     nzFormat="yyyy-MM-dd HH:mm:ss"
                     nzPlaceHolder="请选择日期与时刻"
                     [(ngModel)]="edit_exam_end_time"
-                    (ngModelChange)="onChange($event)"
-                    (nzOnOk)="onOk($event)"
                   ></nz-date-picker>       
                 </nz-form-control>
               </nz-form-item>
 
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考试时长</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="考试名称不能为空!">
-                <input nz-input nzSize="large" name="exam_duration" [(ngModel)]="edit_exam_duration" />
+              <nz-form-control [nzSm]="5" [nzXs]="24" nzErrorTip="考试时长不能为空!">
+                  <nz-input-group nzSize="large" nzAddOnAfter="时"  name="exam_hour">
+                      <input type="text" nz-input [(ngModel)]="edit_exam_duration_hour" />
+                    </nz-input-group>
               </nz-form-control>
+              <nz-form-control [nzSm]="5" [nzXs]="24" nzErrorTip="考试时长不能为空!">
+                  <nz-input-group nzSize="large" nzAddOnAfter="分"  name="exam_minute">
+                    <input type="text" nz-input [(ngModel)]="edit_exam_duration_minute" />
+                  </nz-input-group>
+                </nz-form-control>
+                <nz-form-control [nzSm]="5" [nzXs]="24" nzErrorTip="考试时长不能为空!">
+                    <nz-input-group nzSize="large" nzAddOnAfter="秒"  name="exam_second">
+                        <input type="text" nz-input [(ngModel)]="edit_exam_duration_second" />
+                      </nz-input-group>
+                  </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24">考生组</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-form-control [nzSm]="15" [nzXs]="24">
                   <nz-select [(ngModel)]="edit_group_list" name="exam_student_group"
-                    nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组" (nzOpenChange)="GroupSelectOpened($event)"
+                    nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组" (nzOpenChange)="UpdateGroupInfo($event)"
                     [compareWith]="compareFn">
                     <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
                       <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                     </nz-option>
-                    <nz-option *ngFor="let group of exam_group_info" [nzLabel]="group.group_name" [nzValue]="group">
+                    <nz-option *ngFor="let group of all_group_info" [nzLabel]="group.group_name" [nzValue]="group">
                     </nz-option>
                   </nz-select>
                 </nz-form-control>

@@ -191,7 +191,8 @@ export class CheckQuestionComponent implements OnInit {
       });
   }
 
-  UpdateKnowledgeInfo() {
+  UpdateKnowledgeInfo(is_open:boolean = true) {
+    if(!is_open) return;
     this.add_new_knowledge = false;
     this.knowledge_loading = true;
     this.all_knowledge_info = []

@@ -34,25 +34,29 @@ export class CheckExamComponent implements OnInit {
   public edit_paper_code: string = '';
 
   public edit_exam_info_loading = false;
-  public edit_exam_id:number = 0;
-  public edit_exam_name:string = '';
-  public edit_exam_student_group:Array<any> = null;
-  public edit_exam_start_time:Date=null;
-  public edit_exam_end_time:Date=null;
-  public edit_exam_duration_time:number=null;
+  public edit_exam_id: number = 0;
+  public edit_exam_name: string = '';
+  public edit_exam_student: Array<any> = null;
+  public edit_exam_group: Array<GroupStudentInfo> = null;
+  public edit_exam_start_time: Date = null;
+  public edit_exam_end_time: Date = null;
+  public edit_exam_duration: number = 36000000;
+  public edit_exam_hour: number = 0;
+  public edit_exam_minute: number = 0;
+  public edit_exam_second: number = 0;
 
-  public all_paper_info:Array<PaperBaseInfo> = [];
-  public all_paper_info_loading:boolean = false;
-  public exam_group_loading:boolean = false;
+  public all_paper_info: Array<PaperBaseInfo> = [];
+  public all_paper_info_loading: boolean = false;
+  public group_info_loading: boolean = false;
 
   current_select_exam: number = 0;
   group_loading: boolean;
-  all_group_info:Array<object> = [];
+  all_group_info: Array<object> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService,private router:Router) { }
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router) { }
 
   ngOnInit(): void {
     this.UpdateTableData();
@@ -111,29 +115,13 @@ export class CheckExamComponent implements OnInit {
     this.drawer_visible = false;
   }
 
-
-  UpdateGroupInfo(){
-    this.all_group_info=[]
-    this.http_client.get<MyServerResponse>(this.base_url + 'upi/groupuser/all').subscribe(
-      response => {
-        this.all_group_info = response.data;
-      },
-      error => {
-        this.message.create('error', '用户信息获取失败：连接服务器失败');
-      });
-  }
-
-  EditGroupChange() {
-  //  console.log(this.edit_group_list);
-  }
-
-	GroupSelectOpened(opened: boolean) {
-		if (opened) {
-      this.group_loading=true;
+  GroupSelectOpened(opened: boolean) {
+    if (opened) {
+      this.group_loading = true;
       this.UpdateGroupInfo();
-      this.group_loading=false;
+      this.group_loading = false;
     }
-	}
+  }
 
   DrawerClose(): void {
     this.drawer_visible = false;
@@ -144,9 +132,29 @@ export class CheckExamComponent implements OnInit {
   }
 
   EditExam(index: number): void {
+    if (index == -1) {
+      this.edit_exam_id = -1;
+      return;
+    }
     this.current_select_exam = (this.page_index - 1) * this.page_size + index;
+    this.edit_exam_id = this.exam_info_list[this.current_select_exam].id;
+    this.edit_exam_name = this.exam_info_list[this.current_select_exam].examName;
+    this.edit_exam_start_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].beginTime));
+    this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
 
     this.drawer_visible = true;
+  }
+
+  ParseDuration() {
+    this.edit_exam_hour = this.edit_exam_duration / 3600000;
+    this.edit_exam_minute = (this.edit_exam_duration / 60000) % 60;
+    this.edit_exam_second = (this.edit_exam_duration / 1000) % 60;
+  }
+
+  GetDuration() {
+    this.edit_exam_duration += this.edit_exam_hour * 3600000;
+    this.edit_exam_duration += this.edit_exam_minute * 60000;
+    this.edit_exam_duration += this.edit_exam_second * 1000;
   }
 
   EditExamInfo() {
@@ -157,9 +165,9 @@ export class CheckExamComponent implements OnInit {
 
   }
 
-  GetExamGroupStudents(index:number) {
+  GetExamGroupStudents(index: number) {
     let exam_info = {
-      exam_id:this.exam_info_list[index].id
+      exam_id: this.exam_info_list[index].id
     }
     this.http_client.post<MyServerResponse>(this.base_url + 'paper/student', exam_info).
       subscribe(response => {
@@ -167,23 +175,37 @@ export class CheckExamComponent implements OnInit {
           this.message.create('error', '获取试卷考生组信息失败:' + response.msg);
         }
         else {
-          this.message.create('success', '获取试卷考生组信息成功');
+          this.edit_exam_group = response.data;
         }
       }, error => {
         this.message.create('error', '获取试卷考生组信息失败：连接服务器失败');
       });
   }
 
-  UpdatePaperInfo() {
-    this.loading = true;
+  UpdateGroupInfo(is_open: boolean = false) {
+    if (!is_open) return;
+    this.group_info_loading = true;
+    this.all_group_info = []
+    this.http_client.get<MyServerResponse>(this.base_url + 'upi/groupuser/all').subscribe(
+      response => {
+        this.all_group_info = response.data;
+      },
+      error => {
+        this.message.create('error', '组信息获取失败：连接服务器失败');
+      });
+  }
+
+  UpdatePaperInfo(is_open: boolean = true) {
+    if (!is_open) return;
+    this.all_paper_info_loading = true;
     this.http_client.get<MyServerResponse>(this.base_url + 'paper/all').subscribe(
       response => {
         this.all_paper_info = response.data;
-        this.loading = false;
+        this.all_paper_info_loading = false;
       },
       error => {
         this.message.create('error', '试卷信息获取失败：连接服务器失败');
-        this.loading = false;
+        this.all_paper_info_loading = false;
       });
   }
 
@@ -282,16 +304,16 @@ export class CheckExamComponent implements OnInit {
     );
   };
 
-  
+
 }
 
 interface ExamInfo {
   id: number,
   examName: string,
-  paper_info:PaperBaseInfo,
+  paper_info: PaperBaseInfo,
   beginTime: string,
   endTime: string,
-//  duration: number,
+  //  duration: number,
   duration: string,
   status: string
 }
@@ -299,9 +321,25 @@ interface ExamInfo {
 interface PaperBaseInfo {
   id: number,
   paperCode: string,
-  createTime:string,
+  createTime: string,
   lastModifiedTime: string,
   createUserId: number,
   title: string,
   description: string
+}
+
+interface GroupStudentInfo {
+  group_id: number,
+  group_name: string,
+  students: Array<StudentInfo>
+}
+
+interface GroupInfo {
+  group_id: number,
+  group_name: string,
+}
+
+interface StudentInfo {
+  id: number,
+  user_name: string,
 }
