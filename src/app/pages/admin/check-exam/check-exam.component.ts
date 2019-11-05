@@ -41,6 +41,10 @@ export class CheckExamComponent implements OnInit {
   public edit_exam_end_time:Date=null;
   public edit_exam_duration_time:number=null;
 
+  public all_paper_info:Array<PaperBaseInfo> = [];
+  public all_paper_info_loading:boolean = false;
+  public exam_group_loading:boolean = false;
+
   current_select_exam: number = 0;
   group_loading: boolean;
   all_group_info:Array<object> = [];
@@ -167,6 +171,19 @@ export class CheckExamComponent implements OnInit {
         }
       }, error => {
         this.message.create('error', '获取试卷考生组信息失败：连接服务器失败');
+      });
+  }
+
+  UpdatePaperInfo() {
+    this.loading = true;
+    this.http_client.get<MyServerResponse>(this.base_url + 'paper/all').subscribe(
+      response => {
+        this.all_paper_info = response.data;
+        this.loading = false;
+      },
+      error => {
+        this.message.create('error', '试卷信息获取失败：连接服务器失败');
+        this.loading = false;
       });
   }
 

@@ -67,7 +67,7 @@ export class CheckPaperComponent implements OnInit {
         this.loading = false;
       },
       error => {
-        this.message.create('error', '用户信息获取失败：连接服务器失败');
+        this.message.create('error', '试卷信息获取失败：连接服务器失败');
         this.loading = false;
       });
 

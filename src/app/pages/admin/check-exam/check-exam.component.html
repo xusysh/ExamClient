@@ -124,7 +124,7 @@
                   <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
                       <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                   </nz-option>
-                  <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title"
+                  <nz-option *ngFor="let paper of all_paper_info" [nzLabel]="knowledge.title"
                     [nzValue]="knowledge.title">
                   </nz-option>
                 </nz-select>
