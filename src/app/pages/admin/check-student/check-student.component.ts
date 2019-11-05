@@ -23,7 +23,7 @@ export class CheckStudentComponent implements OnInit {
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
   public student_info_list: Array<UserInfo> = [];
-  public all_studnets:Array<object> = [];
+  public all_studnets: Array<object> = [];
 
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
@@ -34,7 +34,8 @@ export class CheckStudentComponent implements OnInit {
   public edit_user_name: string = '';
   public edit_password: string = '';
   public edit_group_list: Array<object> = [];
-  public edit_group_student_list :Array<object> = [];
+  public edit_group_student_list: Array<Array<object>> = [];
+  public edit_group_student_list_loading: boolean = false;
 
   public user_group_tags = [];
   public inputVisible = false;
@@ -42,12 +43,12 @@ export class CheckStudentComponent implements OnInit {
   public edit_user_info_loading = false;
   public group_info_loading = false;
 
-  edit_group_name_flags:Array<boolean> = [];
-  edit_group_name:string = '';
+  edit_group_name_flags: Array<boolean> = [];
+  edit_group_name: string = '';
 
   current_select_user: number = 0;
   user_group_loading: boolean;
-  all_group_info:Array<GroupInfo> = [];
+  all_group_info: Array<GroupInfo> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
   compareFn_stu = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
@@ -99,7 +100,7 @@ export class CheckStudentComponent implements OnInit {
   }
 
   CheckStudentInfo(index: number): void {
-    if(index == -1) {
+    if (index == -1) {
       this.edit_user_id = 0;
       this.edit_user_name = '';
       this.edit_password = '';
@@ -113,17 +114,17 @@ export class CheckStudentComponent implements OnInit {
       this.edit_group_list = this.student_info_list[this.current_select_user].group_list;
     }
     this.drawer_visible = true;
-//    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
-  //  this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
+    //    this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/id/g,"group_id"));
+    //  this.edit_group_list = JSON.parse(JSON.stringify(this.edit_group_list).replace(/groupName/g,"group_name"));
   }
 
   EditUserInfo(): void {
-    if(this.edit_user_name=='' || this.edit_user_name==null){
-      this.edit_user_name='';
+    if (this.edit_user_name == '' || this.edit_user_name == null) {
+      this.edit_user_name = '';
       return;
     }
-    if(this.edit_password=='' || this.edit_password==null){
-      this.edit_password='';
+    if (this.edit_password == '' || this.edit_password == null) {
+      this.edit_password = '';
       return;
     }
     this.edit_user_info_loading = true;
@@ -132,7 +133,7 @@ export class CheckStudentComponent implements OnInit {
       userName: this.edit_user_name,
       password: this.edit_password,
       userType: 'student',
-      group_list:this.edit_group_list
+      group_list: this.edit_group_list
     }
     this.http_client.post<MyServerResponse>(this.base_url + '/upi/usergroup/relation', user_edit_info).
       subscribe(response => {
@@ -175,12 +176,15 @@ export class CheckStudentComponent implements OnInit {
   }
 
 
-  UpdateGroupInfo(){
+  UpdateGroupInfo() {
     this.group_info_loading = true;
-    this.all_group_info=[]
+    this.all_group_info = []
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/groupuser/all').subscribe(
       response => {
         this.all_group_info = response.data;
+        this.edit_group_student_list = new Array<Array<object>>(this.all_group_info.length);
+        for (let i = 0; i < this.all_group_info.length; i++)
+          this.edit_group_student_list[i] = this.all_group_info[i].students.concat();
         this.group_info_loading = false;
       },
       error => {
@@ -189,26 +193,26 @@ export class CheckStudentComponent implements OnInit {
   }
 
   EditGroupChange() {
-  //  console.log(this.edit_group_list);
+    //  console.log(this.edit_group_list);
   }
 
   GetAllStudents() {
     this.all_studnets = []
-    for(var student of this.student_info_list) {
+    for (var student of this.student_info_list) {
       this.all_studnets.push({
-        id:student.id,
-        user_name:student.userName
+        id: student.id,
+        user_name: student.userName
       })
     }
   }
 
-	GroupSelectOpened(opened: boolean) {
-		if (opened) {
-      this.user_group_loading=true;
+  GroupSelectOpened(opened: boolean) {
+    if (opened) {
+      this.user_group_loading = true;
       this.UpdateGroupInfo();
-      this.user_group_loading=false;
+      this.user_group_loading = false;
     }
-	}
+  }
 
   DrawerClose(): void {
     this.drawer_visible = false;
@@ -246,42 +250,72 @@ export class CheckStudentComponent implements OnInit {
   }
 
   EditGroupStudentChange(): void {
-    
+
   }
 
-  DuplicatedGroupName(group_name:string,index:number) :boolean {
-    for (let i=0;i<this.all_group_info.length;i++) {
-      if(this.all_group_info[i].group_name == group_name && i != index)
+  DuplicatedGroupName(group_name: string, index: number): boolean {
+    for (let i = 0; i < this.all_group_info.length; i++) {
+      if (this.all_group_info[i].group_name == group_name && i != index)
         return true;
     }
     return false;
   }
 
   EditGroupNameDone(index: number) {
-    if(this.DuplicatedGroupName(this.edit_group_name,index)) {
-      this.message.warning('与其他大题名重复');
+    if (this.all_group_info[index].group_name == this.edit_group_name)
+      return;
+    if (this.DuplicatedGroupName(this.edit_group_name, index)) {
+      this.message.warning('与其他小组名重复');
       return;
     }
     else {
       let group_edit_info = {
-        id:this.all_group_info[index].group_id,
-        groupName:this.edit_group_name
+        id: this.all_group_info[index].group_id,
+        groupName: this.edit_group_name
       }
       this.http_client.post<MyServerResponse>(this.base_url + 'upi/group/single', group_edit_info).
+        subscribe(response => {
+          if (response.status != 200) {
+            this.message.create('error', '组名编辑失败:' + response.msg);
+          }
+          else {
+            this.message.create('success', '组名编辑成功');
+            this.edit_group_name_flags[index] = false;
+            this.UpdateGroupInfo();
+          }
+        }, error => {
+          this.message.create('error', '组名编辑失败：连接服务器失败');
+        });
+
+    }
+  }
+
+  GroupStudentListChangeDone(index: number) {
+    var student_id_list = []
+    this.edit_group_student_list_loading = true;
+    for (let student of this.edit_group_student_list[index]) {
+      student_id_list.push(student['id'])
+    }
+    let group_edit_info = {
+      group_id: this.all_group_info[index].group_id,
+      student_id: student_id_list
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'upi/groupuser', group_edit_info).
       subscribe(response => {
         if (response.status != 200) {
-          this.message.create('error', '组名编辑失败:' + response.msg);
+          this.message.create('error', this.all_group_info[index].group_name + ' 学生列表编辑失败:' + response.msg);
+          this.edit_group_student_list_loading = false;
         }
         else {
-          this.message.create('success', '组名编辑成功');
+          this.message.create('success', this.all_group_info[index].group_name + ' 学生列表编辑成功');
+          this.edit_group_student_list_loading = false;
           this.edit_group_name_flags[index] = false;
           this.UpdateGroupInfo();
         }
       }, error => {
-        this.message.create('error', '组名编辑失败：连接服务器失败');
+        this.message.create('error', this.all_group_info[index].group_name + ' 学生列表编辑失败：连接服务器失败');
+        this.edit_group_student_list_loading = false;
       });
-
-    }
   }
 
   DownloadTemplate(): void {
@@ -391,7 +425,7 @@ interface UserEditInfo {
   userName: string,
   password: string,
   userType: string,
-  group_list:Array<object>
+  group_list: Array<object>
 }
 
 interface GroupInfo {
