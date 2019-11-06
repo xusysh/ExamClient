@@ -49,6 +49,8 @@ export class CheckExamComponent implements OnInit {
   public all_paper_info_loading: boolean = false;
   public group_info_loading: boolean = false;
 
+  exam_administration_drawer_visible:boolean = false;
+
   current_select_exam: number = 0;
   group_loading: boolean;
   all_group_info: Array<GroupInfo> = [];
@@ -148,19 +150,19 @@ export class CheckExamComponent implements OnInit {
   EditExam(index: number): void {
     if (index == -1) {
       this.edit_exam_id = null;
-      return;
     }
-    this.UpdatePaperInfo(true);
-    this.current_select_exam = (this.page_index - 1) * this.page_size + index;
-    this.edit_exam_paper_info = this.exam_info_list[this.current_select_exam].paper_info;
-    this.edit_exam_id = this.exam_info_list[this.current_select_exam].id;
-    this.edit_exam_name = this.exam_info_list[this.current_select_exam].examName;
-    this.edit_exam_start_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].beginTime));
-    this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
-    this.edit_exam_duration = this.exam_info_list[this.current_select_exam].duration;
+    else {
+      this.current_select_exam = (this.page_index - 1) * this.page_size + index;
+      this.edit_exam_paper_info = this.exam_info_list[this.current_select_exam].paper_info;
+      this.edit_exam_id = this.exam_info_list[this.current_select_exam].id;
+      this.edit_exam_name = this.exam_info_list[this.current_select_exam].examName;
+      this.edit_exam_start_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].beginTime));
+      this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
+      this.edit_exam_duration = this.exam_info_list[this.current_select_exam].duration;
+      this.ParseDuration();
+    }
     this.UpdateGroupInfo(true);
     this.GetExamGroupStudents();
-    this.ParseDuration();
     this.drawer_visible = true;
   }
 
@@ -204,8 +206,9 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  CheckExamStudentPapers() {
-
+  ExamAdministrationDrawerOpen() {
+    
+    this.exam_administration_drawer_visible = true;
   }
 
   test2(event:any) {

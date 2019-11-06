@@ -81,12 +81,12 @@
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="EditExam(i)" nzShape="circle" nz-tooltip
-                      nzTitle="编辑">
+                      nzTitle="编辑" [disabled]="data.status != '未开始'">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <button nz-button nzSize="small" nzType="primary" (click)="CheckExamStudentPapers(i)"
-                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况">
+                    <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
+                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始'">
                       <i nz-icon nzType="container"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -115,8 +115,8 @@
               <nz-form-label [nzSm]="6" [nzXs]="24">试卷</nz-form-label>
               <nz-form-control [nzSm]="15" [nzXs]="24">
                 <nz-select [(ngModel)]="edit_exam_paper_info" name="exam_paper" nzSize="large" nzPlaceHolder="请选择试卷"
-                  (nzOpenChange)="UpdatePaperInfo($event)" [nzLoading]="all_paper_info_loading"  
-                  (ngModelChange)="test2($event)"  [compareWith]="compareFn_paper">
+                  (nzOpenChange)="UpdatePaperInfo($event)" [nzLoading]="all_paper_info_loading"
+                  (ngModelChange)="test2($event)" [compareWith]="compareFn_paper">
                   <nz-option *ngIf="all_paper_info_loading" nzDisabled nzCustomContent>
                     <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                   </nz-option>
@@ -165,8 +165,7 @@
               <nz-form-label [nzSm]="6" [nzXs]="24">考生组</nz-form-label>
               <nz-form-control [nzSm]="15" [nzXs]="24">
                 <nz-select [(ngModel)]="edit_exam_group" name="exam_group" (nzOpenChange)="UpdateGroupInfo($event)"
-                  nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组"
-                  [compareWith]="compareFn">
+                  nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组" [compareWith]="compareFn">
                   <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
                     <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                   </nz-option>
@@ -184,7 +183,81 @@
             </div>
           </form>
         </nz-drawer>
-        <nz-drawer></nz-drawer>
+
+        <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right" nzTitle="考生答题情况"
+          (nzOnClose)="exam_administration_drawer_visible = false;" [nzWidth]="1000">
+          <div class="exam-administration-table-div">
+            <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_info_list"
+              [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
+              <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                  <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
+                  </th>
+                  <th nzWidth="180px" nzCustomFilter>
+                    <b>考生用户名
+                      <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                        [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                        nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                    </b>
+                  </th>
+                  <th nzWidth="100px"><b>提交状态</b></th>
+                  <th nzWidth="100px"><b>客观题得分</b></th>
+                  <th nzWidth="100px"><b>主观题得分</b></th>
+                  <th nzWidth="100px"><b>总分</b></th>
+                  <th nzWidth="160px" style="align-content: center"><b>操作</b></th>
+                </tr>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <div class="search-box">
+                    <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+                    <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+                      Search
+                    </button>
+                    <button nz-button nzSize="small" (click)="reset()">Reset</button>
+                  </div>
+                </nz-dropdown-menu>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of ajaxTable.data;let i=index">
+                  <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+                  <td>
+                    <p nz-paragraph nzCopyable [(nzContent)]="data.examName"></p>
+                  </td>
+                  <td>
+                    <p nz-paragraph nzCopyable [(nzContent)]="data.paper_info.title"></p>
+                  </td>
+                  <td>
+                    {{data.beginTime}}
+                  </td>
+                  <td>
+                    {{data.endTime}}
+                  </td>
+                  <td>
+                    {{data.duration}}
+                  </td>
+                  <td>
+                    {{data.status}}
+                  </td>
+                  <td>
+                    <button nz-button nzSize="small" nzType="primary" (click)="EditExam(i)" nzShape="circle" nz-tooltip
+                      nzTitle="编辑" [disabled]="data.status != '未开始'">
+                      <i nz-icon nzType="edit"></i>
+                    </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
+                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始'">
+                      <i nz-icon nzType="container"></i>
+                    </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
+                      nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeletePaper(i)" nz-tooltip nzTitle="删除">
+                      <i nz-icon nzType="delete"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </nz-drawer>
       </nz-content>
     </nz-layout>
   </nz-page-header-content>
