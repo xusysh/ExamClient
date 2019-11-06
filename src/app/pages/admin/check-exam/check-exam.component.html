@@ -74,7 +74,9 @@
                     {{data.endTime}}
                   </td>
                   <td>
-                    {{data.duration}}
+                    {{ParseDurationNum(data.duration).hour|number:'2.0'}}&nbsp;:
+                    {{ParseDurationNum(data.duration).minute|number:'2.0'}}&nbsp;:
+                    {{ParseDurationNum(data.duration).sec|number:'2.0'}}
                   </td>
                   <td>
                     {{data.status}}

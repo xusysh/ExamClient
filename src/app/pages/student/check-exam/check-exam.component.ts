@@ -1,5 +1,9 @@
 import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import { TableUpdateService } from '../../../tools/TableUpdateService.component'
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
+import { MyServerResponse } from '../../login/login.component';
 
 @Component({
   selector: 'app-check-exam',
@@ -20,21 +24,31 @@ export class CheckExamComponent implements OnInit {
   sort(sort: { key: string; value: string }): void {
     this.sortKey = sort.key;
     this.sortValue = sort.value;
-    this.UpdateTableData();
   }
 
-  constructor(private table_update_service: TableUpdateService) { }
+  public student_exam_info_list:Array<StudentExamInfo> = []
+
+  constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router) { 
+    }
 
   UpdateTableData(reset: boolean = false): void {
     if (reset) {
       this.pageIndex = 1;
     }
     this.loading = true;
-    this.table_update_service
-      .getUsers(this.pageIndex, 10, this.sortKey!, this.sortValue!, this.searchGenderList)
-      .subscribe((data: any) => {
+    let student_id = {
+      user_id:10
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'epi/user/examlist',student_id).subscribe(
+      response => {
+        this.student_exam_info_list = response.data;
         this.loading = false;
-        this.listOfData = data.results;
+        this.message.create('success', '考试信息获取成功');
+      },
+      error => {
+        this.message.create('error', '考试信息获取失败：连接服务器失败');
+        this.loading = false;
       });
   }
 
@@ -47,4 +61,14 @@ export class CheckExamComponent implements OnInit {
     this.UpdateTableData();
   }
 
+}
+
+interface StudentExamInfo {
+  id: number,
+  examName: string,
+  paperCode: string,
+  beginTime: string,
+  endTime: string,
+  duration: number,
+  status: string
 }

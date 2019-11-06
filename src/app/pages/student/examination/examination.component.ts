@@ -85,7 +85,7 @@ export class ExaminationComponent implements OnInit {
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
     sessionStorage.setItem('paper_code', '20191008193539');
     sessionStorage.setItem('exam_id', '3');
-    sessionStorage.setItem('userid', '11');
+    sessionStorage.setItem('userid', '10');
     this.GetPaperInfo();
     const timer = interval(1000).subscribe(() => {
       if(this.remain_seconds > 0) {

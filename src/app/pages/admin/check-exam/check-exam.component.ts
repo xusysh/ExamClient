@@ -136,6 +136,15 @@ export class CheckExamComponent implements OnInit {
     this.edit_exam_second = Math.floor((this.edit_exam_duration / 1000) % 60);
   }
 
+  ParseDurationNum(duration:number):ShowTime {
+    let show_time:ShowTime = {
+      hour : Math.floor(duration / 3600000),
+      minute  :Math.floor((duration / 60000) % 60),
+      sec:Math.floor((duration / 1000) % 60)
+    }
+    return show_time;
+  }
+
   GetDuration() {
     this.edit_exam_duration = 0;
     this.edit_exam_duration += this.edit_exam_hour * 3600000;
@@ -386,4 +395,10 @@ interface GroupInfo {
 interface StudentInfo {
   id: number,
   user_name: string,
+}
+
+interface ShowTime {
+  hour:number,
+  minute:number,
+  sec:number
 }
