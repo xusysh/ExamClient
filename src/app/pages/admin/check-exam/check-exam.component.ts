@@ -31,13 +31,13 @@ export class CheckExamComponent implements OnInit {
   public dialog_ok_loading: boolean = false;
   public is_allDisplay_data_checked = false;
   public is_indeterminate = false;
-  public edit_paper_code: string = '';
 
   public edit_exam_info_loading = false;
   public edit_exam_id: number = 0;
   public edit_exam_name: string = '';
+  public edit_exam_paper_info: PaperBaseInfo = null;
   public edit_exam_student: Array<any> = null;
-  public edit_exam_group: Array<GroupStudentInfo> = null;
+  public edit_exam_group: Array<GroupInfo> = null;
   public edit_exam_start_time: Date = null;
   public edit_exam_end_time: Date = null;
   public edit_exam_duration: number = 36000000;
@@ -51,8 +51,9 @@ export class CheckExamComponent implements OnInit {
 
   current_select_exam: number = 0;
   group_loading: boolean;
-  all_group_info: Array<object> = [];
+  all_group_info: Array<GroupInfo> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
+  compareFn_paper = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
@@ -78,7 +79,7 @@ export class CheckExamComponent implements OnInit {
         this.loading = false;
       },
       error => {
-        this.message.create('error', '用户信息获取失败：连接服务器失败');
+        this.message.create('error', '考试信息获取失败：连接服务器失败');
         this.loading = false;
       });
 
@@ -126,25 +127,7 @@ export class CheckExamComponent implements OnInit {
   DrawerClose(): void {
     this.drawer_visible = false;
   }
-
-  AddExam() {
-
-  }
-
-  EditExam(index: number): void {
-    if (index == -1) {
-      this.edit_exam_id = -1;
-      return;
-    }
-    this.current_select_exam = (this.page_index - 1) * this.page_size + index;
-    this.edit_exam_id = this.exam_info_list[this.current_select_exam].id;
-    this.edit_exam_name = this.exam_info_list[this.current_select_exam].examName;
-    this.edit_exam_start_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].beginTime));
-    this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
-
-    this.drawer_visible = true;
-  }
-
+  
   ParseDuration() {
     this.edit_exam_hour = this.edit_exam_duration / 3600000;
     this.edit_exam_minute = (this.edit_exam_duration / 60000) % 60;
@@ -152,22 +135,84 @@ export class CheckExamComponent implements OnInit {
   }
 
   GetDuration() {
+    this.edit_exam_duration = 0;
     this.edit_exam_duration += this.edit_exam_hour * 3600000;
     this.edit_exam_duration += this.edit_exam_minute * 60000;
     this.edit_exam_duration += this.edit_exam_second * 1000;
   }
 
-  EditExamInfo() {
+  AddExam() {
 
+  }
+
+  EditExam(index: number): void {
+    if (index == -1) {
+      this.edit_exam_id = null;
+      return;
+    }
+    this.UpdatePaperInfo(true);
+    this.current_select_exam = (this.page_index - 1) * this.page_size + index;
+    this.edit_exam_paper_info = this.exam_info_list[this.current_select_exam].paper_info;
+    this.edit_exam_id = this.exam_info_list[this.current_select_exam].id;
+    this.edit_exam_name = this.exam_info_list[this.current_select_exam].examName;
+    this.edit_exam_start_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].beginTime));
+    this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
+    this.UpdateGroupInfo(true);
+    this.GetExamGroupStudents();
+    this.ParseDuration();
+    this.drawer_visible = true;
+  }
+
+  EditExamInfo() {
+    this.edit_exam_info_loading = true;
+    this.GetDuration();
+    let edit_exam_group_ids = [];
+    for(let group of this.edit_exam_group) {
+      edit_exam_group_ids.push(group.group_id)
+    }
+    let exam_begin_time_str = this.edit_exam_start_time.toISOString();
+    exam_begin_time_str = exam_begin_time_str.substr(0,10) + ' ' + exam_begin_time_str.substr(11,8);
+    let exam_end_time_str = this.edit_exam_end_time.toISOString();
+    exam_end_time_str = exam_end_time_str.substr(0,10) + ' ' + exam_end_time_str.substr(11,8);
+    let edit_exam_info = {
+      id:this.edit_exam_id,
+      exam_name: this.edit_exam_name,
+      paper_code: this.edit_exam_paper_info.paperCode,
+      begin_time: exam_begin_time_str,
+      end_time: exam_end_time_str,
+      duration: this.edit_exam_duration,
+      status: "未开始",
+      group_ids: edit_exam_group_ids
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'exam/new', edit_exam_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '编辑试卷失败:' + response.msg);
+          this.edit_exam_info_loading = false;
+        }
+        else {
+          this.message.create('success', '编辑试卷成功');
+          this.edit_exam_group = response.data;
+          this.edit_exam_info_loading = false;
+          this.drawer_visible = false;
+        }
+      }, error => {
+        this.message.create('error', '编辑试卷失败：连接服务器失败');
+        this.edit_exam_info_loading = false;
+      });
   }
 
   CheckExamStudentPapers() {
 
   }
 
-  GetExamGroupStudents(index: number) {
+  test2(event:any) {
+    console.log(this.edit_exam_paper_info)
+  }
+
+  GetExamGroupStudents() {
     let exam_info = {
-      exam_id: this.exam_info_list[index].id
+      exam_id: this.exam_info_list[this.current_select_exam].id
     }
     this.http_client.post<MyServerResponse>(this.base_url + 'paper/student', exam_info).
       subscribe(response => {
@@ -313,8 +358,7 @@ interface ExamInfo {
   paper_info: PaperBaseInfo,
   beginTime: string,
   endTime: string,
-  //  duration: number,
-  duration: string,
+  duration: number,
   status: string
 }
 
@@ -328,15 +372,10 @@ interface PaperBaseInfo {
   description: string
 }
 
-interface GroupStudentInfo {
-  group_id: number,
-  group_name: string,
-  students: Array<StudentInfo>
-}
-
 interface GroupInfo {
   group_id: number,
   group_name: string,
+  students: Array<StudentInfo>
 }
 
 interface StudentInfo {
