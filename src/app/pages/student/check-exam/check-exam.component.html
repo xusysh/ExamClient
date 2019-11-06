@@ -21,19 +21,13 @@
             (click)="UpdateTableData()">
             <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
           </button>
-          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-            (click)="EditExam(-1)">
-            <i nz-icon nzType="plus"></i>添加考试
-          </button>
         </div>
         <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_exam_info_list"
           [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
           <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>
-              <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
-              </th>
               <th nzWidth="180px" nzCustomFilter>
-                <b>考试名
+                <b>&nbsp;考试名
                   <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                     [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
                     nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
@@ -43,7 +37,7 @@
               <th nzWidth="180px"><b>结束时间</b></th>
               <th nzWidth="120px"><b>持续时长</b></th>
               <th nzWidth="100px"><b>考试状态</b></th>
-              <th nzWidth="160px" style="align-content: center"><b>操作</b></th>
+              <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
               <div class="search-box">
@@ -57,7 +51,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of ajaxTable.data;let i=index;">
-              <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
               <td>
                 <p nz-paragraph nzCopyable [(nzContent)]="data.examName"></p>
               </td>
@@ -68,7 +61,9 @@
                 {{data.endTime}}
               </td>
               <td>
-                {{data.duration}}
+                {{ParseDurationNum(data.duration).hour|number:'2.0'}}&nbsp;:
+                {{ParseDurationNum(data.duration).minute|number:'2.0'}}&nbsp;:
+                {{ParseDurationNum(data.duration).sec|number:'2.0'}}
               </td>
               <td>
                 {{data.status}}
@@ -78,11 +73,11 @@
                   nzTitle="参加考试" [disabled]="data.status != '未开始'">
                   <i nz-icon nzType="edit"></i>
                 </button>
-                <!--nz-divider nzType="vertical"></nz-divider>
+                <nz-divider nzType="vertical"></nz-divider>
                 <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                  nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始'">
+                  nzShape="circle" nz-tooltip nzTitle="查看交卷情况" [disabled]="data.status != '已结束'">
                   <i nz-icon nzType="container"></i>
-                </button-->
+                </button>
               </td>
             </tr>
           </tbody>

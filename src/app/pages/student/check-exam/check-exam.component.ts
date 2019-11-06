@@ -12,8 +12,8 @@ import { MyServerResponse } from '../../login/login.component';
 })
 
 export class CheckExamComponent implements OnInit {
-  pageIndex = 1;
-  pageSize = 5;
+  page_index = 1;
+  page_size = 5;
   listOfData = [];
   loading = true;
   sortValue: string | null = null;
@@ -34,7 +34,7 @@ export class CheckExamComponent implements OnInit {
 
   UpdateTableData(reset: boolean = false): void {
     if (reset) {
-      this.pageIndex = 1;
+      this.page_index = 1;
     }
     this.loading = true;
     let student_id = {
@@ -50,6 +50,15 @@ export class CheckExamComponent implements OnInit {
         this.message.create('error', '考试信息获取失败：连接服务器失败');
         this.loading = false;
       });
+  }
+
+  ParseDurationNum(duration:number):ShowTime {
+    let show_time:ShowTime = {
+      hour : Math.floor(duration / 3600000),
+      minute  :Math.floor((duration / 60000) % 60),
+      sec:Math.floor((duration / 1000) % 60)
+    }
+    return show_time;
   }
 
   updateFilter(value: string[]): void {
@@ -71,4 +80,10 @@ interface StudentExamInfo {
   endTime: string,
   duration: number,
   status: string
+}
+
+interface ShowTime {
+  hour:number,
+  minute:number,
+  sec:number
 }
