@@ -20,6 +20,13 @@
     display:-webkit-flex;
   }
 
+  .exam-administration-table-div{
+    width:100%;
+    height: 100%;
+    justify-content:center;
+  }
+
+
   .table-operations {
     margin-bottom: 16px;
   }
@@ -86,10 +93,4 @@
     margin-right: 8px;
   }
 
-  .exam-administration-table-div{
-    width:100%;
-    height: 100%;
-    justify-content:center;
-    align-items:center;
-    display:-webkit-flex;
-  }
+ 

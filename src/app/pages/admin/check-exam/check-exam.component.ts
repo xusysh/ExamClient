@@ -50,6 +50,10 @@ export class CheckExamComponent implements OnInit {
   public group_info_loading: boolean = false;
 
   exam_administration_drawer_visible:boolean = false;
+  exam_administration_page_index = 1;
+  exam_administration_page_size = 5;
+  exam_student_paper_info_list:Array<StudentPaperBaseInfo> = []
+  exam_administration_loading:boolean = false;
 
   current_select_exam: number = 0;
   group_loading: boolean;
@@ -63,6 +67,7 @@ export class CheckExamComponent implements OnInit {
 
   ngOnInit(): void {
     this.UpdateTableData();
+    this.UpdateStudentPaperInfo();
   }
 
   sort(sort: { key: string; value: string }): void {
@@ -268,6 +273,26 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
+  UpdateStudentPaperInfo(reset:boolean = false) {
+    if (reset) {
+      this.page_index = 1;
+    }
+    this.exam_administration_loading = true;
+    let exam_id = {
+      exam_id:this.exam_info_list[this.current_select_exam].id
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'epi/user/examlist',exam_id).subscribe(
+      response => {
+        this.exam_student_paper_info_list = response.data;
+        this.exam_administration_loading = false;
+        this.message.create('success', '考试信息获取成功');
+      },
+      error => {
+        this.message.create('error', '考试信息获取失败：连接服务器失败');
+        this.exam_administration_loading = false;
+      });
+  }
+
   DialogOKHandle(): void {
     this.dialog_ok_loading = true;
     this.UpdateTableData();
@@ -401,4 +426,22 @@ interface ShowTime {
   hour:number,
   minute:number,
   sec:number
+}
+
+interface StudentPaperBaseInfo {
+  id: 8,
+  paperCode: string,
+  studentId: number,
+  objectiveGrade: number,
+  subjectiveGrade: number,
+  extraPoint: number,
+  paperTotalPoint: number,
+  studentTotalPoint: number,
+  objectiveStatus: number,
+  subjectiveStatus: number,
+  examId: number,
+  endFlag: number,
+  inTime: number,
+  leftTime: number,
+  studentName: string
 }
