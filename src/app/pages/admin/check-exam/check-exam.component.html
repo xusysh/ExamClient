@@ -24,7 +24,7 @@
                 <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
               </button>
               <button style="margin-left: 15px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-                (click)="AddExam()">
+                (click)="EditExam(-1)">
                 <i nz-icon nzType="plus"></i>添加考试
               </button>
             </div>
@@ -46,7 +46,7 @@
                   <th nzWidth="180px"><b>结束时间</b></th>
                   <th nzWidth="120px"><b>持续时长</b></th>
                   <th nzWidth="100px"><b>考试状态</b></th>
-                  <th nzWidth="220px" style="align-content: center"><b>操作</b></th>
+                  <th nzWidth="160px" style="align-content: center"><b>操作</b></th>
                 </tr>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <div class="search-box">
@@ -88,12 +88,6 @@
                     <button nz-button nzSize="small" nzType="primary" (click)="CheckExamStudentPapers(i)"
                       nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况">
                       <i nz-icon nzType="container"></i>
-                    </button>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <button nz-button nzSize="small" nzType="primary" nzShape="circle" nz-tooltip nzTitle="开始考试">
-                      <!--结束考试-->
-                      <i nz-icon nzType="play-square"></i>
-                      <!--close-square-->
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
@@ -190,6 +184,7 @@
             </div>
           </form>
         </nz-drawer>
+        <nz-drawer></nz-drawer>
       </nz-content>
     </nz-layout>
   </nz-page-header-content>

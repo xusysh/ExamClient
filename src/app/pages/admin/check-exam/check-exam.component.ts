@@ -40,7 +40,7 @@ export class CheckExamComponent implements OnInit {
   public edit_exam_group: Array<GroupInfo> = null;
   public edit_exam_start_time: Date = null;
   public edit_exam_end_time: Date = null;
-  public edit_exam_duration: number = 36000000;
+  public edit_exam_duration: number = 0;
   public edit_exam_hour: number = 0;
   public edit_exam_minute: number = 0;
   public edit_exam_second: number = 0;
@@ -129,9 +129,9 @@ export class CheckExamComponent implements OnInit {
   }
   
   ParseDuration() {
-    this.edit_exam_hour = this.edit_exam_duration / 3600000;
-    this.edit_exam_minute = (this.edit_exam_duration / 60000) % 60;
-    this.edit_exam_second = (this.edit_exam_duration / 1000) % 60;
+    this.edit_exam_hour = Math.floor(this.edit_exam_duration / 3600000);
+    this.edit_exam_minute = Math.floor((this.edit_exam_duration / 60000) % 60);
+    this.edit_exam_second = Math.floor((this.edit_exam_duration / 1000) % 60);
   }
 
   GetDuration() {
@@ -157,6 +157,7 @@ export class CheckExamComponent implements OnInit {
     this.edit_exam_name = this.exam_info_list[this.current_select_exam].examName;
     this.edit_exam_start_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].beginTime));
     this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
+    this.edit_exam_duration = this.exam_info_list[this.current_select_exam].duration;
     this.UpdateGroupInfo(true);
     this.GetExamGroupStudents();
     this.ParseDuration();
@@ -170,10 +171,10 @@ export class CheckExamComponent implements OnInit {
     for(let group of this.edit_exam_group) {
       edit_exam_group_ids.push(group.group_id)
     }
-    let exam_begin_time_str = this.edit_exam_start_time.toISOString();
-    exam_begin_time_str = exam_begin_time_str.substr(0,10) + ' ' + exam_begin_time_str.substr(11,8);
-    let exam_end_time_str = this.edit_exam_end_time.toISOString();
-    exam_end_time_str = exam_end_time_str.substr(0,10) + ' ' + exam_end_time_str.substr(11,8);
+    let exam_begin_time_str = this.edit_exam_start_time.toLocaleString()
+    exam_begin_time_str = exam_begin_time_str.substr(0,10).replace(new RegExp('/','g'),'-') + ' ' + this.edit_exam_start_time.toTimeString().substr(0,8);
+    let exam_end_time_str = this.edit_exam_end_time.toLocaleString();
+    exam_end_time_str = exam_end_time_str.substr(0,10).replace(new RegExp('/','g'),'-') + ' ' + this.edit_exam_end_time.toTimeString().substr(0,8);
     let edit_exam_info = {
       id:this.edit_exam_id,
       exam_name: this.edit_exam_name,
@@ -195,6 +196,7 @@ export class CheckExamComponent implements OnInit {
           this.edit_exam_group = response.data;
           this.edit_exam_info_loading = false;
           this.drawer_visible = false;
+          this.UpdateTableData();
         }
       }, error => {
         this.message.create('error', '编辑试卷失败：连接服务器失败');

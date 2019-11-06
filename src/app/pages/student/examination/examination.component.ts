@@ -90,7 +90,7 @@ export class ExaminationComponent implements OnInit {
     const timer = interval(1000).subscribe(() => {
       if(this.remain_seconds > 0) {
         if(this.remain_seconds % this.autosave_interval == 0) {
-          this.SubmitAnswer(1);
+          this.SubmitAnswer(0);
         }
         this.remain_seconds--;
         this.min = Math.floor(this.remain_seconds / 3600);
@@ -342,7 +342,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   EndStudentExam() {
-    this.SubmitAnswer(1);
+    this.SubmitAnswer(0);
     this.exam_end = true;
   }
 
