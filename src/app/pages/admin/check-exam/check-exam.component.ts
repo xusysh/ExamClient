@@ -67,7 +67,6 @@ export class CheckExamComponent implements OnInit {
 
   ngOnInit(): void {
     this.UpdateTableData();
-    this.UpdateStudentPaperInfo();
   }
 
   sort(sort: { key: string; value: string }): void {
@@ -220,9 +219,10 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  ExamAdministrationDrawerOpen() {
-    
+  ExamAdministrationDrawerOpen(index:number) {
+    this.current_select_exam =  (this.page_index - 1) * this.page_size + index;
     this.exam_administration_drawer_visible = true;
+    this.UpdateStudentPaperInfo();
   }
 
   test2(event:any) {
@@ -281,8 +281,13 @@ export class CheckExamComponent implements OnInit {
     let exam_id = {
       exam_id:this.exam_info_list[this.current_select_exam].id
     }
-    this.http_client.post<MyServerResponse>(this.base_url + 'epi/user/examlist',exam_id).subscribe(
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stupoint',exam_id).subscribe(
       response => {
+        if(response.status!=200) {
+          this.exam_administration_loading = false;
+          this.message.create('info', '考试信息获取失败：'+response.msg);
+          return;
+        }
         this.exam_student_paper_info_list = response.data;
         this.exam_administration_loading = false;
         this.message.create('success', '考试信息获取成功');

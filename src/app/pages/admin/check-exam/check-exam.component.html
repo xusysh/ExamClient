@@ -186,13 +186,14 @@
           </form>
         </nz-drawer>
 
-        <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right" [nzTitle]="+'考生答题情况'"
+        <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right" 
+          [nzTitle]="exam_info_list[current_select_exam].examName + ' 考生答题情况'"
           (nzOnClose)="exam_administration_drawer_visible = false;" [nzWidth]="900">
           <div class="exam-administration-table-div">
               <div style="margin-bottom: 15px;margin-left: 15px">
-                  <button style="margin-left: 5px" nz-button nzSize="defalut" nzShape="round"
-                    (click)="UpdateStudentPaperInfo(true)">
-                    <i nz-icon nzType="play-square"></i>开始考试
+                  <button style="margin-left: 5px" nz-button nzSize="defalut"
+                    (click)="UpdateStudentPaperInfo(true)" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题" >
+                    <i nz-icon nzType="play-square"></i>开始判题
                   </button>
                 </div>
             <nz-table #ajaxTable2 nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_student_paper_info_list"
@@ -226,19 +227,19 @@
               <tbody>
                 <tr *ngFor="let data of ajaxTable2.data;let i=index">
                   <td>
-                    <p nz-paragraph nzCopyable [(nzContent)]="data.examName"></p>
+                    <p nz-paragraph nzCopyable [nzContent]="data.studentName"></p>
                   </td>
                   <td>
-                    <p nz-paragraph nzCopyable [(nzContent)]="data.paper_info.title"></p>
+                    <p nz-paragraph nzCopyable [nzContent]="data.endFlag == 1?'已提交':'未提交'"></p>
                   </td>
                   <td>
-                    {{data.studentName}}
+                    {{data.objectiveGrade}}
                   </td>
                   <td>
-                    {{data.endTime}}
+                    {{data.subjectiveGrade}}
                   </td>
                   <td>
-                    {{data.duration}}
+                    {{data.studentTotalPoint}}/{{data.paperTotalPoint}}
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="EditExam(i)" nzShape="circle" nz-tooltip
@@ -247,7 +248,7 @@
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始'">
+                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始' || data.status == '进行中'">
                       <i nz-icon nzType="container"></i>
                     </button>
                   </td>
