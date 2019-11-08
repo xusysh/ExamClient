@@ -277,6 +277,7 @@ export class CheckExamComponent implements OnInit {
     if (reset) {
       this.page_index = 1;
     }
+    this.exam_student_paper_info_list = [];
     this.exam_administration_loading = true;
     let exam_id = {
       exam_id:this.exam_info_list[this.current_select_exam].id
