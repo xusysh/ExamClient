@@ -43,6 +43,9 @@ export class CheckStudentComponent implements OnInit {
   public edit_user_info_loading = false;
   public group_info_loading = false;
 
+  delete_student_ids:Array<number> = [];
+  delete_loading:boolean = false;
+
   edit_group_name_flags: Array<boolean> = [];
   edit_group_name: string = '';
 
@@ -84,6 +87,8 @@ export class CheckStudentComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
       response => {
         this.student_info_list = response.data;
+        for(var student of this.student_info_list) 
+          student['delete_flag'] = false;
         this.GetAllStudents();
         this.loading = false;
       },
@@ -175,6 +180,34 @@ export class CheckStudentComponent implements OnInit {
       });
   }
 
+  //批量删除用户
+  DeleteUsers() {
+    this.delete_loading = true;
+    let user_delete_info = {
+      id: this.delete_student_ids
+    }
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: user_delete_info
+    };
+    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '用户删除失败:' + response.msg);
+          this.delete_loading = false;
+        }
+        else {
+          this.message.create('success', '用户删除成功');
+          this.delete_loading = false;
+          this.delete_student_ids = [];
+          this.UpdateTableData();
+        }
+      }, error => {
+        this.message.create('error', '用户删除失败：连接服务器失败');
+        this.delete_loading = false;
+      });
+  }
+
 
   UpdateGroupInfo() {
     this.group_info_loading = true;
@@ -231,7 +264,14 @@ export class CheckStudentComponent implements OnInit {
     this.dialog_visible = false;
   }
 
-  refreshStatus(): void {
+  RefreshDeleteCheckStatus(checked:boolean): void {
+    this.delete_student_ids = []
+    for(let student of this.student_info_list) {
+      if(student['delete_flag'] == true ) {
+        this.delete_student_ids.push(student.id);
+      }
+    }
+    console.log(this.delete_student_ids);
   }
 
   showInput(): void {

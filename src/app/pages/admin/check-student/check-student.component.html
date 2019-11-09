@@ -26,12 +26,16 @@
                   (click)="dialog_visible=true">
                   <i nz-icon nzType="usergroup-add"></i>批量导入
                 </button>
+                <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
+                  *ngIf="delete_student_ids.length > 0" (click)="DeleteUsers()" [nzLoading]="delete_loading">
+                  <i nz-icon nzType="user-delete"></i>批量删除考生
+                </button>
               </div>
               <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
                 [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
                 <thead (nzSortChange)="sort($event)" nzSingleSort>
                   <tr>
-                    <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
+                    <th>
                     </th>
                     <th nzWidth="200px" nzCustomFilter>
                       <b>用户名
@@ -56,7 +60,8 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of ajaxTable.data;let i=index">
-                    <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+                    <td nzShowCheckbox [(nzChecked)]="data.delete_flag" (nzCheckedChange)="RefreshDeleteCheckStatus()">
+                    </td>
                     <td>
                       <p nz-paragraph nzCopyable [(nzContent)]="data.userName"></p>
                     </td>
