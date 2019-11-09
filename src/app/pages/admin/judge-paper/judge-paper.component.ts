@@ -109,6 +109,10 @@ export class JudgePaperComponent implements OnInit {
     }
   }
 
+  SubmitStudentGrade() {
+    
+  }
+
   ngOnInit(): void {
   }
 

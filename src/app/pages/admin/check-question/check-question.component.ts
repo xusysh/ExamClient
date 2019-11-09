@@ -319,7 +319,7 @@ export class CheckQuestionComponent implements OnInit {
 
   DownloadTemplate(): void {
     this.is_downloading_template = true;
-    this.http_client.post(this.base_url + 'upi/user/template', null, {
+    this.http_client.get(this.base_url + 'question/template', {
       responseType: 'arraybuffer'
     }
     ).subscribe(response => this.DownloadFile(response, "application/ms-excel"),
@@ -333,7 +333,7 @@ export class CheckQuestionComponent implements OnInit {
     let blob = new Blob([data], { type: type });
     let url = window.URL.createObjectURL(blob);
     var anchor = document.createElement("a");
-    anchor.download = "导入模板.xls";
+    anchor.download = "考试系统试题模板.xls";
     anchor.href = url;
     anchor.click();
     this.message.create('success', '文件下载成功');

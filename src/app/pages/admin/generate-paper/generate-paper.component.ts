@@ -22,7 +22,7 @@ export class GeneratePaperComponent implements OnInit {
   search_value = '';
   selected_values = null;
 
-  exam_name: string = '点击此处修改考试名称';
+  exam_name: string = '点击此处修改试卷名称';
   total_points: number = 0;
 
   knowledge: Array<object> = []
@@ -335,7 +335,7 @@ export class GeneratePaperComponent implements OnInit {
           title: this.exam_name,
           description: '',
           paper_code: this.paper_info==null?'':this.paper_info.paperCode,
-          user_id: 1,
+          user_id: 9,
           question_list: all_question_list
         }
         this.http_client.post<MyServerResponse>(this.base_url + "paper/new", new_paper_info).
@@ -398,7 +398,7 @@ interface PaperInfo {
   title: string,
   description: string,
   paper_code: string,
-  user_id: 1,
+  user_id: number,
   question_list: Array<PaperQuestionInfo>
 }
 

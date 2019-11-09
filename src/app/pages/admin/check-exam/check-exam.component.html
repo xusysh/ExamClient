@@ -88,12 +88,14 @@
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始'">
+                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" 
+                      [disabled]="data.status == '未开始' || data.status == '进行中'">
                       <i nz-icon nzType="container"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
-                      nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeletePaper(i)" nz-tooltip nzTitle="删除">
+                      nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeleteExam(i)" nz-tooltip nzTitle="删除"
+                      [disabled]="data.status != '未开始'">
                       <i nz-icon nzType="delete"></i>
                     </button>
                   </td>
@@ -248,7 +250,7 @@
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '未开始' || data.status == '进行中'">
+                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '进行中'">
                       <i nz-icon nzType="container"></i>
                     </button>
                   </td>

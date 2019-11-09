@@ -334,7 +334,7 @@ export class CheckStudentComponent implements OnInit {
     let blob = new Blob([data], { type: type });
     let url = window.URL.createObjectURL(blob);
     var anchor = document.createElement("a");
-    anchor.download = "导入模板.xls";
+    anchor.download = "考试系统学生模板.xls";
     anchor.href = url;
     anchor.click();
     this.message.create('success', '文件下载成功');

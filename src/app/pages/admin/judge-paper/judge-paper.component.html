@@ -56,7 +56,6 @@
                     设置得分（总分{{question.total_point}}分）
                     <input nz-input style="width: 100px;margin-left: 10px;margin-right: 10px;"
                       [(ngModel)]="question.point" (focus)="emm=true" />
-                    <i *ngIf="emm" nz-icon nzType="check"></i>
                   </ng-template>
                 </nz-collapse-panel>
               </nz-collapse>
@@ -74,6 +73,8 @@
           </ul>
         </nz-sider>
       </nz-layout>
+      <button nz-button nzSize="large" (click)="SubmitStudentGrade()"
+        class="submit-judge-button">提交学生成绩</button>
     </nz-page-header-content>
   </nz-page-header>
 

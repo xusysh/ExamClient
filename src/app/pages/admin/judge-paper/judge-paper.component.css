@@ -71,3 +71,10 @@
   opacity: .7;
   transition: opacity .3s;
 }
+
+.submit-judge-button {
+  position: fixed;
+  right: 180px;
+  bottom: 80px;
+  background: rgba(255, 255, 255, 0.8);  /*半透明*/
+}
