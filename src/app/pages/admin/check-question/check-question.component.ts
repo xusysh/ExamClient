@@ -54,6 +54,9 @@ export class CheckQuestionComponent implements OnInit {
   public edit_knowledge_dic:object = {};
   public edit_knowledge_flag_dic:object = {};
 
+  delete_question_ids:Array<number> = [];
+  delete_loading:boolean = false;
+
   public current_select_question: number = 0;
   public all_knowledge_info: Array<any> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
@@ -94,6 +97,7 @@ export class CheckQuestionComponent implements OnInit {
         for (let i = 0; i < this.question_info_list.length; i++) {
           this.question_info_list[i].options = JSON.parse(this.question_info_list[i].options);
           this.question_info_list[i].answer = JSON.parse(this.question_info_list[i].answer);
+          this.question_info_list[i]['delete_flag'] = false;
         }
         this.loading = false;
       },
@@ -257,27 +261,54 @@ export class CheckQuestionComponent implements OnInit {
 
   }
 
-  //todo:删除单个试题
-  DeleteUser(index: number): void {
+  DeleteQuestion(index: number): void {
     this.current_select_question = (this.page_index - 1) * this.page_size + index;
     let question_delete_info = {
-      id: [this.question_info_list[this.current_select_question].id]
+      question_id: [this.question_info_list[this.current_select_question].id]
     }
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       body: question_delete_info
     };
-    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
+    this.http_client.delete<MyServerResponse>(this.base_url + 'question/del', httpOptions).
       subscribe(response => {
         if (response.status != 200) {
-          this.message.create('error', '用户删除失败:' + response.msg);
+          this.message.create('error', '试题删除失败:' + response.msg);
         }
         else {
-          //    this.message.create('success', '用户 ' + this.question_info_list[this.current_select_user].userName + ' 删除成功');
+          this.message.create('success', '试题 ' + this.question_info_list[this.current_select_question].content + ' 删除成功');
           this.UpdateTableData();
         }
       }, error => {
-        this.message.create('error', '用户删除失败：连接服务器失败');
+        this.message.create('error', '试题删除失败：连接服务器失败');
+      });
+    this.drawer_visible = false;
+  }
+
+  DeleteQuestions(): void {
+    this.delete_loading = true;
+    let question_delete_info = {
+      question_id: this.delete_question_ids
+    }
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: question_delete_info
+    };
+    this.http_client.delete<MyServerResponse>(this.base_url + 'question/del', httpOptions).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '试题删除失败:' + response.msg);
+          this.delete_loading = false;
+        }
+        else {
+          this.message.create('success', '试题删除成功');
+          this.delete_question_ids = [];
+          this.delete_loading = false;
+          this.UpdateTableData();
+        }
+      }, error => {
+        this.message.create('error', '试题删除失败：连接服务器失败');
+        this.delete_loading = false;
       });
     this.drawer_visible = false;
   }
@@ -440,6 +471,16 @@ export class CheckQuestionComponent implements OnInit {
       this.add_new_knowledge = false;
     });
     this.edit_knowledge_name = '';
+  }
+
+  RefreshDeleteCheckStatus(checked:boolean): void {
+    this.delete_question_ids = []
+    for(let student of this.question_info_list) {
+      if(student['delete_flag'] == true ) {
+        this.delete_question_ids.push(student.id);
+      }
+    }
+    console.log(this.delete_question_ids);
   }
 
 }

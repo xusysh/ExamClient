@@ -29,6 +29,10 @@
             (click)="dialog_visible=true">
             <i nz-icon nzType="usergroup-add"></i>批量导入
           </button>
+          <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
+          *ngIf="delete_question_ids.length > 0" (click)="DeleteQuestions()" [nzLoading]="delete_loading">
+          <i nz-icon nzType="user-delete"></i>批量删除试题
+          </button>
           <!--知识点管理（拖拽?树）-->
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
             (click)="UpdateKnowledgeInfo();knowledge_dialog_visible=true;">
@@ -39,7 +43,7 @@
           [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'350px'}">
           <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>
-              <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate"></th>
+              <th></th>
               <th nzWidth="200px" nzCustomFilter>
                 <b>题干
                   <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
@@ -65,7 +69,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of ajaxTable.data;let i=index">
-              <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+              <td nzShowCheckbox [(nzChecked)]="data.delete_flag" (nzCheckedChange)="RefreshDeleteCheckStatus()">
+              </td>              
               <td>
                 <p nz-paragraph nzCopyable [nzContent]="data.content"></p>
               </td>
