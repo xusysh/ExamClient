@@ -475,9 +475,9 @@ export class CheckQuestionComponent implements OnInit {
 
   RefreshDeleteCheckStatus(checked:boolean): void {
     this.delete_question_ids = []
-    for(let student of this.question_info_list) {
-      if(student['delete_flag'] == true ) {
-        this.delete_question_ids.push(student.id);
+    for(let question of this.question_info_list) {
+      if(question['delete_flag'] == true ) {
+        this.delete_question_ids.push(question.id);
       }
     }
   }

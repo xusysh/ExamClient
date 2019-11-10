@@ -27,16 +27,16 @@
                 (click)="GeneratePaper()">
                 <i nz-icon nzType="plus"></i>添加试卷
               </button>
-              <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-                (click)="dialog_visible=true">
-                <i nz-icon nzType="usergroup-add"></i>导入模板
-              </button>
+              <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
+              *ngIf="delete_paper_papercodes.length > 0" (click)="DeletePapers()" [nzLoading]="delete_loading">
+              <i nz-icon nzType="user-delete"></i>批量删除试卷
+            </button>
             </div>
             <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="paper_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
               <thead (nzSortChange)="sort($event)" nzSingleSort>
                 <tr>
-                  <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
+                  <th>
                   </th>
                   <th nzWidth="200px" nzCustomFilter>
                     <b>试卷名
@@ -62,7 +62,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let data of ajaxTable.data;let i=index">
-                  <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+                  <td nzShowCheckbox [(nzChecked)]="data.delete_flag" (nzCheckedChange)="RefreshDeleteCheckStatus()"></td>
                   <td>
                     <p nz-paragraph nzCopyable [(nzContent)]="data.title"></p>
                   </td>

@@ -41,6 +41,10 @@ export class CheckPaperComponent implements OnInit {
   current_select_paper: number = 0;
   group_loading: boolean;
   all_group_info:Array<object> = [];
+
+  delete_paper_papercodes:Array<string> = [];
+  delete_loading:boolean = false;
+
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
@@ -64,6 +68,9 @@ export class CheckPaperComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'paper/all').subscribe(
       response => {
         this.paper_info_list = response.data;
+        for(let paper of this.paper_info_list) {
+          paper['delete_flag'] = false;
+        }
         this.loading = false;
       },
       error => {
@@ -85,31 +92,67 @@ export class CheckPaperComponent implements OnInit {
     this.router.navigateByUrl("admin/generate-paper");
   }
 
-  //删除单个试卷
-  DeletePaper(index: number): void {
-    this.current_select_paper = (this.page_index - 1) * this.page_size + index;
-    let user_delete_info = {
-      id: [this.paper_info_list[this.current_select_paper].id]
+
+  RefreshDeleteCheckStatus(checked:boolean): void {
+    this.delete_paper_papercodes = []
+    for(let paper of this.paper_info_list) {
+      if(paper['delete_flag'] == true ) {
+        this.delete_paper_papercodes.push(paper.paperCode);
+      }
     }
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      body: user_delete_info
-    };
-    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
-      subscribe(response => {
-        if (response.status != 200) {
-          this.message.create('error', '用户删除失败:' + response.msg);
-        }
-        else {
-          this.message.create('success', '用户 ' + this.paper_info_list[this.current_select_paper].title + ' 删除成功');
-          this.UpdateTableData();
-        }
-      }, error => {
-        this.message.create('error', '用户删除失败：连接服务器失败');
-      });
-    this.drawer_visible = false;
   }
 
+ //删除单个试卷
+ DeletePaper(index: number): void {
+  this.current_select_paper = (this.page_index - 1) * this.page_size + index;
+  let paper_delete_info = {
+    paper_code: [this.paper_info_list[this.current_select_paper].paperCode]
+  }
+  const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    body: paper_delete_info
+  };
+  this.http_client.delete<MyServerResponse>(this.base_url + 'paper/del', httpOptions).
+    subscribe(response => {
+      if (response.status != 200) {
+        this.message.create('error', '试卷删除失败:' + response.msg);
+      }
+      else {
+        this.message.create('success', '试卷 ' + this.paper_info_list[this.current_select_paper].title + ' 删除成功');
+        this.UpdateTableData();
+      }
+    }, error => {
+      this.message.create('error', '试卷删除失败：连接服务器失败');
+    });
+}
+
+//批量删除试卷
+DeletePapers() {
+  this.delete_loading = true;
+  let paper_delete_info = {
+    paper_code: this.delete_paper_papercodes
+  }
+  const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    body: paper_delete_info
+  };
+  this.http_client.delete<MyServerResponse>(this.base_url + 'paper/del', httpOptions).
+    subscribe(response => {
+      if (response.status != 200) {
+        this.message.create('error', '试卷删除失败:' + response.msg);
+        this.delete_loading = false;
+      }
+      else {
+        this.message.create('success', '试卷删除成功');
+        this.delete_loading = false;
+        this.delete_paper_papercodes = [];
+        this.UpdateTableData();
+      }
+    }, error => {
+      this.message.create('error', '试卷删除失败：连接服务器失败');
+      this.delete_loading = false;
+    });
+}
 
   UpdateGroupInfo(){
     this.all_group_info=[]
