@@ -480,7 +480,6 @@ export class CheckQuestionComponent implements OnInit {
         this.delete_question_ids.push(student.id);
       }
     }
-    console.log(this.delete_question_ids);
   }
 
 }

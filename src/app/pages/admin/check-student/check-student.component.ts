@@ -271,7 +271,6 @@ export class CheckStudentComponent implements OnInit {
         this.delete_student_ids.push(student.id);
       }
     }
-    console.log(this.delete_student_ids);
   }
 
   showInput(): void {
