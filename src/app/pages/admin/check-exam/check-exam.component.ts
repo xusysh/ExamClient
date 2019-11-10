@@ -357,7 +357,7 @@ export class CheckExamComponent implements OnInit {
           this.judge_objective_loading = false;
           return;
         }
-        this.message.create('success', '系统客观题自动判题成功：');
+        this.message.create('success', '系统客观题自动判题成功');
         this.judge_objective_loading = false;
         this.UpdateStudentPaperInfo();
       },
@@ -368,9 +368,11 @@ export class CheckExamComponent implements OnInit {
   }
 
   JudgePaper(index: number) {
-    let judge_exam = (this.page_index - 1) * this.page_size + index;
+    let judge_exam = (this.exam_administration_page_index - 1) * this.exam_administration_page_size + index;
     let judge_exam_id = this.exam_student_paper_info_list[judge_exam].examId;
     let judge_student_id = this.exam_student_paper_info_list[judge_exam].studentId;
+    sessionStorage.setItem('judge_exam_id',judge_exam_id.toString());
+    sessionStorage.setItem('judge_student_index',judge_student_id.toString());
     this.router.navigateByUrl("/admin/judge-paper");
   }
 

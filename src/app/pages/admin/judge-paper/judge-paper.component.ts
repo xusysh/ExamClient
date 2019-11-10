@@ -4,6 +4,7 @@ import { HttpClient, HttpRequest, HttpEvent, HttpEventType, HttpResponse, HttpHe
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs, NzFormatEmitEvent } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
+import { MyServerResponse } from '../../login/login.component';
 
 @Component({
   selector: 'app-judge-paper',
@@ -87,9 +88,12 @@ export class JudgePaperComponent implements OnInit {
     ]
   }
 
-  public current_student_index:number=0;
+  public current_student_index: number = 0;
 
-  all_student_judge_info:Array<StudentPaperJudgeInfo> = [];
+  judge_exam_id: number;
+  judge_student_id: number;
+
+  all_student_judge_info: Array<StudentPaperJudgeInfo> = [];
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -111,26 +115,68 @@ export class JudgePaperComponent implements OnInit {
     }
   }
 
-  GetStudentPapers() {
-    
+  ngOnInit() {
+    this.judge_exam_id = parseInt(sessionStorage.getItem('judge_exam_id'));
+    this.judge_student_id = parseInt(sessionStorage.getItem('judge_student_id'));
+    this.GetStudentJudgePapers();
+  }
+
+
+  GetStudentJudgePapers() {
+    let exam_info = {
+      exam_id: this.judge_exam_id
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/subanswers', exam_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '获取考生答题信息失败：' + response.msg);
+        }
+        else {
+          this.all_student_judge_info = response.data;
+          for(let student_judge_info of this.all_student_judge_info) {
+            //todo
+          }
+          this.message.create('success', '获取考生答题信息成功');
+        }
+      }, error => {
+        this.message.create('error', '获取考生答题信息失败：连接服务器失败');
+      });
   }
 
   SubmitStudentGrade() {
-    
+
   }
 
-  
-
-  ngOnInit(): void {
-  }
 
 }
 
 interface StudentPaperJudgeInfo {
-  student_name: string,
-  student_id: number,
-  paper_status: StudentJudgeInfo
+  exam_id: number,
+  paper_code: string,
+  student_answers_detail: Array<StudentAnswerDetail>
 }
 
-interface StudentJudgeInfo {
+interface StudentAnswerDetail {
+  student_id: number
+  student_name: string,
+  paper_status: PaperStatus,
+}
+
+interface PaperStatus {
+  objective_grade: 0,
+  subjective_answers: Array<SubjectiveAnswer>
+}
+
+interface SubjectiveAnswer {
+  answer: any,
+  student_answer: any,
+  question_status: 0,
+  id: number,
+  total_point: number,
+  content: string
+}
+
+interface AnswerInfo {
+  id: number,
+  content: string
 }
