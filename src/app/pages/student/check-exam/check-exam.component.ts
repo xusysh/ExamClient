@@ -21,6 +21,8 @@ export class CheckExamComponent implements OnInit {
   filterGender = [{ text: 'male', value: 'male' }, { text: 'female', value: 'female' }];
   searchGenderList: string[] = [];
 
+  current_select_exam:number = 0;
+
   sort(sort: { key: string; value: string }): void {
     this.sortKey = sort.key;
     this.sortValue = sort.value;
@@ -38,7 +40,7 @@ export class CheckExamComponent implements OnInit {
     }
     this.loading = true;
     let student_id = {
-      user_id:10
+      user_id:sessionStorage.getItem('userid')
     }
     this.http_client.post<MyServerResponse>(this.base_url + 'epi/user/examlist',student_id).subscribe(
       response => {
@@ -64,6 +66,14 @@ export class CheckExamComponent implements OnInit {
   updateFilter(value: string[]): void {
     this.searchGenderList = value;
     this.UpdateTableData(true);
+  }
+
+  EnterExam(index:number) {
+    this.current_select_exam =  (this.page_index - 1) * this.page_size + index;
+    let current_exam = this.student_exam_info_list[this.current_select_exam];
+    sessionStorage.setItem('exam_id',current_exam.id.toString())
+    sessionStorage.setItem('paper_code',current_exam.paperCode)
+    this.router.navigateByUrl("/student/examination");
   }
 
   ngOnInit(): void {

@@ -199,9 +199,17 @@
           <div class="exam-administration-table-div">
               <div style="margin-bottom: 15px;margin-left: 15px">
                   <button style="margin-left: 5px" nz-button nzSize="defalut"
-                    (click)="UpdateStudentPaperInfo(true)" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题" >
+                  (click)="UpdateStudentPaperInfo(true)">
+                  <i nz-icon [nzType]="exam_administration_loading?'loading' : 'reload'"></i>刷新
+                </button>
+                  <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="judge_objective_loading"
+                    (click)="JudgeObjective()" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题" >
                     <i nz-icon nzType="play-square"></i>开始判题
                   </button>
+                  <button style="margin-left: 15px" nz-button nzSize="defalut"
+                  (click)="EndExam()" nz-tooltip nzTitle="停止修改成绩，考试状态变为已结束" >
+                  <i nz-icon nzType="close-square"></i>结束考试
+                </button>
                 </div>
             <nz-table #ajaxTable2 nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_student_paper_info_list"
               nzBordered [nzScroll]="{y:'450px'}" [(nzPageSize)]="exam_administration_page_size"
@@ -240,24 +248,25 @@
                     <p nz-paragraph nzCopyable [nzContent]="data.endFlag == 1?'已提交':'未提交'"></p>
                   </td>
                   <td>
-                    {{data.objectiveGrade}}
+                    {{data.objectiveGrade == null?'0':data.objectiveGrade}}
                   </td>
                   <td>
-                    {{data.subjectiveGrade}}
+                    {{data.subjectiveGrade == null?'0':data.subjectiveGrade}}
                   </td>
                   <td>
-                    {{data.studentTotalPoint}}/{{data.paperTotalPoint}}
+                    {{data.studentTotalPoint == null?'0':data.studentTotalPoint}}/{{data.paperTotalPoint}}
                   </td>
                   <td>
-                    <button nz-button nzSize="small" nzType="primary" (click)="EditExam(i)" nzShape="circle" nz-tooltip
-                      nzTitle="进入判题" [disabled]="data.status != '未开始'">
+                    <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle" nz-tooltip
+                      nzTitle="进入判题" [disabled]="data.objectiveGrade == null || data.objectiveGrade == 0">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" [disabled]="data.status == '进行中'">
-                      <i nz-icon nzType="container"></i>
-                    </button>
+                    nzShape="circle" nz-tooltip nzTitle="查看完整试题信息" 
+                    [disabled]="data.subjectiveGrade == null || data.subjectiveGrade == 0">
+                    <i nz-icon nzType="container"></i>
+                  </button>
                   </td>
                 </tr>
               </tbody>

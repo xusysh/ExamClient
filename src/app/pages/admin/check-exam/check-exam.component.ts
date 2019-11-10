@@ -49,18 +49,20 @@ export class CheckExamComponent implements OnInit {
   public all_paper_info_loading: boolean = false;
   public group_info_loading: boolean = false;
 
-  exam_administration_drawer_visible:boolean = false;
+  exam_administration_drawer_visible: boolean = false;
   exam_administration_page_index = 1;
   exam_administration_page_size = 5;
-  exam_student_paper_info_list:Array<StudentPaperBaseInfo> = []
-  exam_administration_loading:boolean = false;
+  exam_student_paper_info_list: Array<StudentPaperBaseInfo> = []
+  exam_administration_loading: boolean = false;
+
+  judge_objective_loading: boolean = false;
 
   current_select_exam: number = 0;
   group_loading: boolean;
   all_group_info: Array<GroupInfo> = [];
 
-  delete_exam_ids:Array<number> = [];
-  delete_loading:boolean = false;
+  delete_exam_ids: Array<number> = [];
+  delete_loading: boolean = false;
 
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
   compareFn_paper = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
@@ -86,7 +88,7 @@ export class CheckExamComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'epi/admin/examlist').subscribe(
       response => {
         this.exam_info_list = response.data;
-        for(let exam of this.exam_info_list) {
+        for (let exam of this.exam_info_list) {
           exam['delete_flag'] = false;
         }
         this.loading = false;
@@ -156,10 +158,10 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  RefreshDeleteCheckStatus(checked:boolean): void {
+  RefreshDeleteCheckStatus(checked: boolean): void {
     this.delete_exam_ids = []
-    for(let exam of this.exam_info_list) {
-      if(exam['delete_flag'] == true ) {
+    for (let exam of this.exam_info_list) {
+      if (exam['delete_flag'] == true) {
         this.delete_exam_ids.push(exam.id);
       }
     }
@@ -177,18 +179,18 @@ export class CheckExamComponent implements OnInit {
   DrawerClose(): void {
     this.drawer_visible = false;
   }
-  
+
   ParseDuration() {
     this.edit_exam_hour = Math.floor(this.edit_exam_duration / 3600000);
     this.edit_exam_minute = Math.floor((this.edit_exam_duration / 60000) % 60);
     this.edit_exam_second = Math.floor((this.edit_exam_duration / 1000) % 60);
   }
 
-  ParseDurationNum(duration:number):ShowTime {
-    let show_time:ShowTime = {
-      hour : Math.floor(duration / 3600000),
-      minute  :Math.floor((duration / 60000) % 60),
-      sec:Math.floor((duration / 1000) % 60)
+  ParseDurationNum(duration: number): ShowTime {
+    let show_time: ShowTime = {
+      hour: Math.floor(duration / 3600000),
+      minute: Math.floor((duration / 60000) % 60),
+      sec: Math.floor((duration / 1000) % 60)
     }
     return show_time;
   }
@@ -227,15 +229,15 @@ export class CheckExamComponent implements OnInit {
     this.edit_exam_info_loading = true;
     this.GetDuration();
     let edit_exam_group_ids = [];
-    for(let group of this.edit_exam_group) {
+    for (let group of this.edit_exam_group) {
       edit_exam_group_ids.push(group.group_id)
     }
     let exam_begin_time_str = this.edit_exam_start_time.toLocaleString()
-    exam_begin_time_str = exam_begin_time_str.substr(0,10).replace(new RegExp('/','g'),'-') + ' ' + this.edit_exam_start_time.toTimeString().substr(0,8);
+    exam_begin_time_str = exam_begin_time_str.substr(0, 10).replace(new RegExp('/', 'g'), '-') + ' ' + this.edit_exam_start_time.toTimeString().substr(0, 8);
     let exam_end_time_str = this.edit_exam_end_time.toLocaleString();
-    exam_end_time_str = exam_end_time_str.substr(0,10).replace(new RegExp('/','g'),'-') + ' ' + this.edit_exam_end_time.toTimeString().substr(0,8);
+    exam_end_time_str = exam_end_time_str.substr(0, 10).replace(new RegExp('/', 'g'), '-') + ' ' + this.edit_exam_end_time.toTimeString().substr(0, 8);
     let edit_exam_info = {
-      id:this.edit_exam_id,
+      id: this.edit_exam_id,
       exam_name: this.edit_exam_name,
       paper_code: this.edit_exam_paper_info.paperCode,
       begin_time: exam_begin_time_str,
@@ -263,13 +265,13 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  ExamAdministrationDrawerOpen(index:number) {
-    this.current_select_exam =  (this.page_index - 1) * this.page_size + index;
+  ExamAdministrationDrawerOpen(index: number) {
+    this.current_select_exam = (this.page_index - 1) * this.page_size + index;
     this.exam_administration_drawer_visible = true;
     this.UpdateStudentPaperInfo();
   }
 
-  test2(event:any) {
+  test2(event: any) {
     console.log(this.edit_exam_paper_info)
   }
 
@@ -317,20 +319,20 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  UpdateStudentPaperInfo(reset:boolean = false) {
+  UpdateStudentPaperInfo(reset: boolean = false) {
     if (reset) {
       this.page_index = 1;
     }
     this.exam_student_paper_info_list = [];
     this.exam_administration_loading = true;
     let exam_id = {
-      exam_id:this.exam_info_list[this.current_select_exam].id
+      exam_id: this.exam_info_list[this.current_select_exam].id
     }
-    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stupoint',exam_id).subscribe(
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stupoint', exam_id).subscribe(
       response => {
-        if(response.status!=200) {
+        if (response.status != 200) {
           this.exam_administration_loading = false;
-          this.message.create('info', '考试信息获取失败：'+response.msg);
+          this.message.create('info', '考试信息获取失败：' + response.msg);
           return;
         }
         this.exam_student_paper_info_list = response.data;
@@ -341,6 +343,35 @@ export class CheckExamComponent implements OnInit {
         this.message.create('error', '考试信息获取失败：连接服务器失败');
         this.exam_administration_loading = false;
       });
+  }
+
+  JudgeObjective() {
+    this.judge_objective_loading = true;
+    let exam_id = {
+      exam_id: this.exam_info_list[this.current_select_exam].id
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/startobj', exam_id).subscribe(
+      response => {
+        if (response.status != 200) {
+          this.message.create('info', '系统客观题自动判题失败：' + response.msg);
+          this.judge_objective_loading = false;
+          return;
+        }
+        this.message.create('success', '系统客观题自动判题成功：');
+        this.judge_objective_loading = false;
+        this.UpdateStudentPaperInfo();
+      },
+      error => {
+        this.message.create('error', '系统客观题自动判题失败：连接服务器失败');
+        this.judge_objective_loading = false;
+      });
+  }
+
+  JudgePaper(index: number) {
+    let judge_exam = (this.page_index - 1) * this.page_size + index;
+    let judge_exam_id = this.exam_student_paper_info_list[judge_exam].examId;
+    let judge_student_id = this.exam_student_paper_info_list[judge_exam].studentId;
+    this.router.navigateByUrl("/admin/judge-paper");
   }
 
   DialogOKHandle(): void {
@@ -393,9 +424,9 @@ interface StudentInfo {
 }
 
 interface ShowTime {
-  hour:number,
-  minute:number,
-  sec:number
+  hour: number,
+  minute: number,
+  sec: number
 }
 
 interface StudentPaperBaseInfo {

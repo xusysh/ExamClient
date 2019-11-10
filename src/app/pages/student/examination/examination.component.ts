@@ -31,10 +31,10 @@ export class ExaminationComponent implements OnInit {
   //当前页
   public page_index_char: string = '';
   //考试名
-  public exam_name: string = "考试信息获取异常";
+  public exam_name: string = "考试信息获取中";
   //考试结束标志
   public exam_end:boolean = false;
-  public autosave_interval = 10;
+  public autosave_interval = 60;
   //考试剩余时间
   public remain_seconds: number = 9999;
   public hour = 0;
@@ -83,12 +83,9 @@ export class ExaminationComponent implements OnInit {
 
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
-    sessionStorage.setItem('paper_code', '20191008193539');
-    sessionStorage.setItem('exam_id', '3');
-    sessionStorage.setItem('userid', '10');
     this.GetPaperInfo();
     const timer = interval(1000).subscribe(() => {
-      if(this.remain_seconds > 0) {
+      if(this.remain_seconds > 0 && !this.exam_end) {
         if(this.remain_seconds % this.autosave_interval == 0) {
           this.SubmitAnswer(0);
         }
@@ -99,7 +96,6 @@ export class ExaminationComponent implements OnInit {
       }
       else {
         this.EndStudentExam();
-        alert('end');
         timer.unsubscribe();
       }
       });
@@ -271,8 +267,8 @@ export class ExaminationComponent implements OnInit {
 
   SubmitAnswer(end_flag: number) {
     var msg = '';
-    if (end_flag == 0) msg = '提交';
-    else msg = '自动保存';
+    if (end_flag == 0) msg = '自动保存';
+    else msg = '提交';
     let user_question_answer_info = [];
     for (var category of this.student_paper_info.categoryList) {
       for (let question of category.questionList) {
@@ -333,6 +329,9 @@ export class ExaminationComponent implements OnInit {
         else {
           this.message.create('success', msg + '试卷信息成功');
           this.get_paper_loading = false;
+          if(end_flag == 1) {
+            this.router.navigateByUrl("/student");
+          }
         }
       }, error => {
         this.message.create('error', msg + '试卷信息失败：连接服务器失败');
@@ -342,7 +341,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   EndStudentExam() {
-    this.SubmitAnswer(0);
+    this.SubmitAnswer(1);
     this.exam_end = true;
   }
 

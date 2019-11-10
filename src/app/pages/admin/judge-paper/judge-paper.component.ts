@@ -89,6 +89,8 @@ export class JudgePaperComponent implements OnInit {
 
   public current_student_index:number=0;
 
+  all_student_judge_info:Array<StudentPaperJudgeInfo> = [];
+
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
   }
@@ -109,11 +111,26 @@ export class JudgePaperComponent implements OnInit {
     }
   }
 
+  GetStudentPapers() {
+    
+  }
+
   SubmitStudentGrade() {
     
   }
 
+  
+
   ngOnInit(): void {
   }
 
+}
+
+interface StudentPaperJudgeInfo {
+  student_name: string,
+  student_id: number,
+  paper_status: StudentJudgeInfo
+}
+
+interface StudentJudgeInfo {
 }
