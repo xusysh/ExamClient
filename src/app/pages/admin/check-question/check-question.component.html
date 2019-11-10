@@ -78,11 +78,19 @@
                 {{GetTypeStr(i)}}
               </td>
               <td>
-                {{data.description}}
+                  <div *ngIf="data.description != null && data.description != ''" nz-popover [nzTitle]="'描述详情'" [nzContent]="popoverContentTemplateDesc">
+                      <ng-template #popoverContentTemplateDesc>
+                        <div [innerHtml]="data.description"></div>
+                      </ng-template>
+                      <nz-badge nzDot>
+                        <span>
+                            鼠标悬浮查看详情&nbsp;
+                        </span>
+                      </nz-badge>
+                    </div>
               </td>
-
-              <td nz-popover [nzTitle]="'选项详情'" [nzContent]="popoverContentTemplate">
-                <ng-template #popoverContentTemplate>
+              <td nz-popover [nzTitle]="'选项详情'" [nzContent]="popoverContentTemplateOpts">
+                <ng-template #popoverContentTemplateOpts>
                   <div *ngFor="let option of data.options;let i=index;">{{GetOptionLabel(i)+option.content}}</div>
                 </ng-template>
                 <nz-badge [nzCount]="data.options.length">
