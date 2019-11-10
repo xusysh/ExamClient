@@ -245,7 +245,7 @@
                     <p nz-paragraph nzCopyable [nzContent]="data.studentName"></p>
                   </td>
                   <td>
-                    <p nz-paragraph nzCopyable [nzContent]="data.endFlag == 1?'已提交':'未提交'"></p>
+                    {{data.endFlag == 1?'已提交':'未提交'}}
                   </td>
                   <td>
                     {{data.objectiveGrade == null?'0':data.objectiveGrade}}
@@ -258,13 +258,13 @@
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle" nz-tooltip
-                      nzTitle="进入判题" [disabled]="data.objectiveGrade == null || data.objectiveGrade == 0">
+                      nzTitle="进入判题" [disabled]="data.objectiveStatus == null || data.objectiveStatus == 0">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
                     nzShape="circle" nz-tooltip nzTitle="查看完整试题信息" 
-                    [disabled]="data.subjectiveGrade == null || data.subjectiveGrade == 0">
+                    [disabled]="data.subjectiveStatus == null || data.subjectiveStatus == 0">
                     <i nz-icon nzType="container"></i>
                   </button>
                   </td>
