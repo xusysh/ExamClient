@@ -58,6 +58,10 @@ export class CheckExamComponent implements OnInit {
   current_select_exam: number = 0;
   group_loading: boolean;
   all_group_info: Array<GroupInfo> = [];
+
+  delete_exam_ids:Array<number> = [];
+  delete_loading:boolean = false;
+
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
   compareFn_paper = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
@@ -82,6 +86,9 @@ export class CheckExamComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'epi/admin/examlist').subscribe(
       response => {
         this.exam_info_list = response.data;
+        for(let exam of this.exam_info_list) {
+          exam['delete_flag'] = false;
+        }
         this.loading = false;
       },
       error => {
@@ -97,30 +104,67 @@ export class CheckExamComponent implements OnInit {
   }
 
 
-  //删除单个试卷
-  DeletePaper(index: number): void {
+  //删除单个考试
+  DeleteExam(index: number): void {
     this.current_select_exam = (this.page_index - 1) * this.page_size + index;
-    let user_delete_info = {
-      id: [this.exam_info_list[this.current_select_exam].id]
+    let exam_delete_info = {
+      exam_id: [this.exam_info_list[this.current_select_exam].id]
     }
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      body: user_delete_info
+      body: exam_delete_info
     };
-    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/user/multi', httpOptions).
+    this.http_client.delete<MyServerResponse>(this.base_url + 'exam/del', httpOptions).
       subscribe(response => {
         if (response.status != 200) {
-          this.message.create('error', '用户删除失败:' + response.msg);
+          this.message.create('error', '考试删除失败:' + response.msg);
         }
         else {
-          this.message.create('success', '用户 ' + this.exam_info_list[this.current_select_exam].examName + ' 删除成功');
+          this.message.create('success', '考试 ' + this.exam_info_list[this.current_select_exam].examName + ' 删除成功');
           this.UpdateTableData();
         }
       }, error => {
-        this.message.create('error', '用户删除失败：连接服务器失败');
+        this.message.create('error', '考试删除失败：连接服务器失败');
       });
-    this.drawer_visible = false;
   }
+
+  //批量删除考试
+  DeleteExams() {
+    this.delete_loading = true;
+    let exam_delete_info = {
+      exam_id: this.delete_exam_ids
+    }
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: exam_delete_info
+    };
+    this.http_client.delete<MyServerResponse>(this.base_url + 'exam/del', httpOptions).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '考试删除失败:' + response.msg);
+          this.delete_loading = false;
+        }
+        else {
+          this.message.create('success', '考试删除成功');
+          this.delete_loading = false;
+          this.delete_exam_ids = [];
+          this.UpdateTableData();
+        }
+      }, error => {
+        this.message.create('error', '考试删除失败：连接服务器失败');
+        this.delete_loading = false;
+      });
+  }
+
+  RefreshDeleteCheckStatus(checked:boolean): void {
+    this.delete_exam_ids = []
+    for(let exam of this.exam_info_list) {
+      if(exam['delete_flag'] == true ) {
+        this.delete_exam_ids.push(exam.id);
+      }
+    }
+  }
+
 
   GroupSelectOpened(opened: boolean) {
     if (opened) {

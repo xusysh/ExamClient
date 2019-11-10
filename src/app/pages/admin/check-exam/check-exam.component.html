@@ -27,12 +27,16 @@
                 (click)="EditExam(-1)">
                 <i nz-icon nzType="plus"></i>添加考试
               </button>
+              <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
+              *ngIf="delete_exam_ids.length > 0" (click)="DeleteExams()" [nzLoading]="delete_loading">
+              <i nz-icon nzType="user-delete"></i>批量删除考试
+            </button>
             </div>
             <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
               <thead (nzSortChange)="sort($event)" nzSingleSort>
                 <tr>
-                  <th nzShowCheckbox [(nzChecked)]="is_allDisplay_data_checked" [nzIndeterminate]="is_indeterminate">
+                  <th>
                   </th>
                   <th nzWidth="180px" nzCustomFilter>
                     <b>考试名
@@ -60,7 +64,8 @@
               </thead>
               <tbody>
                 <tr *ngFor="let data of ajaxTable.data;let i=index">
-                  <td nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="refreshStatus()"></td>
+                  <td nzShowCheckbox [(nzChecked)]="data.delete_flag" (nzCheckedChange)="RefreshDeleteCheckStatus()">
+                  </td>
                   <td>
                     <p nz-paragraph nzCopyable [(nzContent)]="data.examName"></p>
                   </td>
