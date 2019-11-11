@@ -10,7 +10,9 @@ export class AdminComponent implements OnInit {
 
   public user_name: string = null;
 
-  constructor(private router:Router) { }
+  constructor(private router:Router) { 
+    
+  }
 
   ngOnInit() {
 

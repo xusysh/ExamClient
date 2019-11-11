@@ -93,7 +93,7 @@ export class JudgePaperComponent implements OnInit {
   judge_exam_id: number;
   judge_student_id: number;
 
-  all_student_judge_info: Array<StudentPaperJudgeInfo> = [];
+  all_student_judge_info: StudentPaperJudgeInfo = null;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -133,8 +133,11 @@ export class JudgePaperComponent implements OnInit {
         }
         else {
           this.all_student_judge_info = response.data;
-          for(let student_judge_info of this.all_student_judge_info) {
-            //todo
+          for(var student_answers_detail of this.all_student_judge_info.student_answers_detail) {
+            for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
+              subjective_answers.answer = JSON.parse(subjective_answers.answer);
+              subjective_answers.student_answer = JSON.parse(subjective_answers.student_answer);
+            }
           }
           this.message.create('success', '获取考生答题信息成功');
         }
