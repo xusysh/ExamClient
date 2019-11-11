@@ -220,9 +220,9 @@ export class CheckExamComponent implements OnInit {
       this.edit_exam_end_time = new Date(Date.parse(this.exam_info_list[this.current_select_exam].endTime));
       this.edit_exam_duration = this.exam_info_list[this.current_select_exam].duration;
       this.ParseDuration();
+      this.GetExamGroupStudents();
     }
     this.UpdateGroupInfo(true);
-    this.GetExamGroupStudents();
     this.drawer_visible = true;
   }
 
