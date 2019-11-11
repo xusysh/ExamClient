@@ -203,11 +203,13 @@
                   <i nz-icon [nzType]="exam_administration_loading?'loading' : 'reload'"></i>刷新
                 </button>
                   <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="judge_objective_loading"
-                    (click)="JudgeObjective()" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题" >
+                    (click)="JudgeObjective()" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题" 
+                    [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
                     <i nz-icon nzType="play-square"></i>开始判题
                   </button>
-                  <button style="margin-left: 15px" nz-button nzSize="defalut"
-                  (click)="EndExam()" nz-tooltip nzTitle="停止修改成绩，考试状态变为已结束" >
+                  <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="end_exam_loading"
+                  (click)="EndExam()" nz-tooltip nzTitle="停止修改成绩，考试状态变为已结束" 
+                    [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
                   <i nz-icon nzType="close-square"></i>结束考试
                 </button>
                 </div>
@@ -258,7 +260,7 @@
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle" nz-tooltip
-                      nzTitle="进入判题" [disabled]="data.objectiveStatus == null || data.objectiveStatus == 0">
+                      nzTitle="进入判题" [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>

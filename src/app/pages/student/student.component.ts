@@ -9,12 +9,14 @@ import { Route, ActivatedRoute,Router } from '@angular/router';
 export class StudentComponent implements OnInit {
 
   public user_id: string = null;
+  public user_name:string = null;
 
   constructor(private router:Router) { }
 
   ngOnInit() {
 
     this.user_id=sessionStorage.getItem('userid')
+    this.user_name=sessionStorage.getItem('username')
     //判断是否已经登录，未登录则进行跳转
     if (!this.user_id) {
       alert("请登录");

@@ -110,6 +110,7 @@
           <i class="trigger" nz-icon nzType="layout" (click)="side_fix = !side_fix"
             [nzTheme]="side_fix ? 'fill' : 'outline'" nz-tooltip [nzTitle]="side_fix ? '边框已固定': '边框未固定'"></i>
         </span>
+        <div style="float: right;margin-right: 30px;font-weight: 600;font-size: 120%;">当前用户：{{user_name}}</div>
       </div>
     </nz-header>
     <nz-content (mouseenter)="side_fix ? isCollapsed: isCollapsed = true">

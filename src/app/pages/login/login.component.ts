@@ -54,6 +54,8 @@ export class LoginComponent implements OnInit {
           this.is_checking=false;
         }
         else if (response.data.role == "admin") {
+          sessionStorage.setItem('username', this.user_name);
+          sessionStorage.setItem('userid', response.data.id);
           this.message.create('success', "管理员用户 " + this.user_name + ' 登陆成功');
           this.router.navigate(['/admin']);
           this.is_checking=false;

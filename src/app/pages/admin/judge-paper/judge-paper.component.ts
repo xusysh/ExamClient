@@ -70,7 +70,7 @@ export class JudgePaperComponent implements OnInit {
             for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
               subjective_answers.answer = JSON.parse(subjective_answers.answer);
               subjective_answers.student_answer = JSON.parse(subjective_answers.student_answer);
-              subjective_answers['point'] = "";
+              subjective_answers['point'] = subjective_answers.tech_point.toString();
             }
             i++;
           }
@@ -120,6 +120,7 @@ interface SubjectiveAnswer {
   student_answer: any,
   question_status: 0,
   id: number,
+  tech_point: number,
   total_point: number,
   content: string
 }

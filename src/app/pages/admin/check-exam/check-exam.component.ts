@@ -63,6 +63,7 @@ export class CheckExamComponent implements OnInit {
 
   delete_exam_ids: Array<number> = [];
   delete_loading: boolean = false;
+  end_exam_loading: boolean = false;
 
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
   compareFn_paper = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
@@ -371,8 +372,8 @@ export class CheckExamComponent implements OnInit {
     let judge_exam = (this.exam_administration_page_index - 1) * this.exam_administration_page_size + index;
     let judge_exam_id = this.exam_student_paper_info_list[judge_exam].examId;
     let judge_student_id = this.exam_student_paper_info_list[judge_exam].studentId;
-    sessionStorage.setItem('judge_exam_id',judge_exam_id.toString());
-    sessionStorage.setItem('judge_student_id',judge_student_id.toString());
+    sessionStorage.setItem('judge_exam_id', judge_exam_id.toString());
+    sessionStorage.setItem('judge_student_id', judge_student_id.toString());
     this.router.navigateByUrl("/admin/judge-paper");
   }
 
@@ -390,6 +391,29 @@ export class CheckExamComponent implements OnInit {
   }
 
   refreshStatus(): void {
+  }
+
+  EndExam() {
+    this.end_exam_loading = true;
+    let exam_info = {
+      exam_id: this.exam_info_list[this.current_select_exam].id
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'exam/techend', exam_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '结束考试失败:' + response.msg);
+          this.end_exam_loading = false;
+        }
+        else {
+          this.message.create('success', '结束考试成功:');
+          this.end_exam_loading = false;
+          this.UpdateTableData();
+          this.UpdateStudentPaperInfo();
+        }
+      }, error => {
+        this.message.create('error', '结束考试失败：连接服务器失败');
+        this.end_exam_loading = false;
+      });
   }
 
 }
