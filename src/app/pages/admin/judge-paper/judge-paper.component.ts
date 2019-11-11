@@ -70,7 +70,12 @@ export class JudgePaperComponent implements OnInit {
             for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
               subjective_answers.answer = JSON.parse(subjective_answers.answer);
               subjective_answers.student_answer = JSON.parse(subjective_answers.student_answer);
-              subjective_answers['point'] = subjective_answers.tech_point.toString();
+              if(subjective_answers.question_status == 0) {
+                subjective_answers['point'] = '-1.0';
+              }
+              else {
+                subjective_answers['point'] = subjective_answers.tech_point.toString();
+              }
             }
             i++;
           }
@@ -79,6 +84,17 @@ export class JudgePaperComponent implements OnInit {
       }, error => {
         this.message.create('error', '获取考生答题信息失败：连接服务器失败');
       });
+  }
+
+  StudentAllJudged(index:number) {
+    var student_answers_detail = this.all_student_judge_info[0].student_answers_detail[index];
+    for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
+      subjective_answers.answer = JSON.parse(subjective_answers.answer);
+      subjective_answers.student_answer = JSON.parse(subjective_answers.student_answer);
+      if(subjective_answers['point'] == '-1.0')
+        return false;
+    }
+    return true;
   }
 
   SubmitStudentGrade() {
@@ -118,7 +134,7 @@ interface PaperStatus {
 interface SubjectiveAnswer {
   answer: any,
   student_answer: any,
-  question_status: 0,
+  question_status: number,
   id: number,
   tech_point: number,
   total_point: number,
