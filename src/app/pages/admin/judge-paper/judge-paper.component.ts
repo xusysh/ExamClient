@@ -5,6 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs, NzFormatEmitEvent } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-judge-paper',
@@ -42,7 +43,7 @@ export class JudgePaperComponent implements OnInit {
   }
 
   constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
-    private message: NzMessageService) {
+    private message: NzMessageService,private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -107,6 +108,10 @@ export class JudgePaperComponent implements OnInit {
       }, error => {
         this.message.create('error', '保存考生阅卷信息失败：连接服务器失败');
       });
+  }
+
+  GetRichHtml(html:string):SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
 

@@ -43,7 +43,7 @@
                             <i nz-icon nzType="edit"></i>
                           </section>
                           <nz-list-item>
-                            <div [innerHtml]="question.student_answer[0].content"></div>
+                            <div [innerHtml]="GetRichHtml(question.student_answer[0].content)"></div>
                           </nz-list-item>
                         </nz-list>
                       </section>
@@ -53,7 +53,7 @@
                           <i nz-icon nzType="edit"></i>
                         </section>
                         <section class="code-box-description">
-                          <div [innerHtml]="question.answer[0].content"></div>
+                          <div [innerHtml]="GetRichHtml(question.answer[0].content)"></div>
                         </section>
                       </section>
                     </section>
@@ -63,7 +63,7 @@
                     <i nz-icon nzType="setting"></i>
                     设置得分（总分{{question.total_point}}分）
                     <input nz-input style="width: 100px;margin-left: 10px;margin-right: 10px;"
-                      [(ngModel)]="question.point" (focus)="emm=true" />
+                      [(ngModel)]="question.point"/>
                   </ng-template>
                 </nz-collapse-panel>
               </nz-collapse>

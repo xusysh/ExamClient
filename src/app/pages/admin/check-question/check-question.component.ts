@@ -7,6 +7,7 @@ import { forkJoin, from } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component'
 import { NzTreeNode ,NzTreeComponent} from 'ng-zorro-antd';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-check-question',
@@ -72,7 +73,7 @@ export class CheckQuestionComponent implements OnInit {
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   @ViewChild('knowledge_tree',{static: false}) treeElement:NzTreeComponent;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) {
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService,private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -480,6 +481,10 @@ export class CheckQuestionComponent implements OnInit {
         this.delete_question_ids.push(question.id);
       }
     }
+  }
+
+  GetRichHtml(html:string):SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
 }

@@ -80,7 +80,7 @@
               <td>
                   <div *ngIf="data.description != null && data.description != ''" nz-popover [nzTitle]="'描述详情'" [nzContent]="popoverContentTemplateDesc">
                       <ng-template #popoverContentTemplateDesc>
-                        <div [innerHtml]="data.description"></div>
+                        <div [innerHtml]="GetRichHtml(data.description)"></div>
                       </ng-template>
                       <nz-badge nzDot>
                         <span>
@@ -102,7 +102,7 @@
                 <div *ngIf="data.type!='subjective'">{{GetAnswer(i)}}</div>
                 <div *ngIf="data.type=='subjective'" nz-popover [nzTitle]="'答案详情'" [nzContent]="popoverContentTemplate">
                   <ng-template #popoverContentTemplate>
-                    <div [innerHtml]="data.answer[0].content"></div>
+                    <div [innerHtml]="GetRichHtml(data.answer[0].content)"></div>
                   </ng-template>
                   <nz-badge nzDot>
                     <span>
