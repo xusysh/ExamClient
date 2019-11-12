@@ -7,6 +7,7 @@ import { GeneratePaperComponent } from './generate-paper/generate-paper.componen
 import { JudgePaperComponent } from './judge-paper/judge-paper.component';
 import { CheckPaperComponent } from './check-paper/check-paper.component';
 import { CheckExamComponent } from '../admin/check-exam/check-exam.component';
+import { CheckExamPaperComponent } from './check-exam-paper-detail/check-exam-paper.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,9 @@ const routes: Routes = [
       {
         path: 'judge-paper', component: JudgePaperComponent
       },
+      {
+        path: 'check-exam-paper', component: CheckExamPaperComponent
+      }
     ]
   }
 ];

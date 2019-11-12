@@ -13,10 +13,11 @@ import { GeneratePaperModule } from './generate-paper/generate-paper.module';
 import { JudgePaperModule } from './judge-paper/judge-paper.module';
 import { CheckPaperModule } from './check-paper/check-paper.module';
 import { CheckExamModule } from '../admin/check-exam/check-exam.module';
+import { CheckExamPaperModule } from './check-exam-paper-detail/check-exam-paper.module';
 
 @NgModule({
   imports: [AdminRoutingModule,NgZorroAntdModule,CheckStudentModule,CheckQuestionModule,GeneratePaperModule,
-  CheckPaperModule,CheckExamModule,JudgePaperModule],
+  CheckPaperModule,CheckExamModule,JudgePaperModule,CheckExamPaperModule],
   declarations: [AdminComponent],
   exports: [AdminComponent]
 })
