@@ -23,6 +23,13 @@ export class CheckExamComponent implements OnInit {
 
   current_select_exam:number = 0;
 
+  status_filter = [
+    { text: '未开始', value: '未开始' }, 
+    { text: '进行中', value: '进行中' },
+    { text: '判卷中', value: '判卷中' },
+    { text: '已结束', value: '已结束' }
+  ];
+
   sort(sort: { key: string; value: string }): void {
     this.sortKey = sort.key;
     this.sortValue = sort.value;
@@ -78,6 +85,11 @@ export class CheckExamComponent implements OnInit {
 
   ngOnInit(): void {
     this.UpdateTableData();
+  }
+
+  StatusFilterChange(filter) {
+    console.log(filter);
+    //todo
   }
 
 }
