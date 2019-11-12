@@ -375,6 +375,16 @@ export class CheckExamComponent implements OnInit {
     this.router.navigateByUrl("/admin/judge-paper");
   }
 
+  CheckExamPaper(index: number) {
+    let judge_exam = (this.exam_administration_page_index - 1) * this.exam_administration_page_size + index;
+    let judge_exam_id = this.exam_student_paper_info_list[judge_exam].examId;
+    let judge_student_id = this.exam_student_paper_info_list[judge_exam].studentId;
+    sessionStorage.setItem('judge_exam_id', judge_exam_id.toString());
+    sessionStorage.setItem('judge_student_id', judge_student_id.toString());
+    this.router.navigateByUrl("/admin/check-exam-paper");
+  }
+
+
   DialogOKHandle(): void {
     this.dialog_ok_loading = true;
     this.UpdateTableData();

@@ -10,11 +10,12 @@
       <a>考试管理</a>
     </nz-breadcrumb-item>
     <nz-breadcrumb-item>
-      <a>考试&答题情况</a>
+      <a>考试答卷详情</a>
     </nz-breadcrumb-item>
   </nz-breadcrumb>
   <nz-page-header-content>
     <nz-layout>
+      <!--todo:tab切换+考生答题情况-->
       <nz-content style="background-color: #ffffff;">
         <div class="exam-table-div">
           <div>
@@ -260,11 +261,11 @@
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle" nz-tooltip
-                      nzTitle="进入判题" [disabled]="exam_student_paper_info_list[i].objectiveStatus != 1">
+                      nzTitle="进入判题" [disabled]="exam_student_paper_info_list[i].objectiveStatus != 1 || exam_info_list[current_select_exam].status != '判卷中'">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
+                    <button nz-button nzSize="small" nzType="primary" (click)="CheckExamPaper(i)"
                     nzShape="circle" nz-tooltip nzTitle="查看完整试题信息" 
                     [disabled]="data.subjectiveStatus == null || data.subjectiveStatus == 0">
                     <i nz-icon nzType="container"></i>
