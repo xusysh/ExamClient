@@ -77,7 +77,7 @@
               <ul>
                 <li *ngFor="let student of all_student_judge_info[0]['student_answers_detail'];let i=index;"
                   nz-menu-item (click)="current_student_index = i;" [nzSelected] = 'i == current_student_index'>
-                  <span *ngIf="StudentAllJudged()">
+                  <span *ngIf="StudentAllJudged(i)">
                     {{student['student_name']}}
                   </span>
                   <nz-badge *ngIf="!StudentAllJudged(i)" nzDot>

@@ -42,6 +42,7 @@ export class CheckStudentComponent implements OnInit {
   public inputValue = '';
   public edit_user_info_loading = false;
   public group_info_loading = false;
+  public new_group_name:string = '';
 
   delete_student_ids:Array<number> = [];
   delete_loading:boolean = false;
@@ -327,6 +328,48 @@ export class CheckStudentComponent implements OnInit {
         });
 
     }
+  }
+
+  AddGroup() {
+    let group_edit_info = {
+      id: 0,
+      groupName:this.new_group_name
+    }
+    this.http_client.post<MyServerResponse>(this.base_url + 'upi/group/single', group_edit_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '添加组失败:' + response.msg);
+        }
+        else {
+          this.message.create('success', '添加组成功');
+          this.new_group_name = ''
+          this.UpdateGroupInfo();
+        }
+      }, error => {
+        this.message.create('error','添加组失败：连接服务器失败');
+      });
+  }
+
+  DeleteGroup(index:number) {
+    let group_delete_info = {
+      group_id: [this.all_group_info[index].group_id],
+    }
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: group_delete_info
+    };
+    this.http_client.delete<MyServerResponse>(this.base_url + 'upi/group/del', httpOptions).
+      subscribe(response => {
+    if (response.status != 200) {
+          this.message.create('error', '删除组失败:' + response.msg);
+        }
+        else {
+          this.message.create('success', '删除组成功');
+          this.UpdateGroupInfo();
+        }
+      }, error => {
+        this.message.create('error','删除组失败：连接服务器失败');
+      });
   }
 
   GroupStudentListChangeDone(index: number) {

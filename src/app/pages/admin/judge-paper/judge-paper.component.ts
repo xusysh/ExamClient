@@ -89,8 +89,6 @@ export class JudgePaperComponent implements OnInit {
   StudentAllJudged(index:number) {
     var student_answers_detail = this.all_student_judge_info[0].student_answers_detail[index];
     for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
-      subjective_answers.answer = JSON.parse(subjective_answers.answer);
-      subjective_answers.student_answer = JSON.parse(subjective_answers.student_answer);
       if(subjective_answers['point'] == '-1.0')
         return false;
     }

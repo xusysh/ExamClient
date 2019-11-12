@@ -194,7 +194,7 @@
         </nz-drawer>
 
         <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right" 
-          [nzTitle]="exam_info_list[current_select_exam].examName + ' 考生答题情况'"
+          [nzTitle]="exam_info_list[current_select_exam].examName+ ' （' + exam_info_list[current_select_exam].status + '） 考生答题情况'"
           (nzOnClose)="exam_administration_drawer_visible = false;" [nzWidth]="900">
           <div class="exam-administration-table-div">
               <div style="margin-bottom: 15px;margin-left: 15px">
@@ -260,7 +260,7 @@
                   </td>
                   <td>
                     <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle" nz-tooltip
-                      nzTitle="进入判题" [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
+                      nzTitle="进入判题" [disabled]="exam_student_paper_info_list[i].objectiveStatus != 1">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>

@@ -175,6 +175,7 @@ export class ExaminationComponent implements OnInit {
         if (response.status != 200) {
           this.message.create('error', '获取试卷信息失败:' + response.msg);
           this.get_paper_loading = false;
+          this.router.navigateByUrl("/student");
         }
         else {
           this.student_paper_info = response.data;

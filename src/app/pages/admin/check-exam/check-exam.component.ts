@@ -233,10 +233,8 @@ export class CheckExamComponent implements OnInit {
     for (let group of this.edit_exam_group) {
       edit_exam_group_ids.push(group.group_id)
     }
-    let exam_begin_time_str = this.edit_exam_start_time.toLocaleString()
-    exam_begin_time_str = exam_begin_time_str.substr(0, 10).replace(new RegExp('/', 'g'), '-') + ' ' + this.edit_exam_start_time.toTimeString().substr(0, 8);
-    let exam_end_time_str = this.edit_exam_end_time.toLocaleString();
-    exam_end_time_str = exam_end_time_str.substr(0, 10).replace(new RegExp('/', 'g'), '-') + ' ' + this.edit_exam_end_time.toTimeString().substr(0, 8);
+    let exam_begin_time_str = this.getNowFormatDate(this.edit_exam_start_time);
+    let exam_end_time_str = this.getNowFormatDate(this.edit_exam_end_time);
     let edit_exam_info = {
       id: this.edit_exam_id,
       exam_name: this.edit_exam_name,
@@ -415,6 +413,27 @@ export class CheckExamComponent implements OnInit {
         this.end_exam_loading = false;
       });
   }
+
+  getNowFormatDate(date:Date):string {
+    let seperator1 = "-";
+    let seperator2 = ":";
+    let month = getNewDate(date.getMonth() + 1);
+    let day = getNewDate(date.getDate());
+    let hours = getNewDate(date.getHours());
+    let minutes = getNewDate(date.getMinutes());
+    let seconds = getNewDate(date.getSeconds());
+    //统一格式为两位数
+    function getNewDate(date) {
+        if (date <= 9) {
+            date = "0" + date;
+        }
+        return date;
+    }
+
+    let currentDate = date.getFullYear() + seperator1 + month + seperator1 + day
+        + " " + hours + seperator2 + minutes + seperator2 + seconds;
+    return currentDate;
+}
 
 }
 

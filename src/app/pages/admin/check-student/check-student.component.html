@@ -50,7 +50,7 @@
                   </tr>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                     <div class="search-box">
-                      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+                      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue"/>
                       <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
                         Search
                       </button>
@@ -154,6 +154,12 @@
           [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
           <div style="width: 100%;">
             <h2 style="text-align: center">用户组管理</h2>
+            <div>
+              <input type="text" nz-input style="width:75%;margin-left: 15px;margin-right: 10px;margin-bottom: 15px;"
+                placeholder="输入组名称" [(ngModel)]="new_group_name" />
+              <button nz-button nzType="small" nzShape="circle" (click)="AddGroup()"><i nz-icon
+                  nzType="plus"></i></button>
+            </div>
             <nz-skeleton [nzLoading]="group_info_loading" [nzActive]="true">
               <nz-card style="margin-left: 15px;margin-right:15px" *ngFor="let group of all_group_info;let i=index;"
                 [nzTitle]="group.group_name" nzType="inner" [nzExtra]="extraTemplate">
@@ -176,7 +182,7 @@
                     (click)="edit_group_name = all_group_info[i].group_name;edit_group_name_flags[i]=true;"
                     nzType="edit"></i>
                   <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"
-                    (click)="all_group_info.splice(i,1);edit_group_name_flags.splice(i,1);"></i>
+                    (click)="DeleteGroup(i)"></i>
                 </ng-template>
               </nz-card>
             </nz-skeleton>
