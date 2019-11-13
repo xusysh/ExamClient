@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
 import { MyServerResponse } from '../../login/login.component';
+import { FilterSortService } from 'src/app/tools/FilterSortService.component';
 
 @Component({
   selector: 'app-check-exam',
@@ -30,14 +31,17 @@ export class CheckExamComponent implements OnInit {
     { text: '已结束', value: '已结束' }
   ];
 
+  status_selected_filter_val = []
+
   sort(sort: { key: string; value: string }): void {
     this.sortKey = sort.key;
     this.sortValue = sort.value;
   }
 
   public student_exam_info_list:Array<StudentExamInfo> = []
+  public student_exam_info_list_backup:Array<StudentExamInfo> = []
 
-  constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
+  constructor(private filter_sort_service: FilterSortService, private http_client: HttpClient,
     @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router) { 
     }
 
@@ -52,6 +56,8 @@ export class CheckExamComponent implements OnInit {
     this.http_client.post<MyServerResponse>(this.base_url + 'epi/user/examlist',student_id).subscribe(
       response => {
         this.student_exam_info_list = response.data;
+        this.student_exam_info_list_backup = response.data;
+        this.UpdateFilteredData();
         this.loading = false;
         this.message.create('success', '考试信息获取成功');
       },
@@ -59,6 +65,10 @@ export class CheckExamComponent implements OnInit {
         this.message.create('error', '考试信息获取失败：连接服务器失败');
         this.loading = false;
       });
+  }
+
+  UpdateFilteredData() {
+    this.student_exam_info_list = this.filter_sort_service.GetFilteredArray(this.student_exam_info_list_backup,this.status_selected_filter_val,'status');
   }
 
   ParseDurationNum(duration:number):ShowTime {
@@ -88,9 +98,10 @@ export class CheckExamComponent implements OnInit {
   }
 
   StatusFilterChange(filter) {
-    console.log(filter);
-    //todo
+    this.status_selected_filter_val = filter;
+    this.student_exam_info_list = this.filter_sort_service.GetFilteredArray(this.student_exam_info_list_backup,filter,'status');
   }
+
 
 }
 
