@@ -17,8 +17,9 @@ export class FilterSortService {
 		})
 	}
 
-	GetSortedArrat() {
-
+	GetSearchedArray(arr: Array<any>, search_val: string, filter_key: string): Array<any> {
+		if(search_val.length == 0) return arr;
+		return arr.filter(arr_item => arr_item[filter_key].includes(search_val))
 	}
 
 }

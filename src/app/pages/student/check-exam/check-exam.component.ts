@@ -17,10 +17,6 @@ export class CheckExamComponent implements OnInit {
   page_size = 5;
   listOfData = [];
   loading = true;
-  sortValue: string | null = null;
-  sortKey: string | null = null;
-  filterGender = [{ text: 'male', value: 'male' }, { text: 'female', value: 'female' }];
-  searchGenderList: string[] = [];
 
   current_select_exam:number = 0;
 
@@ -31,12 +27,8 @@ export class CheckExamComponent implements OnInit {
     { text: '已结束', value: '已结束' }
   ];
 
-  status_selected_filter_val = []
-
-  sort(sort: { key: string; value: string }): void {
-    this.sortKey = sort.key;
-    this.sortValue = sort.value;
-  }
+  status_selected_filter_val = [];
+  search_exam_name_value = "";
 
   public student_exam_info_list:Array<StudentExamInfo> = []
   public student_exam_info_list_backup:Array<StudentExamInfo> = []
@@ -58,6 +50,7 @@ export class CheckExamComponent implements OnInit {
         this.student_exam_info_list = response.data;
         this.student_exam_info_list_backup = response.data;
         this.UpdateFilteredAndSortedData();
+        this.ResetSearch();
         this.loading = false;
         this.message.create('success', '考试信息获取成功');
       },
@@ -80,11 +73,6 @@ export class CheckExamComponent implements OnInit {
     return show_time;
   }
 
-  updateFilter(value: string[]): void {
-    this.searchGenderList = value;
-    this.UpdateTableData(true);
-  }
-
   EnterExam(index:number) {
     this.current_select_exam =  (this.page_index - 1) * this.page_size + index;
     let current_exam = this.student_exam_info_list[this.current_select_exam];
@@ -102,6 +90,14 @@ export class CheckExamComponent implements OnInit {
     this.student_exam_info_list = this.filter_sort_service.GetFilteredArray(this.student_exam_info_list_backup,filter,'status');
   }
 
+  SearchNameInArray() {
+    this.student_exam_info_list = this.filter_sort_service.GetSearchedArray(this.student_exam_info_list_backup,this.search_exam_name_value,'examName');
+  }
+
+  ResetSearch() {
+    this.search_exam_name_value = "";
+    this.SearchNameInArray();
+  }
 
 }
 

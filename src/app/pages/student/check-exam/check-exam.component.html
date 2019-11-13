@@ -44,11 +44,11 @@
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
               <div class="search-box">
-                <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
-                <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-                  Search
+                <input type="text" nz-input placeholder="输入要检索的考试名" [(ngModel)]="search_exam_name_value" />
+                <button nz-button nzSize="small" nzType="primary" (click)="SearchNameInArray()" class="search-button">
+                  搜索
                 </button>
-                <button nz-button nzSize="small" (click)="reset()">Reset</button>
+                <button nz-button nzSize="small" (click)="ResetSearch()">重置</button>
               </div>
             </nz-dropdown-menu>
           </thead>
