@@ -130,7 +130,7 @@ export class CheckExamComponent implements OnInit {
   UpdateSortedData() {
     let insc = this.begin_time_sort_value == 'ascend'?true:false;
     this.student_exam_info_list = this.filter_sort_service.GetSortedDateTimeStrArray(this.student_exam_info_list,'beginTime',insc);
-    //改变对象的句柄，不然表格不会更新
+    //改变对象的句柄/引用，不然表格不会更新
     this.student_exam_info_list = Array.from(this.student_exam_info_list);
   }
 
