@@ -57,7 +57,7 @@ export class CheckExamComponent implements OnInit {
       response => {
         this.student_exam_info_list = response.data;
         this.student_exam_info_list_backup = response.data;
-        this.UpdateFilteredData();
+        this.UpdateFilteredAndSortedData();
         this.loading = false;
         this.message.create('success', '考试信息获取成功');
       },
@@ -67,7 +67,7 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  UpdateFilteredData() {
+  UpdateFilteredAndSortedData() {
     this.student_exam_info_list = this.filter_sort_service.GetFilteredArray(this.student_exam_info_list_backup,this.status_selected_filter_val,'status');
   }
 
