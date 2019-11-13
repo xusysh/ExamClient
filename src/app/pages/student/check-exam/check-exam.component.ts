@@ -29,6 +29,7 @@ export class CheckExamComponent implements OnInit {
 
   status_selected_filter_val = [];
   search_exam_name_value = "";
+  begin_time_sort_value = null;
 
   public student_exam_info_list:Array<StudentExamInfo> = []
   public student_exam_info_list_backup:Array<StudentExamInfo> = []
@@ -48,7 +49,7 @@ export class CheckExamComponent implements OnInit {
     this.http_client.post<MyServerResponse>(this.base_url + 'epi/user/examlist',student_id).subscribe(
       response => {
         this.student_exam_info_list = response.data;
-        this.student_exam_info_list_backup = response.data;
+        this.student_exam_info_list_backup = Array.from(this.student_exam_info_list);
         this.ResetArrayData();
         this.loading = false;
         this.message.create('success', '考试信息获取成功');
@@ -88,6 +89,8 @@ export class CheckExamComponent implements OnInit {
       { text: '已结束', value: '已结束' }
     ];
     this.ResetSearch();
+    this.ResetSort();
+    this.student_exam_info_list = Array.from(this.student_exam_info_list_backup);
   }
 
   StatusFilterChange(filter) {
@@ -113,7 +116,26 @@ export class CheckExamComponent implements OnInit {
 
   ResetSearch() {
     this.search_exam_name_value = "";
-    this.student_exam_info_list = this.student_exam_info_list_backup;
+  }
+
+  TimeSortStatusChanged() {
+  //  console.log(this.begin_time_sort_value)
+    if(this.begin_time_sort_value == null) {
+      this.ResetArrayData();
+      return;
+    }
+    this.UpdateSortedData();
+  }
+
+  UpdateSortedData() {
+    let insc = this.begin_time_sort_value == 'ascend'?true:false;
+    this.student_exam_info_list = this.filter_sort_service.GetSortedDateTimeStrArray(this.student_exam_info_list,'beginTime',insc);
+    //改变对象的句柄，不然表格不会更新
+    this.student_exam_info_list = Array.from(this.student_exam_info_list);
+  }
+
+  ResetSort() {
+    this.begin_time_sort_value = null;
   }
 
 }

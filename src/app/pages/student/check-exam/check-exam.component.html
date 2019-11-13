@@ -24,7 +24,7 @@
         </div>
         <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_exam_info_list"
           [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
-          <thead (nzSortChange)="sort($event)" nzSingleSort>
+          <thead>
             <tr>
               <th nzWidth="180px" nzCustomFilter>
                 <b>&nbsp;考试名
@@ -33,11 +33,12 @@
                     nzPlacement="bottomRight" [nzClickHide]="true" nzTableFilter></i>
                 </b>
               </th>
-              <th nzWidth="180px"><b>开始时间</b></th>
+              <th nzWidth="180px" nzShowSort [(nzSort)]="begin_time_sort_value"
+                (nzSortChange)="TimeSortStatusChanged($event)"><b>开始时间</b></th>
               <th nzWidth="180px"><b>结束时间</b></th>
               <th nzWidth="120px"><b>持续时长</b></th>
-              <th nzWidth="110px" nzShowFilter [nzFilterMultiple]="true"
-                [nzFilters]="status_filter" (nzFilterChange)="StatusFilterChange($event)">
+              <th nzWidth="110px" nzShowFilter [nzFilterMultiple]="true" [nzFilters]="status_filter"
+                (nzFilterChange)="StatusFilterChange($event)">
                 <b>考试状态</b>
               </th>
               <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
