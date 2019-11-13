@@ -30,7 +30,7 @@
                 <b>&nbsp;考试名
                   <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                     [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
-                    nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                    nzPlacement="bottomRight" [nzClickHide]="true" nzTableFilter></i>
                 </b>
               </th>
               <th nzWidth="180px"><b>开始时间</b></th>
@@ -48,7 +48,7 @@
                 <button nz-button nzSize="small" nzType="primary" (click)="SearchNameInArray()" class="search-button">
                   搜索
                 </button>
-                <button nz-button nzSize="small" (click)="ResetSearch()">重置</button>
+                <button nz-button nzSize="small" (click)="ResetArrayData()">重置</button>
               </div>
             </nz-dropdown-menu>
           </thead>
