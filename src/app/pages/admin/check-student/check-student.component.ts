@@ -5,6 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
+import { FilterSortService } from 'src/app/tools/FilterSortService.component';
 
 @Component({
   selector: 'app-check-student',
@@ -23,6 +24,7 @@ export class CheckStudentComponent implements OnInit {
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
   public student_info_list: Array<UserInfo> = [];
+  public student_info_list_backup: Array<UserInfo> = [];
   public all_studnets: Array<object> = [];
 
   public drawer_visible: boolean = false;
@@ -44,6 +46,8 @@ export class CheckStudentComponent implements OnInit {
   public group_info_loading = false;
   public new_group_name:string = '';
 
+  user_name_search_val = "";
+
   delete_student_ids:Array<number> = [];
   delete_loading:boolean = false;
 
@@ -58,7 +62,10 @@ export class CheckStudentComponent implements OnInit {
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService) { }
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService,
+    private filter_sort_service: FilterSortService) {
+
+    }
 
   ngOnInit(): void {
     this.UpdateTableData();
@@ -88,9 +95,11 @@ export class CheckStudentComponent implements OnInit {
     this.http_client.get<MyServerResponse>(this.base_url + 'upi/usergroup/all').subscribe(
       response => {
         this.student_info_list = response.data;
+        this.student_info_list_backup = this.student_info_list;
         for(var student of this.student_info_list) 
           student['delete_flag'] = false;
         this.GetAllStudents();
+        this.user_name_search_val = ""
         this.loading = false;
       },
       error => {
@@ -478,6 +487,15 @@ export class CheckStudentComponent implements OnInit {
       }
     );
   };
+
+  SearchUserName() {
+    this.student_info_list = this.filter_sort_service.GetSearchedArray(this.student_info_list,this.user_name_search_val,"userName")
+  }
+
+  ResetArrayData() {
+    this.user_name_search_val = ""
+    this.student_info_list = Array.from(this.student_info_list_backup);
+  }
 
 }
 

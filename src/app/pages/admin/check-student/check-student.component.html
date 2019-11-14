@@ -33,7 +33,7 @@
               </div>
               <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="student_info_list"
                 [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
-                <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <thead>
                   <tr>
                     <th>
                     </th>
@@ -50,11 +50,11 @@
                   </tr>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                     <div class="search-box">
-                      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue"/>
-                      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-                        Search
+                      <input type="text" nz-input placeholder="输入要搜索的用户名" [(ngModel)]="user_name_search_val"/>
+                      <button nz-button nzSize="small" nzType="primary" (click)="SearchUserName()" class="search-button">
+                        搜索
                       </button>
-                      <button nz-button nzSize="small" (click)="reset()">Reset</button>
+                      <button nz-button nzSize="small" (click)="ResetArrayData()">重置</button>
                     </div>
                   </nz-dropdown-menu>
                 </thead>
