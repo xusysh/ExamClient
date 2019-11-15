@@ -76,7 +76,7 @@
                         <section class="code-box-demo">
                           <nz-list nzSize="large">
                             <nz-list-item *ngIf="question.description != '' && question.description != null">
-                              <pre><span style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
+                              <div style="font-size: 120%" [innerHtml]="question.description"></div>
                             </nz-list-item>
                             <nz-list-item *ngFor="let option of question.options;let i=index;"
                               [nzContent]="GetOptionLabel(i)+option.content">
