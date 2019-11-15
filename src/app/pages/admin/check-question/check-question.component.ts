@@ -5,9 +5,10 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin, from } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component'
-import { NzTreeNode ,NzTreeComponent} from 'ng-zorro-antd';
+import { NzTreeNode, NzTreeComponent } from 'ng-zorro-antd';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FilterSortService } from 'src/app/tools/FilterSortService.component';
 
 @Component({
   selector: 'app-check-question',
@@ -26,6 +27,14 @@ export class CheckQuestionComponent implements OnInit {
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
   public question_info_list: Array<QuestionInfo> = [];
+  question_info_list_backup: Array<QuestionInfo> = [];
+  question_type_filter = [
+    { text: '单选题', value: 'single' },
+    { text: '不定项选择题', value: 'multi' },
+    { text: '判断题', value: 'judge' },
+    { text: '简答题', value: 'subjective' }
+  ];
+  question_type_filter_val = [];
 
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
@@ -33,7 +42,7 @@ export class CheckQuestionComponent implements OnInit {
   public is_allDisplay_data_checked = false;
   public is_indeterminate = false;
 
-  public new_question:boolean = false;
+  public new_question: boolean = false;
   public edit_question_id: number = 0;
   public edit_question_type: string = '';
   public edit_question_content: string = '';
@@ -49,14 +58,16 @@ export class CheckQuestionComponent implements OnInit {
 
   //知识点管理
   public knowledge_loading = false;
-  public checked_knowledge_id:Array<number> = [];
-  public edit_knowledge_name:string = '';
-  public add_new_knowledge:boolean = false;
-  public edit_knowledge_dic:object = {};
-  public edit_knowledge_flag_dic:object = {};
+  public checked_knowledge_id: Array<number> = [];
+  public edit_knowledge_name: string = '';
+  public add_new_knowledge: boolean = false;
+  public edit_knowledge_dic: object = {};
+  public edit_knowledge_flag_dic: object = {};
 
-  delete_question_ids:Array<number> = [];
-  delete_loading:boolean = false;
+  delete_question_ids: Array<number> = [];
+  delete_loading: boolean = false;
+
+  question_content_search_val = "";
 
   public current_select_question: number = 0;
   public all_knowledge_info: Array<any> = [];
@@ -71,9 +82,10 @@ export class CheckQuestionComponent implements OnInit {
   };
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
-  @ViewChild('knowledge_tree',{static: false}) treeElement:NzTreeComponent;
+  @ViewChild('knowledge_tree', { static: false }) treeElement: NzTreeComponent;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService,private sanitizer: DomSanitizer) {
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private sanitizer: DomSanitizer,
+    private filter_sort_service: FilterSortService) {
   }
 
   ngOnInit(): void {
@@ -100,6 +112,14 @@ export class CheckQuestionComponent implements OnInit {
           this.question_info_list[i].answer = JSON.parse(this.question_info_list[i].answer);
           this.question_info_list[i]['delete_flag'] = false;
         }
+        this.question_info_list_backup = Array.from(this.question_info_list);
+        this.question_type_filter = [
+          { text: '单选题', value: 'single' },
+          { text: '不定项选择题', value: 'multi' },
+          { text: '判断题', value: 'judge' },
+          { text: '简答题', value: 'subjective' }
+        ];
+        this.question_content_search_val = "";
         this.loading = false;
       },
       error => {
@@ -143,7 +163,7 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   CheckQuestionInfo(index: number): void {
-    if(index == -1) {
+    if (index == -1) {
       this.new_question = true;
       this.edit_question_id = null;
       this.edit_question_type = 'single';
@@ -166,11 +186,11 @@ export class CheckQuestionComponent implements OnInit {
     this.drawer_visible = true;
   }
 
-  KnowledgeCheckChanged(event:any) {
-  //  console.log(this.edit_question_answer)
+  KnowledgeCheckChanged(event: any) {
+    //  console.log(this.edit_question_answer)
     let check_node_list = this.treeElement.getCheckedNodeList();
     this.checked_knowledge_id = [];
-    for(let i=0;i< check_node_list.length; i++) 
+    for (let i = 0; i < check_node_list.length; i++)
       this.checked_knowledge_id.push(parseInt(check_node_list[i].key));
   }
 
@@ -196,8 +216,8 @@ export class CheckQuestionComponent implements OnInit {
       });
   }
 
-  UpdateKnowledgeInfo(is_open:boolean = true) {
-    if(!is_open) return;
+  UpdateKnowledgeInfo(is_open: boolean = true) {
+    if (!is_open) return;
     this.add_new_knowledge = false;
     this.knowledge_loading = true;
     this.all_knowledge_info = []
@@ -206,8 +226,8 @@ export class CheckQuestionComponent implements OnInit {
         this.all_knowledge_info = response.data;
         this.edit_knowledge_dic = {};
         this.edit_knowledge_flag_dic = {};
-        for (let i = 0; i <this.all_knowledge_info.length;i++) {
-          this.edit_knowledge_dic[this.all_knowledge_info[i].key] =  this.all_knowledge_info[i].title;
+        for (let i = 0; i < this.all_knowledge_info.length; i++) {
+          this.edit_knowledge_dic[this.all_knowledge_info[i].key] = this.all_knowledge_info[i].title;
           this.edit_knowledge_flag_dic[this.all_knowledge_info[i].key] = false;
         }
         this.knowledge_loading = false;
@@ -219,27 +239,27 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   AddEditOption() {
-    let option:Option={
-      id:this.edit_question_options.length,
-      content:''
+    let option: Option = {
+      id: this.edit_question_options.length,
+      content: ''
     }
     this.edit_question_options.push(option);
   }
 
   EditQuestionInfo(): void {
     this.edit_question_info_loading = true;
-    if(!this.new_question)
+    if (!this.new_question)
       this.edit_question_id = this.question_info_list[this.current_select_question].id;
-    if(this.edit_question_type == 'subjective') 
+    if (this.edit_question_type == 'subjective')
       this.edit_question_options = []
-    let question_edit_info:UpdateQuestionInfo = {
+    let question_edit_info: UpdateQuestionInfo = {
       id: this.edit_question_id,
       type: this.edit_question_type,
       content: this.edit_question_content,
       description: this.edit_question_description,
       option_list: this.edit_question_options,
       answer_list: this.edit_question_answer,
-      knowledge_list:this.edit_question_knowledge
+      knowledge_list: this.edit_question_knowledge
     }
     this.http_client.post<MyServerResponse>(this.base_url + 'question/single', question_edit_info).
       subscribe(response => {
@@ -428,9 +448,9 @@ export class CheckQuestionComponent implements OnInit {
     );
   };
 
-  
+
   limit() {
-    if (this.edit_question_answer[0].content.length > 20000) 
+    if (this.edit_question_answer[0].content.length > 20000)
       this.edit_question_answer[0].content = this.edit_question_answer[0].content.substring(0, 20000);
   }
 
@@ -438,53 +458,82 @@ export class CheckQuestionComponent implements OnInit {
     console.log(event);
   }
 
-  TypeSelectChanged(event:string) {
-    if(event != 'subjective')
+  TypeSelectChanged(event: string) {
+    if (event != 'subjective')
       this.edit_question_answer = [];
     else
-      this.edit_question_answer = [{id:0,content:''}]
+      this.edit_question_answer = [{ id: 0, content: '' }]
   }
 
-  EditKnowledgeInfo(knowledge_id:string,knowledge_name:string=null) {
-    if(knowledge_id != '') 
+  EditKnowledgeInfo(knowledge_id: string, knowledge_name: string = null) {
+    if (knowledge_id != '')
       this.edit_knowledge_name = knowledge_name;
-    let knowledge_info:KnowledgeInfo = {
+    let knowledge_info: KnowledgeInfo = {
       id: knowledge_id,
-      name:this.edit_knowledge_name,
+      name: this.edit_knowledge_name,
       description: this.edit_knowledge_name,
       level: 1,
-      parent_id:0
+      parent_id: 0
     }
     this.http_client.post<MyServerResponse>(this.base_url + 'keypoint/single', knowledge_info).
-    subscribe(response => {
-      if (response.status != 200) {
-        this.message.create('error', '知识点编辑失败:' + response.msg);
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '知识点编辑失败:' + response.msg);
+          this.add_new_knowledge = false;
+        }
+        else {
+          this.message.create('success', '知识点编辑成功');
+          this.add_new_knowledge = false;
+          this.UpdateKnowledgeInfo();
+        }
+      }, error => {
+        this.message.create('error', '知识点编辑失败：连接服务器失败');
+        this.edit_question_info_loading = false;
         this.add_new_knowledge = false;
-      }
-      else {
-        this.message.create('success', '知识点编辑成功');
-        this.add_new_knowledge = false;
-        this.UpdateKnowledgeInfo();
-      }
-    }, error => {
-      this.message.create('error', '知识点编辑失败：连接服务器失败');
-      this.edit_question_info_loading = false;
-      this.add_new_knowledge = false;
-    });
+      });
     this.edit_knowledge_name = '';
   }
 
-  RefreshDeleteCheckStatus(checked:boolean): void {
+  RefreshDeleteCheckStatus(checked: boolean): void {
     this.delete_question_ids = []
-    for(let question of this.question_info_list) {
-      if(question['delete_flag'] == true ) {
+    for (let question of this.question_info_list) {
+      if (question['delete_flag'] == true) {
         this.delete_question_ids.push(question.id);
       }
     }
   }
 
-  GetRichHtml(html:string):SafeHtml {
+  GetRichHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  ResetArrayData() {
+    this.question_type_filter = [
+      { text: '单选题', value: 'single' },
+      { text: '不定项选择题', value: 'multi' },
+      { text: '判断题', value: 'judge' },
+      { text: '简答题', value: 'subjective' }
+    ];
+    this.question_content_search_val = "";
+    this.question_info_list = Array.from(this.question_info_list_backup);
+  }
+
+
+  SearchQuestionContent() {
+    this.question_info_list = this.filter_sort_service.GetSearchedArray(this.question_info_list, this.question_content_search_val, "content")
+  }
+  
+  QuestionTypeFilterChange(filter) {
+    this.question_type_filter_val = filter;
+    this.UpdateFilteredData();
+  }
+
+  UpdateFilteredData() {
+    if(this.question_type_filter_val.length == 0) {
+      this.ResetArrayData();
+      return;
+    }
+    this.question_info_list = this.filter_sort_service.GetFilteredArray(this.question_info_list,this.question_type_filter_val,'type');
   }
 
 }
@@ -494,7 +543,7 @@ export interface QuestionInfo {
   content: string,
   type: string,
   description: string,
-  knowledge:Array<string>,
+  knowledge: Array<string>,
   answer: any,
   options: any
 }
@@ -504,7 +553,7 @@ interface UpdateQuestionInfo {
   content: string,
   type: string,
   description: string,
-  knowledge_list:Array<string>,
+  knowledge_list: Array<string>,
   answer_list: any,
   option_list: any
 }

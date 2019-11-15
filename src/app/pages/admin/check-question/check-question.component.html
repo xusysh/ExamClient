@@ -51,7 +51,8 @@
                     nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
                 </b>
               </th>
-              <th nzWidth="160px"><b>试题类型</b></th>
+              <th nzWidth="160px" nzShowFilter [nzFilterMultiple]="true" [nzFilters]="question_type_filter"
+              (nzFilterChange)="QuestionTypeFilterChange($event)"><b>试题类型</b></th>
               <th nzWidth="300px"><b>追加描述</b></th>
               <th nzWidth="200px"><b>选项</b></th>
               <th nzWidth="150px"><b>参考答案</b></th>
@@ -59,11 +60,11 @@
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
               <div class="search-box">
-                <input type="text" nz-input placeholder="请输入搜索的题干" [(ngModel)]="searchValue" />
-                <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+                <input type="text" nz-input placeholder="请输入搜索的题干" [(ngModel)]="question_content_search_val" />
+                <button nz-button nzSize="small" nzType="primary" (click)="SearchQuestionContent()" class="search-button">
                   搜索
                 </button>
-                <button nz-button nzSize="small" (click)="reset()">重置</button>
+                <button nz-button nzSize="small" (click)="ResetArrayData()">重置</button>
               </div>
             </nz-dropdown-menu>
           </thead>
