@@ -158,6 +158,7 @@ export class CheckStudentComponent implements OnInit {
         else {
           this.message.create('success', '用户 ' + this.edit_user_name + ' 编辑成功');
           this.UpdateTableData();
+          this.UpdateGroupInfo();
         }
       }, error => {
         this.message.create('error', '用户编辑失败：连接服务器失败');
@@ -184,6 +185,7 @@ export class CheckStudentComponent implements OnInit {
         else {
           this.message.create('success', '用户 ' + this.student_info_list[this.current_select_user].userName + ' 删除成功');
           this.UpdateTableData();
+          this.UpdateGroupInfo();
         }
       }, error => {
         this.message.create('error', '用户删除失败：连接服务器失败');
@@ -211,6 +213,7 @@ export class CheckStudentComponent implements OnInit {
           this.delete_loading = false;
           this.delete_student_ids = [];
           this.UpdateTableData();
+          this.UpdateGroupInfo();
         }
       }, error => {
         this.message.create('error', '用户删除失败：连接服务器失败');
@@ -331,6 +334,7 @@ export class CheckStudentComponent implements OnInit {
             this.message.create('success', '组名编辑成功');
             this.edit_group_name_flags[index] = false;
             this.UpdateGroupInfo();
+            this.UpdateTableData();
           }
         }, error => {
           this.message.create('error', '组名编辑失败：连接服务器失败');
@@ -374,6 +378,7 @@ export class CheckStudentComponent implements OnInit {
         }
         else {
           this.message.create('success', '删除组成功');
+          this.UpdateGroupInfo();
           this.UpdateGroupInfo();
         }
       }, error => {
