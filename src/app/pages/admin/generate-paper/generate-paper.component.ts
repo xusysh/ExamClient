@@ -8,6 +8,7 @@ import { MyServerResponse } from '../../login/login.component';
 import { QuestionInfo } from '../check-question/check-question.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { summaryFileName } from '@angular/compiler/src/aot/util';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-generate-paper',
@@ -80,7 +81,7 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
-    private message: NzMessageService, private modal: NzModalService) {
+    private message: NzMessageService, private modal: NzModalService,private router:Router) {
     this.GetKnowledge();
     this.GetAllQuestions();
 
@@ -342,6 +343,7 @@ export class GeneratePaperComponent implements OnInit {
           subscribe(response => {
             if (response.status == 200) {
               this.message.create('success', '编辑试卷成功');
+              this.router.navigateByUrl("/student/check-paper");
             }
             else {
               this.message.create('error', '编辑试卷失败:' + response.msg);

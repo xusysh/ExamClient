@@ -66,6 +66,7 @@ export class CheckQuestionComponent implements OnInit {
 
   delete_question_ids: Array<number> = [];
   delete_loading: boolean = false;
+  delete_knowledge_loading:boolean = false;
 
   question_content_search_val = "";
 
@@ -195,6 +196,7 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   DeleteKnowledge() {
+    this.delete_knowledge_loading = false;
     let knowledge_delete_info = {
       id: this.checked_knowledge_id
     }
@@ -206,13 +208,16 @@ export class CheckQuestionComponent implements OnInit {
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '知识点删除失败:' + response.msg);
+          this.delete_knowledge_loading = false;
         }
         else {
           this.message.create('success', '知识点删除成功');
           this.UpdateKnowledgeInfo();
+          this.delete_knowledge_loading = false;
         }
       }, error => {
         this.message.create('error', '知识点删除失败：连接服务器失败');
+        this.delete_knowledge_loading = false;
       });
   }
 

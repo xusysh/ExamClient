@@ -154,17 +154,21 @@ export class CheckStudentComponent implements OnInit {
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '用户编辑失败:' + response.msg);
+          this.edit_user_info_loading = false;
+          this.drawer_visible = false;
         }
         else {
           this.message.create('success', '用户 ' + this.edit_user_name + ' 编辑成功');
           this.UpdateTableData();
           this.UpdateGroupInfo();
+          this.edit_user_info_loading = false;
+          this.drawer_visible = false;
         }
       }, error => {
         this.message.create('error', '用户编辑失败：连接服务器失败');
+        this.edit_user_info_loading = false;
+        this.drawer_visible = false;
       });
-    this.edit_user_info_loading = false;
-    this.drawer_visible = false;
   }
 
   //删除单个用户
@@ -379,7 +383,7 @@ export class CheckStudentComponent implements OnInit {
         else {
           this.message.create('success', '删除组成功');
           this.UpdateGroupInfo();
-          this.UpdateGroupInfo();
+          this.UpdateTableData();
         }
       }, error => {
         this.message.create('error','删除组失败：连接服务器失败');
