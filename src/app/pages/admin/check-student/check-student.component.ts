@@ -402,6 +402,7 @@ export class CheckStudentComponent implements OnInit {
           this.edit_group_student_list_loading = false;
           this.edit_group_name_flags[index] = false;
           this.UpdateGroupInfo();
+          this.UpdateTableData();
         }
       }, error => {
         this.message.create('error', this.all_group_info[index].group_name + ' 学生列表编辑失败：连接服务器失败');
