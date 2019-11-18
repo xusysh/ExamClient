@@ -219,6 +219,11 @@ export class CheckExamComponent implements OnInit {
   EditExam(index: number): void {
     if (index == -1) {
       this.edit_exam_id = null;
+      this.edit_exam_paper_info = null;
+      this.edit_exam_name = "";
+      this.edit_exam_start_time = new Date(Date.now());
+      this.edit_exam_end_time = new Date(Date.now());
+      this.edit_exam_duration = 0;
     }
     else {
       this.current_select_exam = (this.page_index - 1) * this.page_size + index;
@@ -232,6 +237,7 @@ export class CheckExamComponent implements OnInit {
       this.GetExamGroupStudents();
     }
     this.UpdateGroupInfo(true);
+    this.UpdatePaperInfo(true);
     this.drawer_visible = true;
   }
 
