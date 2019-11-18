@@ -107,10 +107,6 @@ export class CheckExamComponent implements OnInit {
   }
 
   SearchNameInArray() {
-    if(this.search_exam_name_value == null||this.search_exam_name_value == "") {
-      this.ResetArrayData();
-      return;
-    }
     this.student_exam_info_list = this.filter_sort_service.GetSearchedArray(this.student_exam_info_list,this.search_exam_name_value,'examName');
   }
 
