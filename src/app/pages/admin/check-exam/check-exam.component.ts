@@ -6,6 +6,7 @@ import { UploadXHRArgs } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
 import { Router } from '@angular/router';
+import { FilterSortService } from 'src/app/tools/FilterSortService.component';
 
 @Component({
   selector: 'app-check-exam',
@@ -25,6 +26,7 @@ export class CheckExamComponent implements OnInit {
   public searchGenderList: string[] = [];
   public is_downloading_template = false;
   public exam_info_list: Array<ExamInfo> = [];
+  exam_info_list_backup:Array<ExamInfo> = [];
 
   public drawer_visible: boolean = false;
   public dialog_visible: boolean = false;
@@ -69,8 +71,13 @@ export class CheckExamComponent implements OnInit {
   compareFn_paper = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
+  status_filter: { text: string; value: string; }[];
+  status_selected_filter_val: any;
+  search_exam_name_value: any;
+  begin_time_sort_value: any;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router) { }
+    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router,
+    private filter_sort_service:FilterSortService) { }
 
   ngOnInit(): void {
     this.UpdateTableData();
@@ -92,6 +99,8 @@ export class CheckExamComponent implements OnInit {
         for (let exam of this.exam_info_list) {
           exam['delete_flag'] = false;
         }
+        this.exam_info_list_backup = Array.from(this.exam_info_list);
+        this.ResetArrayData();
         this.loading = false;
       },
       error => {
@@ -424,7 +433,7 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  getNowFormatDate(date:Date):string {
+  getNowFormatDate(date: Date): string {
     let seperator1 = "-";
     let seperator2 = ":";
     let month = getNewDate(date.getMonth() + 1);
@@ -434,16 +443,70 @@ export class CheckExamComponent implements OnInit {
     let seconds = getNewDate(date.getSeconds());
     //统一格式为两位数
     function getNewDate(date) {
-        if (date <= 9) {
-            date = "0" + date;
-        }
-        return date;
+      if (date <= 9) {
+        date = "0" + date;
+      }
+      return date;
     }
 
     let currentDate = date.getFullYear() + seperator1 + month + seperator1 + day
-        + " " + hours + seperator2 + minutes + seperator2 + seconds;
+      + " " + hours + seperator2 + minutes + seperator2 + seconds;
     return currentDate;
-}
+  }
+
+
+  ResetArrayData() {
+    this.status_filter = [
+      { text: '未开始', value: '未开始' }, 
+      { text: '进行中', value: '进行中' },
+      { text: '判卷中', value: '判卷中' },
+      { text: '已结束', value: '已结束' }
+    ];
+    this.ResetSearch();
+    this.ResetSort();
+    this.exam_info_list = Array.from(this.exam_info_list_backup);
+  }
+
+  StatusFilterChange(filter) {
+    this.status_selected_filter_val = filter;
+    this.UpdateFilteredData();
+  }
+
+  UpdateFilteredData() {
+    if(this.status_selected_filter_val.length == 0) {
+      this.ResetArrayData();
+      return;
+    }
+    this.exam_info_list = this.filter_sort_service.GetFilteredArray(this.exam_info_list,this.status_selected_filter_val,'status');
+  }
+
+  SearchNameInArray() {
+    this.exam_info_list = this.filter_sort_service.GetSearchedArray(this.exam_info_list,this.search_exam_name_value,'examName');
+  }
+
+  ResetSearch() {
+    this.search_exam_name_value = "";
+  }
+
+  TimeSortStatusChanged() {
+  //  console.log(this.begin_time_sort_value)
+    if(this.begin_time_sort_value == null) {
+      this.ResetArrayData();
+      return;
+    }
+    this.UpdateSortedData();
+  }
+
+  UpdateSortedData() {
+    let insc = this.begin_time_sort_value == 'ascend'?true:false;
+    this.exam_info_list = this.filter_sort_service.GetSortedDateTimeStrArray(this.exam_info_list,'beginTime',insc);
+    //改变对象的句柄/引用，不然表格不会更新
+    this.exam_info_list = Array.from(this.exam_info_list);
+  }
+
+  ResetSort() {
+    this.begin_time_sort_value = null;
+  }
 
 }
 

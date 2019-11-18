@@ -29,13 +29,13 @@
                 <i nz-icon nzType="plus"></i>添加考试
               </button>
               <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
-              *ngIf="delete_exam_ids.length > 0" (click)="DeleteExams()" [nzLoading]="delete_loading">
-              <i nz-icon nzType="user-delete"></i>批量删除考试
-            </button>
+                *ngIf="delete_exam_ids.length > 0" (click)="DeleteExams()" [nzLoading]="delete_loading">
+                <i nz-icon nzType="user-delete"></i>批量删除考试
+              </button>
             </div>
             <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_info_list"
               [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'360px'}">
-              <thead (nzSortChange)="sort($event)" nzSingleSort>
+              <thead>
                 <tr>
                   <th>
                   </th>
@@ -47,19 +47,22 @@
                     </b>
                   </th>
                   <th nzWidth="180px"><b>试卷名</b></th>
-                  <th nzWidth="180px"><b>开始时间</b></th>
+                  <th nzWidth="180px" nzWidth="180px" nzShowSort [(nzSort)]="begin_time_sort_value"
+                    (nzSortChange)="TimeSortStatusChanged()"><b>开始时间</b></th>
                   <th nzWidth="180px"><b>结束时间</b></th>
                   <th nzWidth="120px"><b>持续时长</b></th>
-                  <th nzWidth="100px"><b>考试状态</b></th>
+                  <th nzWidth="100px" nzShowFilter [nzFilterMultiple]="true" [nzFilters]="status_filter"
+                    (nzFilterChange)="StatusFilterChange($event)"><b>考试状态</b></th>
                   <th nzWidth="160px" style="align-content: center"><b>操作</b></th>
                 </tr>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <div class="search-box">
-                    <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
-                    <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-                      Search
+                    <input type="text" nz-input placeholder="输入要检索的考试名" [(ngModel)]="search_exam_name_value" />
+                    <button nz-button nzSize="small" nzType="primary" (click)="SearchNameInArray()"
+                      class="search-button">
+                      搜索
                     </button>
-                    <button nz-button nzSize="small" (click)="reset()">Reset</button>
+                    <button nz-button nzSize="small" (click)="ResetArrayData()">重置</button>
                   </div>
                 </nz-dropdown-menu>
               </thead>
@@ -94,7 +97,7 @@
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况" 
+                      nzShape="circle" nz-tooltip nzTitle="查看学生交卷情况"
                       [disabled]="data.status == '未开始' || data.status == '进行中'">
                       <i nz-icon nzType="container"></i>
                     </button>
@@ -194,36 +197,35 @@
           </form>
         </nz-drawer>
 
-        <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right" 
+        <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right"
           [nzTitle]="exam_info_list[current_select_exam].examName+ ' （' + exam_info_list[current_select_exam].status + '） 考生答题情况'"
           (nzOnClose)="exam_administration_drawer_visible = false;" [nzWidth]="900">
           <div class="exam-administration-table-div">
-              <div style="margin-bottom: 15px;margin-left: 15px">
-                  <button style="margin-left: 5px" nz-button nzSize="defalut"
-                  (click)="UpdateStudentPaperInfo(true)">
-                  <i nz-icon [nzType]="exam_administration_loading?'loading' : 'reload'"></i>刷新
-                </button>
-                  <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="judge_objective_loading"
-                    (click)="JudgeObjective()" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题" 
-                    [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
-                    <i nz-icon nzType="play-square"></i>开始判题
-                  </button>
-                  <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="end_exam_loading"
-                  (click)="EndExam()" nz-tooltip nzTitle="停止修改成绩，考试状态变为已结束" 
-                    [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
-                  <i nz-icon nzType="close-square"></i>结束考试
-                </button>
-                </div>
+            <div style="margin-bottom: 15px;margin-left: 15px">
+              <button style="margin-left: 5px" nz-button nzSize="defalut" (click)="UpdateStudentPaperInfo(true)">
+                <i nz-icon [nzType]="exam_administration_loading?'loading' : 'reload'"></i>刷新
+              </button>
+              <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="judge_objective_loading"
+                (click)="JudgeObjective()" nz-tooltip nzTitle="考试状态变为判卷中，同时系统自动判客观题"
+                [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
+                <i nz-icon nzType="play-square"></i>开始判题
+              </button>
+              <button style="margin-left: 15px" nz-button nzSize="defalut" [nzLoading]="end_exam_loading"
+                (click)="EndExam()" nz-tooltip nzTitle="停止修改成绩，考试状态变为已结束"
+                [disabled]="exam_info_list[current_select_exam].status != '判卷中'">
+                <i nz-icon nzType="close-square"></i>结束考试
+              </button>
+            </div>
             <nz-table #ajaxTable2 nzShowSizeChanger [nzFrontPagination]="true" [nzData]="exam_student_paper_info_list"
               nzBordered [nzScroll]="{y:'450px'}" [(nzPageSize)]="exam_administration_page_size"
-              [nzLoading]="exam_administration_loading" [(nzPageIndex)]="exam_administration_page_index" >
-              <thead (nzSortChange)="sort($event)" nzSingleSort>
+              [nzLoading]="exam_administration_loading" [(nzPageIndex)]="exam_administration_page_index">
+              <thead>
                 <tr>
                   <th nzWidth="180px" nzCustomFilter>
                     <b>考生用户名
-                      <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                      <!--i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
                         [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
-                        nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                        nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i-->
                     </b>
                   </th>
                   <th nzWidth="100px"><b>提交状态</b></th>
@@ -232,7 +234,7 @@
                   <th nzWidth="100px"><b>总分</b></th>
                   <th nzWidth="100px" style="align-content: center"><b>操作</b></th>
                 </tr>
-                <nz-dropdown-menu #menu="nzDropdownMenu">
+                <!--nz-dropdown-menu #menu="nzDropdownMenu">
                   <div class="search-box">
                     <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
                     <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
@@ -240,7 +242,7 @@
                     </button>
                     <button nz-button nzSize="small" (click)="reset()">Reset</button>
                   </div>
-                </nz-dropdown-menu>
+                </nz-dropdown-menu-->
               </thead>
               <tbody>
                 <tr *ngFor="let data of ajaxTable2.data;let i=index">
@@ -260,16 +262,17 @@
                     {{data.studentTotalPoint == null?'0':data.studentTotalPoint}}/{{data.paperTotalPoint}}
                   </td>
                   <td>
-                    <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle" nz-tooltip
-                      nzTitle="进入判题" [disabled]="exam_student_paper_info_list[i].objectiveStatus != 1 || exam_info_list[current_select_exam].status != '判卷中'">
+                    <button nz-button nzSize="small" nzType="primary" (click)="JudgePaper(i)" nzShape="circle"
+                      nz-tooltip nzTitle="进入判题"
+                      [disabled]="exam_student_paper_info_list[i].objectiveStatus != 1 || exam_info_list[current_select_exam].status != '判卷中'">
                       <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <button nz-button nzSize="small" nzType="primary" (click)="CheckExamPaper(i)"
-                    nzShape="circle" nz-tooltip nzTitle="查看完整试题信息" 
-                    [disabled]="data.subjectiveStatus == null || data.subjectiveStatus == 0">
-                    <i nz-icon nzType="container"></i>
-                  </button>
+                    <button nz-button nzSize="small" nzType="primary" (click)="CheckExamPaper(i)" nzShape="circle"
+                      nz-tooltip nzTitle="查看完整试题信息"
+                      [disabled]="data.subjectiveStatus == null || data.subjectiveStatus == 0">
+                      <i nz-icon nzType="container"></i>
+                    </button>
                   </td>
                 </tr>
               </tbody>
