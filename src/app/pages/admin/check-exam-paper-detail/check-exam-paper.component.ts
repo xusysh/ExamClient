@@ -6,6 +6,7 @@ import { UploadXHRArgs, NzFormatEmitEvent } from 'ng-zorro-antd';
 import { forkJoin } from 'rxjs';
 import { MyServerResponse } from '../../login/login.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { StudentPaperBaseInfo } from '../check-exam/check-exam.component';
 
 @Component({
   selector: 'app-check-exam-paper',
@@ -27,7 +28,7 @@ export class CheckExamPaperComponent implements OnInit {
   judge_exam_id: number;
   judge_student_id: number;
 
-  all_student_judge_info: Array<StudentPaperJudgeInfo> = [];
+  all_student_judge_info: Array<StudentPaperBaseInfo> = [];
 
   student_paper_judge_detail:PaperJudgeDetail = null;
 
@@ -59,7 +60,7 @@ export class CheckExamPaperComponent implements OnInit {
   GetStudentJudgePapers() {
     let exam_info = {
       exam_id: this.judge_exam_id,
-      student_id: this.all_student_judge_info[0].student_answers_detail[this.current_student_index].student_id
+      stu_id: this.all_student_judge_info[this.current_student_index].studentId
     }
     this.http_client.post<MyServerResponse>(this.base_url + 'spi/stuans', exam_info).
       subscribe(response => {
@@ -68,6 +69,12 @@ export class CheckExamPaperComponent implements OnInit {
         }
         else {
           this.student_paper_judge_detail = response.data;
+          for(var category of this.student_paper_judge_detail.categoryList) {
+            for(var question of category.questionList) {
+              question.def_ans = JSON.parse(question.def_ans);
+              question.student_answer = JSON.parse(question.student_answer);
+            }
+          }
           this.message.create('success', '获取考生答题信息成功');
         }
       }, error => {
@@ -75,19 +82,8 @@ export class CheckExamPaperComponent implements OnInit {
       });
   }
 
-
-  SubmitStudentGrade() {
-    this.http_client.post<MyServerResponse>(this.base_url + 'spi/techsub', this.all_student_judge_info[0]).
-      subscribe(response => {
-        if (response.status != 200) {
-          this.message.create('error', '保存考生阅卷信息失败：' + response.msg);
-        }
-        else {
-          this.message.create('success', '保存考生阅卷信息成功');
-        }
-      }, error => {
-        this.message.create('error', '保存考生阅卷信息失败：连接服务器失败');
-      });
+  SwitchStudent(index:number) {
+    this.current_student_index = index;
   }
 
   GetRichHtml(html: string): SafeHtml {

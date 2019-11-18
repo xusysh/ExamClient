@@ -21,9 +21,10 @@
             <nz-collapse-panel *ngFor="let category of student_paper_judge_detail.categoryList;let i=index;"
               [nzHeader]="category.categoryContent" [nzActive]="true" [nzShowArrow]="false">
               <nz-collapse>
-                <nz-collapse-panel *ngFor="let question of questions;let j=index;" [nzHeader]="question.content"
+                <nz-collapse-panel *ngFor="let question of category.questionList;let j=index;" [nzHeader]="question.content"
                   [nzActive]="true" [nzShowArrow]="true">
-                  <nz-card>
+                  <!--简答题-->
+                  <nz-card *ngIf="question.type == 'subjective'">
                     <section class="code-box">
                       <section class="code-box-demo2">
                         <pre><span *ngIf="question.description != ''" style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
@@ -45,7 +46,7 @@
                           <i nz-icon nzType="edit"></i>
                         </section>
                         <section class="code-box-description">
-                          <div [innerHtml]="GetRichHtml(question.answer[0].content)"></div>
+                          <div [innerHtml]="GetRichHtml(question.def_ans[0].content)"></div>
                         </section>
                       </section>
                     </section>
@@ -61,10 +62,10 @@
             <li nz-submenu nzOpen nzTitle="考生列表" nzIcon="reconciliation"
               *ngIf="all_student_judge_info != [] && all_student_judge_info != null">
               <ul>
-                <li *ngFor="let student of all_student_judge_info[0]['student_answers_detail'];let i=index;"
-                  nz-menu-item (click)="current_student_index = i;" [nzSelected]='i == current_student_index'>
+                <li *ngFor="let student of all_student_judge_info;let i=index;"
+                  nz-menu-item (click)="SwitchStudent(i)" [nzSelected]='i == current_student_index'>
                   <span>
-                    {{student['student_name']}}
+                    {{student.studentName}}
                   </span>
                 </li>
               </ul>

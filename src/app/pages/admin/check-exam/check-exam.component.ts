@@ -554,7 +554,7 @@ interface ShowTime {
   sec: number
 }
 
-interface StudentPaperBaseInfo {
+export interface StudentPaperBaseInfo {
   id: 8,
   paperCode: string,
   studentId: number,
