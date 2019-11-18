@@ -396,6 +396,7 @@ export class CheckExamComponent implements OnInit {
     let judge_student_id = this.exam_student_paper_info_list[judge_exam].studentId;
     sessionStorage.setItem('judge_exam_id', judge_exam_id.toString());
     sessionStorage.setItem('judge_student_id', judge_student_id.toString());
+    sessionStorage.setItem('all_student_judge_info',JSON.stringify(this.exam_student_paper_info_list));
     this.router.navigateByUrl("/admin/check-exam-paper");
   }
 

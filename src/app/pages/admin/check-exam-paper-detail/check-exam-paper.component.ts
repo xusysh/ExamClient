@@ -29,6 +29,8 @@ export class CheckExamPaperComponent implements OnInit {
 
   all_student_judge_info: Array<StudentPaperJudgeInfo> = [];
 
+  student_paper_judge_detail:PaperJudgeDetail = null;
+
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
   }
@@ -36,52 +38,36 @@ export class CheckExamPaperComponent implements OnInit {
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
   public elem_height_str: string = '500px';
-  public elem_height_str_sub: string = '500px';
 
   ngAfterViewInit(): void {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
-    this.elem_height_str = Math.ceil(this.canvas_height * 0.95).toString() + 'px';
-    this.elem_height_str_sub = Math.ceil(this.canvas_height * 0.95 - 60).toString() + 'px';
+    this.elem_height_str = Math.ceil(this.canvas_height * 0.85).toString() + 'px';
   }
 
   constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
-    private message: NzMessageService,private sanitizer: DomSanitizer) {
+    private message: NzMessageService, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
     this.judge_exam_id = parseInt(sessionStorage.getItem('judge_exam_id'));
     this.judge_student_id = parseInt(sessionStorage.getItem('judge_student_id'));
+    this.all_student_judge_info = JSON.parse(sessionStorage.getItem('all_student_judge_info'));
     this.GetStudentJudgePapers();
   }
 
 
   GetStudentJudgePapers() {
     let exam_info = {
-      exam_id: this.judge_exam_id
+      exam_id: this.judge_exam_id,
+      student_id: this.all_student_judge_info[0].student_answers_detail[this.current_student_index].student_id
     }
-    this.http_client.post<MyServerResponse>(this.base_url + 'spi/subanswers', exam_info).
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stuans', exam_info).
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '获取考生答题信息失败：' + response.msg);
         }
         else {
-          this.all_student_judge_info = response.data;
-          var i = 0;
-          for(var student_answers_detail of this.all_student_judge_info[0].student_answers_detail) {
-            if(student_answers_detail.student_id == this.judge_student_id)
-              this.current_student_index = i;
-            for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
-              subjective_answers.answer = JSON.parse(subjective_answers.answer);
-              subjective_answers.student_answer = JSON.parse(subjective_answers.student_answer);
-              if(subjective_answers.question_status == 0) {
-                subjective_answers['point'] = '-1.0';
-              }
-              else {
-                subjective_answers['point'] = subjective_answers.tech_point.toString();
-              }
-            }
-            i++;
-          }
+          this.student_paper_judge_detail = response.data;
           this.message.create('success', '获取考生答题信息成功');
         }
       }, error => {
@@ -89,14 +75,6 @@ export class CheckExamPaperComponent implements OnInit {
       });
   }
 
-  StudentAllJudged(index:number) {
-    var student_answers_detail = this.all_student_judge_info[0].student_answers_detail[index];
-    for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
-      if(subjective_answers['point'] == '-1.0')
-        return false;
-    }
-    return true;
-  }
 
   SubmitStudentGrade() {
     this.http_client.post<MyServerResponse>(this.base_url + 'spi/techsub', this.all_student_judge_info[0]).
@@ -112,13 +90,50 @@ export class CheckExamPaperComponent implements OnInit {
       });
   }
 
-  GetRichHtml(html:string):SafeHtml {
+  GetRichHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
 
 }
 
+interface PaperJudgeDetail {
+  paperCode: string,
+  title: string,
+  paperDescription: string,
+  createTime: string,
+  lastModifiedTime: string,
+  createUserId: number,
+  objectiveGrade: number,
+  objectiveStatus: number,
+  subjectiveGrade: number,
+  subjectiveStatus: number,
+  paperTotalPoint: number,
+  studentTotalPoint: number,
+  endFlag: number,
+  categoryList: Array<CategoryInfo>
+}
+
+
+interface CategoryInfo {
+  paperCode: string,
+  categoryContent: string,
+  questionList: Array<QuestionInfo>
+}
+
+interface QuestionInfo {
+  ques_id: 29,
+  content: string,
+  description: string,
+  type: string,
+  score: number,
+  options: any,
+  student_answer: any,
+  def_ans: any,
+  student_point: number,
+}
+
+//old
 interface StudentPaperJudgeInfo {
   exam_id: number,
   paper_code: string,
