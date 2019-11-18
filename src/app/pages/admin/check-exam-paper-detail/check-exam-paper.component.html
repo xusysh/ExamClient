@@ -21,13 +21,46 @@
             <nz-collapse-panel *ngFor="let category of student_paper_judge_detail.categoryList;let i=index;"
               [nzHeader]="category.categoryContent" [nzActive]="true" [nzShowArrow]="false">
               <nz-collapse>
-                <nz-collapse-panel *ngFor="let question of category.questionList;let j=index;" [nzHeader]="question.content"
-                  [nzActive]="true" [nzShowArrow]="true">
+                <nz-collapse-panel *ngFor="let question of category.questionList;let j=index;"
+                  [nzHeader]="question.content" [nzActive]="true" [nzShowArrow]="true">
+                  <!--选择题-->
+                  <nz-card *ngIf="question.type != 'subjective'">
+                    <section class="code-box">
+                      <section class="code-box-demo2">
+                        <div *ngIf="question.description != ''" style="font-size: 120%"
+                          [innerHtml]="question.description"></div>
+                      </section>
+                      <nz-list-item *ngFor="let option of question.options;let i=index;"
+                        [nzContent]="GetOptionLabel(i)+option.content">
+                      </nz-list-item>
+                      <section class="code-box-demo">
+                        <nz-list nzSize="large">
+                          <section class="code-box-title">
+                            考生作答
+                            <i nz-icon nzType="edit"></i>
+                          </section>
+                          <nz-list-item>
+                            <div>{{GetStudentObjectiveAnswer(i,j)}}</div>
+                          </nz-list-item>
+                        </nz-list>
+                      </section>
+                      <section class="code-box-meta markdown">
+                        <section class="code-box-title">
+                          参考答案
+                          <i nz-icon nzType="edit"></i>
+                        </section>
+                        <section class="code-box-description">
+                          <div>{{GetObjectiveAnswer(i,j)}}</div>
+                        </section>
+                      </section>
+                    </section>
+                  </nz-card>
                   <!--简答题-->
                   <nz-card *ngIf="question.type == 'subjective'">
                     <section class="code-box">
                       <section class="code-box-demo2">
-                        <pre><span *ngIf="question.description != ''" style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
+                        <div *ngIf="question.description != ''" style="font-size: 120%"
+                          [innerHtml]="question.description"></div>
                       </section>
                       <section class="code-box-demo">
                         <nz-list nzSize="large">
@@ -51,7 +84,7 @@
                       </section>
                     </section>
                   </nz-card>
-                
+
                 </nz-collapse-panel>
               </nz-collapse>
             </nz-collapse-panel>
@@ -62,8 +95,8 @@
             <li nz-submenu nzOpen nzTitle="考生列表" nzIcon="reconciliation"
               *ngIf="all_student_judge_info != [] && all_student_judge_info != null">
               <ul>
-                <li *ngFor="let student of all_student_judge_info;let i=index;"
-                  nz-menu-item (click)="SwitchStudent(i)" [nzSelected]='i == current_student_index'>
+                <li *ngFor="let student of all_student_judge_info;let i=index;" nz-menu-item (click)="SwitchStudent(i)"
+                  [nzSelected]='i == current_student_index'>
                   <span>
                     {{student.studentName}}
                   </span>
