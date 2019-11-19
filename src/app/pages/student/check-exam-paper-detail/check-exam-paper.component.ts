@@ -62,6 +62,7 @@ export class CheckExamPaperComponent implements OnInit {
 
   //简答题编辑器和内容
   public editor = ClassicEditor;
+  public editor2 = ClassicEditor;
   public editor_data = '';
   public editor_config = {
     // 配置语言

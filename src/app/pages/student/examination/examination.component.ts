@@ -61,6 +61,8 @@ export class ExaminationComponent implements OnInit {
   //  public option_bdcolor: Array<string> = [];
   public option_default_bdcolor: string = '#d4d4d4';
 
+  timer = null;
+
   //简答题编辑器和内容
   public editor = ClassicEditor;
   public editor_data = '';
@@ -83,7 +85,7 @@ export class ExaminationComponent implements OnInit {
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
     this.GetPaperInfo();
-    const timer = interval(1000).subscribe(() => {
+    this.timer = interval(1000).subscribe(() => {
       if(this.remain_seconds > 0 && !this.exam_end) {
         if(this.remain_seconds % this.autosave_interval == 0) {
           this.SubmitAnswer(0);
@@ -95,7 +97,7 @@ export class ExaminationComponent implements OnInit {
       }
       else {
         this.EndStudentExam();
-        timer.unsubscribe();
+        this.timer.unsubscribe();
       }
       });
   }

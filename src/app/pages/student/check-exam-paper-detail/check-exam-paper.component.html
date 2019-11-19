@@ -79,23 +79,25 @@
             <!--简答题-->
             <div style="width: 100%;margin-top:15px;"
               *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'">
-              <nz-sider></nz-sider>
-              <div style="width: 40%;margin-left:5%;float: left;">
+              <div style="width: 48%;;float: left;">
+                <h3 style="text-align: center;">考生作答</h3>
                   <ckeditor [editor]="editor" [config]="editor_config" [disabled]="true"
                   [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_value"
                   (ngModelChange)="limit()">
                 </ckeditor>
               </div>
-              <div style="width: 40%;margin-top:15px;margin-left:5%;">
-                  <ckeditor [editor]="editor" [config]="editor_config" [disabled]="true"
-                  [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_value"
+              <div style="width: 48%;float: right;">
+                  <h3 style="text-align: center;">标准答案</h3>
+                  <ckeditor [editor]="editor2" [config]="editor_config" [disabled]="true"
+                  [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].def_ans[0].content"
                   (ngModelChange)="limit()">
                 </ckeditor>
               </div>
             </div>
           </div>
-
-          <nz-layout *ngIf="!get_paper_loading" style="margin-top: 15px">
+          <div style="clear: both; "></div>
+          <div *ngIf="!get_paper_loading" style="margin-top: 15px">
+          <nz-layout >
             <nz-content style="background-color:#FFFFFF;padding-left: 20px;">
               <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type != 'subjective'">正确答案：{{GetDefAnsStr()}}</div>
             </nz-content>
@@ -106,7 +108,11 @@
               </nz-button-group>
             </nz-sider>
           </nz-layout>
+        </div>
+
+
         </nz-content>
+
         <nz-sider *ngIf="!get_paper_loading" [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,'overflow-y':'auto'}">
           <ul nz-menu nzMode="inline">
             <li nz-submenu nzOpen nzTitle="答题卡" nzIcon="reconciliation">
