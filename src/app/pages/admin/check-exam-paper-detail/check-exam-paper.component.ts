@@ -71,6 +71,7 @@ export class CheckExamPaperComponent implements OnInit {
           this.student_paper_judge_detail = response.data;
           for(var category of this.student_paper_judge_detail.categoryList) {
             for(var question of category.questionList) {
+              question.options = JSON.parse(question.options);
               question.def_ans = JSON.parse(question.def_ans);
               question.student_answer = JSON.parse(question.student_answer);
             }
@@ -89,6 +90,44 @@ export class CheckExamPaperComponent implements OnInit {
   GetRichHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
+
+  GetCategoryTitle(i:number,title:string) {
+    return this.NumToRoman(i+1) + '. ' + title;
+  }
+  
+  GetObjectiveAnswer(answer:Array<AnswerInfo>):Array<string> {
+    let ans_str:Array<string> = [];
+    for(let ans of answer) {
+      ans_str.push(String.fromCharCode(ans.id + 0x41));
+    }
+    return ans_str;
+  }
+
+  GetOptionStr(option:OptionInfo):string {
+    return String.fromCharCode(option.id + 0x41) + '. ' + option.content;
+  }
+
+  NumToRoman(num):string {
+    var ans = "";
+    var k = Math.floor(num / 1000);
+    var h = Math.floor((num % 1000) / 100);
+    var t = Math.floor((num % 100) / 10);
+    var o = num % 10;
+    var one = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+    var ten = ['X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC'];
+    var hundred = ['C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM']
+    var thousand = 'M';
+    for (var i = 0; i < k; i++) {
+        ans += thousand;
+    }
+    if (h)
+        ans += hundred[h - 1];
+    if (t)
+        ans += ten[t - 1];
+    if (o)
+        ans += one[o - 1];
+    return ans;
+}
 
 
 }
@@ -160,4 +199,9 @@ interface SubjectiveAnswer {
 interface AnswerInfo {
   id: number,
   content: string
+}
+
+interface OptionInfo {
+  id:number,
+  content:string
 }
