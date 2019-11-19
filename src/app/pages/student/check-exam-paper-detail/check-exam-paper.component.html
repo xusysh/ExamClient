@@ -12,7 +12,7 @@
         <a>在线考试</a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item>
-        <a>参加考试</a>
+        <a>查看答卷详情</a>
       </nz-breadcrumb-item>
     </nz-breadcrumb>
     <nz-page-header-content>
@@ -77,13 +77,21 @@
               </label>
             </div>
             <!--简答题-->
-            <div
-              *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'"
-              style="width: 100%;margin-top:15px">
-              <ckeditor [editor]="editor" [config]="editor_config"
-                [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_value"
-                (ngModelChange)="limit()">
-              </ckeditor>
+            <div style="width: 100%;margin-top:15px;"
+              *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='subjective'">
+              <nz-sider></nz-sider>
+              <div style="width: 40%;margin-left:5%;float: left;">
+                  <ckeditor [editor]="editor" [config]="editor_config" [disabled]="true"
+                  [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_value"
+                  (ngModelChange)="limit()">
+                </ckeditor>
+              </div>
+              <div style="width: 40%;margin-top:15px;margin-left:5%;">
+                  <ckeditor [editor]="editor" [config]="editor_config" [disabled]="true"
+                  [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].editor_value"
+                  (ngModelChange)="limit()">
+                </ckeditor>
+              </div>
             </div>
           </div>
 

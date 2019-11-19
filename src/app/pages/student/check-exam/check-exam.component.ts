@@ -135,7 +135,7 @@ export class CheckExamComponent implements OnInit {
   }
 
   GetStudentPaperPoint(student_exam_info:StudentExamInfo) {
-    if(student_exam_info.studentTotalPoint == null || student_exam_info.paperTotalPoint)
+    if(student_exam_info.studentTotalPoint == null || student_exam_info.paperTotalPoint == null)
       return '无';
     if(student_exam_info.status == '已结束')
       return `${student_exam_info.studentTotalPoint}/${student_exam_info.paperTotalPoint}`;
