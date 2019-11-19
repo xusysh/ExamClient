@@ -32,6 +32,10 @@ export class CheckExamPaperComponent implements OnInit {
 
   student_paper_judge_detail:PaperJudgeDetail = null;
 
+  right_color:string = "rgba(160, 255, 160, 0.3)";
+  wrong_color:string = "rgba(255, 160, 160, 0.3)";
+  not_completely_right_or_wrong_color:string = "rgba(160, 160, 255, 0.3)";
+
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
   }
@@ -129,6 +133,14 @@ export class CheckExamPaperComponent implements OnInit {
     return ans;
 }
 
+GetQuestionColor(question:QuestionInfo) {
+  if(question.score == question.student_point)
+    return this.right_color;
+  else if(question.student_point == 0)
+    return this.wrong_color;
+  else 
+    return this.not_completely_right_or_wrong_color;
+}
 
 }
 
