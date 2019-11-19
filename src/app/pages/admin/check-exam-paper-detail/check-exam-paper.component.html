@@ -23,7 +23,7 @@
               [nzHeader]="GetCategoryTitle(i,category.categoryContent)" [nzActive]="true" [nzShowArrow]="false">
               <nz-collapse>
                 <nz-collapse-panel *ngFor="let question of category.questionList;let j=index;"
-                  [nzHeader]="(j+1) + '. ' + question.content" [nzActive]="true" [nzShowArrow]="true"
+                  [nzHeader]="GetQuestionTitle(j,question)" [nzActive]="true" [nzShowArrow]="true"
                   [ngStyle]="{'background-color':GetQuestionColor(question)}" >
                   <!--选择题-->
                   <nz-card *ngIf="question.type != 'subjective'">

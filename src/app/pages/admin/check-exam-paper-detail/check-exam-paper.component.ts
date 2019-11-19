@@ -105,6 +105,10 @@ export class CheckExamPaperComponent implements OnInit {
     return this.NumToRoman(i + 1) + '. ' + title;
   }
 
+  GetQuestionTitle(index:number,question:QuestionInfo) {
+    return `【${question.student_point}/${question.score}】 ${index+1}. ${question.content}`;
+  }
+
   GetObjectiveAnswer(answer: Array<AnswerInfo>): Array<string> {
     let ans_str: Array<string> = [];
     for (let ans of answer) {
