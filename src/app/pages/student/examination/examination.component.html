@@ -80,6 +80,8 @@
             </nz-sider>
           </nz-layout>
 
+          <nz-skeleton *ngIf="get_paper_loading" [nzActive]="true"></nz-skeleton>
+
           <nz-steps *ngIf="!get_paper_loading" nzType="navigation" nzSize="small" [nzCurrent]="current_category">
             <nz-step *ngFor="let category of student_paper_info.categoryList;let i = index"
               [nzTitle]="category.categoryContent"
@@ -94,12 +96,12 @@
               {{student_paper_info.categoryList[current_category].questionList[current_question].content}}
               （{{student_paper_info.categoryList[current_category].questionList[current_question].score}}分）
             </div>
-            <!--pre标签，代码换行的话会影响显示内容，所以都写在一行了-->
-            <pre
+            <div style="margin-top: 20px;margin-bottom: 10px;"
               *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].description!=''">
-              <span [innerHtml]="student_paper_info.categoryList[current_category].questionList[current_question].description">
+              <span style="font-weight: 500;font-size: 110%;"
+                [innerHtml]="student_paper_info.categoryList[current_category].questionList[current_question].description">
               </span>
-            </pre>
+            </div>
             <!---单选题-->
             <nz-radio-group *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type=='single'||
               student_paper_info.categoryList[current_category].questionList[current_question].type=='judge'"
