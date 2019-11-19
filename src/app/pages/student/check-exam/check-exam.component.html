@@ -41,6 +41,7 @@
                 (nzFilterChange)="StatusFilterChange($event)">
                 <b>考试状态</b>
               </th>
+              <th nzWidth="80px"><b>得分</b></th>
               <th nzWidth="120px" style="align-content: center"><b>操作</b></th>
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -73,13 +74,16 @@
                 {{data.status}}
               </td>
               <td>
+                {{GetStudentPaperPoint(data)}}
+              </td>
+              <td>
                 <button nz-button nzSize="small" nzType="primary" (click)="EnterExam(i)" nzShape="circle" nz-tooltip
                   nzTitle="参加考试" [disabled]="data.status != '进行中'">
                   <i nz-icon nzType="edit"></i>
                 </button>
                 <nz-divider nzType="vertical"></nz-divider>
-                <button nz-button nzSize="small" nzType="primary" (click)="ExamAdministrationDrawerOpen(i)"
-                  nzShape="circle" nz-tooltip nzTitle="查看交卷情况" [disabled]="data.status != '已结束'">
+                <button nz-button nzSize="small" nzType="primary" (click)="CheckStudentPaper(i)"
+                  nzShape="circle" nz-tooltip nzTitle="查看试卷详情" [disabled]="data.status != '已结束'">
                   <i nz-icon nzType="container"></i>
                 </button>
               </td>

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { StudentComponent } from './student.component';
 import { CheckExamComponent } from './check-exam/check-exam.component';
 import { ExaminationComponent } from './examination/examination.component';
+import { CheckExamPaperComponent } from './check-exam-paper-detail/check-exam-paper.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,9 @@ const routes: Routes = [
       },
       {
         path: 'examination', component: ExaminationComponent
+      },
+      {
+        path: 'check-exam-paper', component: CheckExamPaperComponent
       }
     ]
   }

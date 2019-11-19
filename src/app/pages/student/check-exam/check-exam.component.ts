@@ -134,6 +134,18 @@ export class CheckExamComponent implements OnInit {
     this.begin_time_sort_value = null;
   }
 
+  GetStudentPaperPoint(student_exam_info:StudentExamInfo) {
+    if(student_exam_info.status == '已结束')
+      return `${student_exam_info.studentTotalPoint}/${student_exam_info.paperTotalPoint}`;
+    else if(student_exam_info.studentTotalPoint == null || student_exam_info.paperTotalPoint)
+      return '无';
+    else return '无';
+  }
+
+  CheckStudentPaper(index:number) {
+    this.router.navigate(['/student/check-exam-paper']);
+  }
+
 }
 
 interface StudentExamInfo {
@@ -143,7 +155,11 @@ interface StudentExamInfo {
   beginTime: string,
   endTime: string,
   duration: number,
-  status: string
+  status: string,
+  studentTotalPoint:number,
+  paperTotalPoint:number,
+  objectiveGrade:number,
+  subjectiveGrade:number
 }
 
 interface ShowTime {
