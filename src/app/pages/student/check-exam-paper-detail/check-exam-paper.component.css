@@ -41,6 +41,7 @@
     max-height: 400px;
 }
 
+/*覆盖ngzorro默认样式*/
 :host ::ng-deep .ant-checkbox-disabled + span{
   color:rgba(0, 0, 0, 0.65)
 }

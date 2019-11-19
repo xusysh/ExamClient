@@ -57,6 +57,9 @@ export class CheckExamPaperComponent implements OnInit {
   //  public option_bdcolor: Array<string> = [];
   public option_default_bdcolor: string = '#d4d4d4';
 
+  right_color: string = "rgba(160, 255, 160, 0.2)";
+  wrong_color: string = "rgba(255, 160, 160, 0.2)";
+
   //简答题编辑器和内容
   public editor = ClassicEditor;
   public editor_data = '';
@@ -115,8 +118,11 @@ export class CheckExamPaperComponent implements OnInit {
     }
     for (let i = 0; i < options.length; i++) {
       if (question['radio_value'].charCodeAt(0) == 0x41 + i) {
-        question['option_bdcolor'][i] = '#0099FF';
-        question['option_bgcolor'][i] = this.option_default_bgcolor;
+        if(question.student_point == question.score)
+          question['option_bgcolor'][i] = this.right_color;
+        else
+          question['option_bgcolor'][i] = this.wrong_color;
+        question['option_bdcolor'][i] = this.option_default_bdcolor;
       }
       else {
         question['option_bgcolor'][i] = this.option_default_bgcolor;
@@ -130,8 +136,11 @@ export class CheckExamPaperComponent implements OnInit {
     let options = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question].options;
     for (let i = 0; i < options.length; i++) {
       if (question['checkbox_values'][i] == true) {
-        question['option_bdcolor'][i] = '#0099FF';
-        question['option_bgcolor'][i] = this.option_default_bgcolor;
+        if(question.student_point == question.score)
+          question['option_bgcolor'][i] = this.right_color;
+        else
+          question['option_bgcolor'][i] = this.wrong_color;
+        question['option_bdcolor'][i] = this.option_default_bdcolor;
       }
       else {
         question['option_bgcolor'][i] = this.option_default_bgcolor;
@@ -247,6 +256,15 @@ export class CheckExamPaperComponent implements OnInit {
     else if (current_question_info.type != 'subjective') {
       this.updateRadioStatus();
     }
+  }
+
+  GetDefAnsStr():Array<string> {
+    let ans_strs:Array<string> = [];
+    let cur_question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    for(var ans_obj of cur_question.def_ans) {
+      ans_strs.push(String.fromCharCode(ans_obj.id + 0x41))
+    }
+    return ans_strs;
   }
 
 }

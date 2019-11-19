@@ -39,7 +39,7 @@
               [{{GetTypeStr()}}]&nbsp;
               {{current_question+1}}.
               {{student_paper_info.categoryList[current_category].questionList[current_question].content}}
-              （{{student_paper_info.categoryList[current_category].questionList[current_question].score}}分）
+              （{{student_paper_info.categoryList[current_category].questionList[current_question].student_point}}/{{student_paper_info.categoryList[current_category].questionList[current_question].score}}）
             </div>
             <div style="margin-top: 20px;margin-bottom: 10px;"
               *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].description!=''">
@@ -57,7 +57,7 @@
               <label nz-radio
                 *ngFor="let option of student_paper_info.categoryList[current_category].questionList[current_question].options;let i = index"
                 class="option-radio"
-                (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';"
+                (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
                 (mouseleave)="updateRadioStatus()" [nzValue]="GetValue(i)"
                 [ngStyle]="{'background-color': student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i],'border-color':student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]}">
                 {{option.content}}
@@ -70,7 +70,7 @@
                 *ngFor="let option of student_paper_info.categoryList[current_category].questionList[current_question].options;let i = index"
                 [(ngModel)]="student_paper_info.categoryList[current_category].questionList[current_question].checkbox_values[i]"
                 class="option-checkbox"
-                (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i]='#f5f5f5';"
+                (mouseenter)="student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]='#333'"
                 (mouseleave)="updateCheckboxStatus()"
                 [ngStyle]="{'background-color': student_paper_info.categoryList[current_category].questionList[current_question].option_bgcolor[i],'border-color':student_paper_info.categoryList[current_category].questionList[current_question].option_bdcolor[i]}">
                 {{option.content}}
@@ -88,7 +88,8 @@
           </div>
 
           <nz-layout *ngIf="!get_paper_loading" style="margin-top: 15px">
-            <nz-content style="background-color:#FFFFFF;">
+            <nz-content style="background-color:#FFFFFF;padding-left: 20px;">
+              <div *ngIf="student_paper_info.categoryList[current_category].questionList[current_question].type != 'subjective'">正确答案：{{GetDefAnsStr()}}</div>
             </nz-content>
             <nz-sider style="background-color:#FFFFFF;">
               <nz-button-group>
