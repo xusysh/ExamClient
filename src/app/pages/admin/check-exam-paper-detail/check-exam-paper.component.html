@@ -17,7 +17,8 @@
       <nz-layout>
         <nz-content [ngStyle]="{'background-color': '#FFFFFF','height':elem_height_str,
           'overflow-y':'auto','padding-left':'20px'}">
-          <nz-collapse *ngIf="student_paper_judge_detail != [] && student_paper_judge_detail != null">
+          <nz-skeleton *ngIf="student_paper_judge_detail_loading" [nzActive]="true"></nz-skeleton>
+          <nz-collapse *ngIf="!student_paper_judge_detail_loading">
             <nz-collapse-panel *ngFor="let category of student_paper_judge_detail.categoryList;let i=index;"
               [nzHeader]="GetCategoryTitle(i,category.categoryContent)" [nzActive]="true" [nzShowArrow]="false">
               <nz-collapse>

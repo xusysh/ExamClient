@@ -29,12 +29,13 @@ export class CheckExamPaperComponent implements OnInit {
   judge_student_id: number;
 
   all_student_judge_info: Array<StudentPaperBaseInfo> = [];
+  student_paper_judge_detail_loading: boolean = false
 
-  student_paper_judge_detail:PaperJudgeDetail = null;
+  student_paper_judge_detail: PaperJudgeDetail = null;
 
-  right_color:string = "rgba(160, 255, 160, 0.3)";
-  wrong_color:string = "rgba(255, 160, 160, 0.3)";
-  not_completely_right_or_wrong_color:string = "rgba(160, 160, 255, 0.3)";
+  right_color: string = "rgba(160, 255, 160, 0.3)";
+  wrong_color: string = "rgba(255, 160, 160, 0.3)";
+  not_completely_right_or_wrong_color: string = "rgba(160, 160, 255, 0.3)";
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -62,6 +63,7 @@ export class CheckExamPaperComponent implements OnInit {
 
 
   GetStudentJudgePapers() {
+    this.student_paper_judge_detail_loading = true;
     let exam_info = {
       exam_id: this.judge_exam_id,
       stu_id: this.all_student_judge_info[this.current_student_index].studentId
@@ -70,48 +72,52 @@ export class CheckExamPaperComponent implements OnInit {
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '获取考生答题信息失败：' + response.msg);
+          this.student_paper_judge_detail_loading = false;
         }
         else {
           this.student_paper_judge_detail = response.data;
-          for(var category of this.student_paper_judge_detail.categoryList) {
-            for(var question of category.questionList) {
+          for (var category of this.student_paper_judge_detail.categoryList) {
+            for (var question of category.questionList) {
               question.options = JSON.parse(question.options);
               question.def_ans = JSON.parse(question.def_ans);
               question.student_answer = JSON.parse(question.student_answer);
             }
           }
+          this.student_paper_judge_detail_loading = false;
           this.message.create('success', '获取考生答题信息成功');
         }
       }, error => {
+        this.student_paper_judge_detail_loading = false;
         this.message.create('error', '获取考生答题信息失败：连接服务器失败');
       });
   }
 
-  SwitchStudent(index:number) {
+  SwitchStudent(index: number) {
     this.current_student_index = index;
+    this.GetStudentJudgePapers();
   }
 
   GetRichHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  GetCategoryTitle(i:number,title:string) {
-    return this.NumToRoman(i+1) + '. ' + title;
+  GetCategoryTitle(i: number, title: string) {
+    return this.NumToRoman(i + 1) + '. ' + title;
   }
-  
-  GetObjectiveAnswer(answer:Array<AnswerInfo>):Array<string> {
-    let ans_str:Array<string> = [];
-    for(let ans of answer) {
+
+  GetObjectiveAnswer(answer: Array<AnswerInfo>): Array<string> {
+    let ans_str: Array<string> = [];
+    for (let ans of answer) {
       ans_str.push(String.fromCharCode(ans.id + 0x41));
     }
     return ans_str;
   }
 
-  GetOptionStr(option:OptionInfo):string {
+  GetOptionStr(option: OptionInfo): string {
     return String.fromCharCode(option.id + 0x41) + '. ' + option.content;
   }
 
-  NumToRoman(num):string {
+  NumToRoman(num): string {
     var ans = "";
     var k = Math.floor(num / 1000);
     var h = Math.floor((num % 1000) / 100);
@@ -122,25 +128,25 @@ export class CheckExamPaperComponent implements OnInit {
     var hundred = ['C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM']
     var thousand = 'M';
     for (var i = 0; i < k; i++) {
-        ans += thousand;
+      ans += thousand;
     }
     if (h)
-        ans += hundred[h - 1];
+      ans += hundred[h - 1];
     if (t)
-        ans += ten[t - 1];
+      ans += ten[t - 1];
     if (o)
-        ans += one[o - 1];
+      ans += one[o - 1];
     return ans;
-}
+  }
 
-GetQuestionColor(question:QuestionInfo) {
-  if(question.score == question.student_point)
-    return this.right_color;
-  else if(question.student_point == 0)
-    return this.wrong_color;
-  else 
-    return this.not_completely_right_or_wrong_color;
-}
+  GetQuestionColor(question: QuestionInfo) {
+    if (question.score == question.student_point)
+      return this.right_color;
+    else if (question.student_point == 0)
+      return this.wrong_color;
+    else
+      return this.not_completely_right_or_wrong_color;
+  }
 
 }
 
@@ -214,6 +220,6 @@ interface AnswerInfo {
 }
 
 interface OptionInfo {
-  id:number,
-  content:string
+  id: number,
+  content: string
 }
