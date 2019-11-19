@@ -225,11 +225,11 @@ export class ExaminationComponent implements OnInit {
   SwitchQuestion(i: number, j: number) {
     this.current_category = i;
     this.current_question = j;
-    let current_question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
-    if (current_question.type == 'multi') {
+    let current_question_info = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if (current_question_info.type == 'multi') {
       this.updateCheckboxStatus();
     }
-    else if (current_question.type != 'subjective') {
+    else if (current_question_info.type != 'subjective') {
       this.updateRadioStatus();
     }
   }
@@ -242,6 +242,13 @@ export class ExaminationComponent implements OnInit {
       }
     }
     else this.current_question--;
+    let current_question_info = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if (current_question_info.type == 'multi') {
+      this.updateCheckboxStatus();
+    }
+    else if (current_question_info.type != 'subjective') {
+      this.updateRadioStatus();
+    }
   }
 
   NextQuestion() {
@@ -252,6 +259,13 @@ export class ExaminationComponent implements OnInit {
       }
     }
     else this.current_question++;
+    let current_question_info = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if (current_question_info.type == 'multi') {
+      this.updateCheckboxStatus();
+    }
+    else if (current_question_info.type != 'subjective') {
+      this.updateRadioStatus();
+    }
   }
 
   ShowSubmitConfirm() {

@@ -6,6 +6,7 @@ import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { MyServerResponse } from '../../login/login.component';
 import { HttpClient } from '@angular/common/http';
 import { interval } from 'rxjs';
+import { PaperJudgeDetail } from '../../admin/check-exam-paper-detail/check-exam-paper.component';
 
 
 @Component({
@@ -17,29 +18,24 @@ import { interval } from 'rxjs';
 export class CheckExamPaperComponent implements OnInit {
 
   public get_paper_loading: boolean = false;
-  public student_paper_info: ServerStudentPaperInfo = {
-    paperCode: '',
-    title: '',
-    paperDescription: '',
-    createTime: '',
-    lastModifiedTime: '',
-    createUserId: 0,
-    categoryList: [],
-    leftTime:0
-  };
+  public student_paper_info: PaperJudgeDetail = null;
+
+
+  exam_id: number = 0;
+  user_id: number = 0;
 
   //当前页
   public page_index_char: string = '';
   //考试名
   public exam_name: string = "考试信息获取中";
   //考试结束标志
-  public exam_end:boolean = false;
+  public exam_end: boolean = false;
   public autosave_interval = 60;
   //考试剩余时间
   public remain_seconds: number = 9999;
   public hour = 0;
   public min = 0;
-  public sec =0;
+  public sec = 0;
 
   //大题列表
   public categorys: Array<string> = ["数据结构", "计算机组成原理", "计算机网络", "数据库原理"];
@@ -48,7 +44,7 @@ export class CheckExamPaperComponent implements OnInit {
   //当前选择的题目
   public current_question: number = 0;
 
-  public emm:number = 0;
+  public emm: number = 0;
 
   //当前选中的单选项
   //  public radio_value: string = String.fromCharCode(0x41);
@@ -82,22 +78,9 @@ export class CheckExamPaperComponent implements OnInit {
 
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
+    this.exam_id = parseInt(sessionStorage.getItem('student_check_exam_id'));
+    this.user_id = parseInt(sessionStorage.getItem('userid'));
     this.GetPaperInfo();
-    const timer = interval(1000).subscribe(() => {
-      if(this.remain_seconds > 0 && !this.exam_end) {
-        if(this.remain_seconds % this.autosave_interval == 0) {
-          this.SubmitAnswer(0);
-        }
-        this.remain_seconds--;
-        this.min = Math.floor(this.remain_seconds / 3600);
-        this.min = Math.floor(this.remain_seconds / 60);
-        this.sec = this.remain_seconds % 60;
-      }
-      else {
-        this.EndStudentExam();
-        timer.unsubscribe();
-      }
-      });
   }
 
   ngOnInit(): void {
@@ -164,26 +147,24 @@ export class CheckExamPaperComponent implements OnInit {
 
   GetPaperInfo() {
     this.get_paper_loading = true;
-    let user_paper_check_info = {
-      paper_code: sessionStorage.getItem('paper_code'),
-      exam_id: sessionStorage.getItem('exam_id'),
-      stu_id: sessionStorage.getItem('userid')
+    let exam_info = {
+      exam_id: this.exam_id,
+      stu_id: this.user_id
     }
-    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stupaper', user_paper_check_info).
+    this.http_client.post<MyServerResponse>(this.base_url + 'spi/stuans', exam_info).
       subscribe(response => {
         if (response.status != 200) {
-          this.message.create('error', '获取试卷信息失败:' + response.msg);
+          this.message.create('error', '获取考生答题信息失败：' + response.msg);
           this.get_paper_loading = false;
-          this.router.navigateByUrl("/student");
         }
         else {
           this.student_paper_info = response.data;
           this.exam_name = this.student_paper_info.title;
-          this.remain_seconds = Math.round(this.student_paper_info.leftTime / 1000);
           for (let i = 0; i < this.student_paper_info.categoryList.length; i++) {
             for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
               let question = this.student_paper_info.categoryList[i].questionList[j];
               question.options = JSON.parse(question.options);
+              question.def_ans = JSON.parse(question.def_ans);
               if (question.student_answer == "" || question.student_answer == null)
                 question.student_answer = []
               else
@@ -217,19 +198,19 @@ export class CheckExamPaperComponent implements OnInit {
           this.SwitchQuestion(0, 0);
         }
       }, error => {
-        this.message.create('error', '获取试卷信息失败：连接服务器失败');
         this.get_paper_loading = false;
+        this.message.create('error', '获取考生答卷信息失败：连接服务器失败');
       });
   }
 
   SwitchQuestion(i: number, j: number) {
     this.current_category = i;
     this.current_question = j;
-    let current_question = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
-    if (current_question.type == 'multi') {
+    let current_question_info = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if (current_question_info.type == 'multi') {
       this.updateCheckboxStatus();
     }
-    else if (current_question.type != 'subjective') {
+    else if (current_question_info.type != 'subjective') {
       this.updateRadioStatus();
     }
   }
@@ -242,6 +223,13 @@ export class CheckExamPaperComponent implements OnInit {
       }
     }
     else this.current_question--;
+    let current_question_info = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if (current_question_info.type == 'multi') {
+      this.updateCheckboxStatus();
+    }
+    else if (current_question_info.type != 'subjective') {
+      this.updateRadioStatus();
+    }
   }
 
   NextQuestion() {
@@ -252,155 +240,13 @@ export class CheckExamPaperComponent implements OnInit {
       }
     }
     else this.current_question++;
-  }
-
-  ShowSubmitConfirm() {
-    this.confirm_modal = this.modal.confirm({
-      nzTitle: '是否提交考试答案?',
-      nzContent: '',
-      //todo:等待关闭
-      nzOnOk: () => {
-        this.EndStudentExam();
-      }
-    });
-  }
-
-  SubmitAnswer(end_flag: number) {
-    var msg = '';
-    if (end_flag == 0) msg = '自动保存';
-    else msg = '提交';
-    let user_question_answer_info = [];
-    for (var category of this.student_paper_info.categoryList) {
-      for (let question of category.questionList) {
-        question.student_answer = []
-        if (question.type == 'subjective') {
-          question.student_answer.push({
-            id: 0,
-            content: question['editor_value']
-          });
-        }
-        else {
-          if (question.type == 'multi') {
-            question.student_answer = [];
-            for (let i = 0; i < question['checkbox_values'].length; i++) {
-              if (question['checkbox_values'][i] == true) {
-                question.student_answer.push({
-                  id: i,
-                  content: question.options[i]
-                });
-              }
-            }
-          }
-          else {
-            question.student_answer = [];
-            let index = question['radio_value'].charCodeAt(0) - 0x41;
-            question.student_answer.push({
-              id: index,
-              content: question.options[index]
-            });
-          }
-        }
-        let submit_question: QuestionUpdateInfo = {
-          id: question.ques_id,
-          content: question.content,
-          type: question.type,
-          description: question.description,
-          total_point: question.score,
-          stamp: question.stamp,
-          mustOrNot: 0,
-          student_answer: question.student_answer
-        }
-        user_question_answer_info.push(submit_question)
-      }
+    let current_question_info = this.student_paper_info.categoryList[this.current_category].questionList[this.current_question];
+    if (current_question_info.type == 'multi') {
+      this.updateCheckboxStatus();
     }
-    let user_paper_answer_info: UserPaperAnswerInfo = {
-      paper_code: sessionStorage.getItem('paper_code'),
-      exam_id: sessionStorage.getItem('exam_id'),
-      student_id: sessionStorage.getItem('userid'),
-      end_flag: end_flag,
-      paper_status: user_question_answer_info
+    else if (current_question_info.type != 'subjective') {
+      this.updateRadioStatus();
     }
-    this.http_client.post<MyServerResponse>(this.base_url + '/spi/do', user_paper_answer_info).
-      subscribe(response => {
-        if (response.status != 200) {
-          this.message.create('error', msg + '试卷信息失败:' + response.msg);
-          this.get_paper_loading = false;
-        }
-        else {
-          this.message.create('success', msg + '试卷信息成功');
-          this.get_paper_loading = false;
-          if(end_flag == 1) {
-            this.router.navigateByUrl("/student");
-          }
-        }
-      }, error => {
-        this.message.create('error', msg + '试卷信息失败：连接服务器失败');
-        this.get_paper_loading = false;
-      });
-
   }
 
-  EndStudentExam() {
-    this.SubmitAnswer(1);
-    this.exam_end = true;
-  }
-
-}
-
-interface ServerStudentPaperInfo {
-  paperCode: string,
-  title: string,
-  paperDescription: string,
-  createTime: string,
-  lastModifiedTime: string,
-  createUserId: number,
-  categoryList: Array<CategoryInfo>
-  leftTime:number
-}
-
-interface CategoryInfo {
-  paperCode: string,
-  categoryContent: string,
-  questionList: Array<QuestionInfo>
-}
-
-interface QuestionInfo {
-  score: number,
-  ques_id: number,
-  options: any,
-  student_answer: any,
-  description: string,
-  type: string,
-  content: string,
-  mustOrNot: 0,
-  stamp: number
-}
-
-interface QuestionUpdateInfo {
-  id: number,
-  content: string,
-  type: string,
-  description: string,
-  total_point: number,
-  stamp: number
-  mustOrNot: number,
-  student_answer: Array<AnswerInfo>
-}
-
-interface AnswerInfo {
-  id: number,
-  content: string
-}
-
-interface OptionInfo {
-  id: number,
-  content: string
-}
-
-interface UserPaperAnswerInfo {
-  exam_id: string,
-  paper_code: string,
-  student_id: string,
-  end_flag: number,
-  paper_status: Array<QuestionUpdateInfo>
 }

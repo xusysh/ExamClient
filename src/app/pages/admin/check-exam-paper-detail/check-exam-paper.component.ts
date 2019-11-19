@@ -154,7 +154,7 @@ export class CheckExamPaperComponent implements OnInit {
 
 }
 
-interface PaperJudgeDetail {
+export interface PaperJudgeDetail {
   paperCode: string,
   title: string,
   paperDescription: string,
@@ -172,13 +172,13 @@ interface PaperJudgeDetail {
 }
 
 
-interface CategoryInfo {
+export interface CategoryInfo {
   paperCode: string,
   categoryContent: string,
   questionList: Array<QuestionInfo>
 }
 
-interface QuestionInfo {
+export interface QuestionInfo {
   ques_id: 29,
   content: string,
   description: string,
