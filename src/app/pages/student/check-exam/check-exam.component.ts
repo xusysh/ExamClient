@@ -52,6 +52,10 @@ export class CheckExamComponent implements OnInit {
         this.student_exam_info_list_backup = Array.from(this.student_exam_info_list);
         this.ResetArrayData();
         this.loading = false;
+        for(let student_exam_info of this.student_exam_info_list) {
+          if(student_exam_info.endFlag == 1)
+            student_exam_info.status = '已交卷'
+        }
         this.message.create('success', '考试信息获取成功');
       },
       error => {
@@ -85,6 +89,7 @@ export class CheckExamComponent implements OnInit {
     this.status_filter = [
       { text: '未开始', value: '未开始' }, 
       { text: '进行中', value: '进行中' },
+      { text: '已交卷', value: '已交卷' },
       { text: '判卷中', value: '判卷中' },
       { text: '已结束', value: '已结束' }
     ];
@@ -157,6 +162,7 @@ interface StudentExamInfo {
   endTime: string,
   duration: number,
   status: string,
+  endFlag: number,
   studentTotalPoint:number,
   paperTotalPoint:number,
   objectiveGrade:number,
