@@ -37,7 +37,7 @@
   }
 
   :host ::ng-deep .ck-editor__editable_inline {
-    min-height: 220px;
+    min-height: 400px;
     max-height: 400px;
 }
 
