@@ -83,6 +83,7 @@ export class CheckExamPaperComponent implements OnInit {
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
     this.exam_id = parseInt(sessionStorage.getItem('student_check_exam_id'));
+    this.exam_name = sessionStorage.getItem('student_check_exam_name');
     this.user_id = parseInt(sessionStorage.getItem('userid'));
     this.GetPaperInfo();
   }
@@ -169,7 +170,6 @@ export class CheckExamPaperComponent implements OnInit {
         }
         else {
           this.student_paper_info = response.data;
-          this.exam_name = this.student_paper_info.title;
           for (let i = 0; i < this.student_paper_info.categoryList.length; i++) {
             for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
               let question = this.student_paper_info.categoryList[i].questionList[j];

@@ -150,6 +150,7 @@ export class CheckExamComponent implements OnInit {
 
   CheckStudentPaper(student_exam_info:StudentExamInfo) {
     sessionStorage.setItem('student_check_exam_id',student_exam_info.id.toString());
+    sessionStorage.setItem('student_check_exam_name',student_exam_info.examName.toString());
     this.router.navigate(['/student/check-exam-paper']);
   }
 
