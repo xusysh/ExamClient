@@ -335,7 +335,7 @@ export class CheckExamComponent implements OnInit {
 
   UpdateStudentPaperInfo(reset: boolean = false) {
     if (reset) {
-      this.page_index = 1;
+      this.exam_administration_page_index = 1;
     }
     this.exam_student_paper_info_list = [];
     this.exam_administration_loading = true;
