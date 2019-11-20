@@ -85,21 +85,6 @@ export class ExaminationComponent implements OnInit {
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
     this.GetPaperInfo();
-    this.timer = interval(1000).subscribe(() => {
-      if(this.remain_seconds > 0 && !this.exam_end) {
-        if(this.remain_seconds % this.autosave_interval == 0) {
-          this.SubmitAnswer(0);
-        }
-        this.remain_seconds--;
-        this.min = Math.floor(this.remain_seconds / 3600);
-        this.min = Math.floor(this.remain_seconds / 60);
-        this.sec = this.remain_seconds % 60;
-      }
-      else {
-        this.EndStudentExam();
-        this.timer.unsubscribe();
-      }
-      });
   }
 
   ngOnInit(): void {
@@ -214,13 +199,32 @@ export class ExaminationComponent implements OnInit {
               }
             }
           }
-          this.message.create('success', '获取试卷信息成功');
+          this.InitTimer();
           this.get_paper_loading = false;
           this.SwitchQuestion(0, 0);
+          this.message.create('success', '获取试卷信息成功');
         }
       }, error => {
         this.message.create('error', '获取试卷信息失败：连接服务器失败');
         this.get_paper_loading = false;
+      });
+  }
+
+  InitTimer() {
+    this.timer = interval(1000).subscribe(() => {
+      if(this.remain_seconds > 0 && !this.exam_end) {
+        if(this.remain_seconds % this.autosave_interval == 0) {
+          this.SubmitAnswer(0);
+        }
+        this.remain_seconds--;
+        this.min = Math.floor(this.remain_seconds / 3600);
+        this.min = Math.floor(this.remain_seconds / 60);
+        this.sec = this.remain_seconds % 60;
+      }
+      else {
+        this.EndStudentExam();
+        this.timer.unsubscribe();
+      }
       });
   }
 
