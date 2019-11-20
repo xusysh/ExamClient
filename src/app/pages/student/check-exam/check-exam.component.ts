@@ -54,7 +54,7 @@ export class CheckExamComponent implements OnInit {
         this.ResetArrayData();
         this.loading = false;
         for(let student_exam_info of this.student_exam_info_list) {
-          if(student_exam_info.endFlag == 1)
+          if(student_exam_info.endFlag == 1 && student_exam_info.status == '进行中')
             student_exam_info.status = '已交卷'
         }
         this.message.create('success', '考试信息获取成功');
