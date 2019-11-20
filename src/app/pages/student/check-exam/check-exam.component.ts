@@ -23,6 +23,7 @@ export class CheckExamComponent implements OnInit {
   status_filter = [
     { text: '未开始', value: '未开始' }, 
     { text: '进行中', value: '进行中' },
+    { text: '已交卷', value: '已交卷' },
     { text: '判卷中', value: '判卷中' },
     { text: '已结束', value: '已结束' }
   ];
