@@ -28,6 +28,8 @@ export class CheckExamPaperComponent implements OnInit {
   public page_index_char: string = '';
   //考试名
   public exam_name: string = "考试信息获取中";
+  student_score: string = "";
+  total_score: string = "";
   //考试结束标志
   public exam_end: boolean = false;
   public autosave_interval = 60;
@@ -75,6 +77,7 @@ export class CheckExamPaperComponent implements OnInit {
   public canvas_height: number = 0;
   public elem_height_str: string = '500px';
 
+
   ngAfterViewInit(): void {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
     this.elem_height_str = Math.ceil(this.canvas_height * 0.85).toString() + 'px';
@@ -84,6 +87,8 @@ export class CheckExamPaperComponent implements OnInit {
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
     this.exam_id = parseInt(sessionStorage.getItem('student_check_exam_id'));
     this.exam_name = sessionStorage.getItem('student_check_exam_name');
+    this.student_score = sessionStorage.getItem('student_check_exam_student_score');
+    this.total_score = sessionStorage.getItem('student_check_exam_total_score');
     this.user_id = parseInt(sessionStorage.getItem('userid'));
     this.GetPaperInfo();
   }
