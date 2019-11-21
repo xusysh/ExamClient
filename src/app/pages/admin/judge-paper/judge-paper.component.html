@@ -34,7 +34,9 @@
                   <nz-card [nzActions]="[actionSetting]">
                     <section class="code-box">
                       <section class="code-box-demo2">
-                        <pre><span *ngIf="question.description != ''" style="font-weight:bold;font-size: 120%">{{question.description}}</span></pre>
+                          <span style="font-weight: 500;font-size: 110%;"
+                          [innerHtml]="question.description">
+                          </span>
                       </section>
                       <section class="code-box-demo">
                         <nz-list nzSize="large">
