@@ -50,8 +50,9 @@
                   </tr>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                     <div class="search-box">
-                      <input type="text" nz-input placeholder="输入要搜索的用户名" [(ngModel)]="user_name_search_val"/>
-                      <button nz-button nzSize="small" nzType="primary" (click)="SearchUserName()" class="search-button">
+                      <input type="text" nz-input placeholder="输入要搜索的用户名" [(ngModel)]="user_name_search_val" />
+                      <button nz-button nzSize="small" nzType="primary" (click)="SearchUserName()"
+                        class="search-button">
                         搜索
                       </button>
                       <button nz-button nzSize="small" (click)="ResetArrayData()">重置</button>
@@ -129,7 +130,8 @@
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24">所在考生组</nz-form-label>
-                <nz-form-control [nzSm]="15" [nzXs]="24">
+                <nz-form-control [nzSm]="15" [nzXs]="24"
+                  [nzValidateStatus]="edit_group_list==[] || edit_group_list==null ? 'error':'validating'">
                   <nz-select [(ngModel)]="edit_group_list" (ngModelChange)="EditGroupChange()" name="question_answer"
                     nzSize="large" nzMode="tags" nzPlaceHolder="请选择组" (nzOpenChange)="GroupSelectOpened($event)"
                     [compareWith]="compareFn">
@@ -181,8 +183,7 @@
                   <i nz-icon style="cursor: pointer;margin-left: 10px;"
                     (click)="edit_group_name = all_group_info[i].group_name;edit_group_name_flags[i]=true;"
                     nzType="edit"></i>
-                  <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus"
-                    (click)="DeleteGroup(i)"></i>
+                  <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="minus" (click)="DeleteGroup(i)"></i>
                 </ng-template>
               </nz-card>
             </nz-skeleton>
