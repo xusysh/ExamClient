@@ -170,7 +170,7 @@ export class CheckQuestionComponent implements OnInit {
       this.edit_question_type = 'single';
       this.edit_question_content = '';
       this.edit_question_description = '';
-      this.edit_question_options = [];
+      this.edit_question_options = [{id:0,content:''}];
       this.edit_question_answer = [];
       this.edit_question_knowledge = [];
     }
@@ -252,6 +252,7 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   EditQuestionInfo(): void {
+    if(!this.Validate()) return;
     this.edit_question_info_loading = true;
     if (!this.new_question)
       this.edit_question_id = this.question_info_list[this.current_select_question].id;
@@ -539,6 +540,16 @@ export class CheckQuestionComponent implements OnInit {
       return;
     }
     this.question_info_list = this.filter_sort_service.GetFilteredArray(this.question_info_list,this.question_type_filter_val,'type');
+  }
+
+  Validate():boolean {
+    if(this.edit_question_content == null || this.edit_question_content == '') return false;
+    if(this.edit_question_type == null || this.edit_question_type == '') return false;
+    if(this.edit_question_options == null || this.edit_question_options.length==0) return false;
+    for(let option of this.edit_question_options) 
+      if(option['content'] == '') return false;
+    if(this.edit_question_answer == null || this.edit_question_answer.length==0) return false;
+    return true;
   }
 
 }
