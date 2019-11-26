@@ -130,8 +130,7 @@
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24">所在考生组</nz-form-label>
-                <nz-form-control [nzSm]="15" [nzXs]="24"
-                  [nzValidateStatus]="edit_group_list==[] || edit_group_list==null ? 'error':'validating'">
+                <nz-form-control [nzSm]="15" [nzXs]="24">
                   <nz-select [(ngModel)]="edit_group_list" (ngModelChange)="EditGroupChange()" name="question_answer"
                     nzSize="large" nzMode="tags" nzPlaceHolder="请选择组" (nzOpenChange)="GroupSelectOpened($event)"
                     [compareWith]="compareFn">

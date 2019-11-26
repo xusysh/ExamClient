@@ -25,10 +25,10 @@
             (click)="CheckQuestionInfo(-1)">
             <i nz-icon nzType="user-add"></i>添加试题
           </button>
-          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
+          <!--button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
             (click)="dialog_visible=true">
             <i nz-icon nzType="usergroup-add"></i>批量导入
-          </button>
+          </button-->
           <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
             *ngIf="delete_question_ids.length > 0" (click)="DeleteQuestions()" [nzLoading]="delete_loading">
             <i nz-icon nzType="user-delete"></i>批量删除试题
