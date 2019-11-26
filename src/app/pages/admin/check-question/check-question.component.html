@@ -263,7 +263,7 @@
               参考答案
             </nz-form-label>
             <nz-form-control [nzPush]="2" [nzSm]="20" [nzXs]="24"
-              [nzValidateStatus]="edit_question_answer==null || edit_question_answer==''? 'error':'validating'"
+              [nzValidateStatus]="edit_question_answer[0].content==null || edit_question_answer[0].content==''? 'error':'validating'"
               nzErrorTip="参考答案不能为空！">
               <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="edit_question_answer[0].content"
                 name="subjective_editor" (ngModelChange)="limit()">

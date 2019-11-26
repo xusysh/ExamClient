@@ -543,12 +543,18 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   Validate():boolean {
-    if(this.edit_question_content == null || this.edit_question_content == '') return false;
     if(this.edit_question_type == null || this.edit_question_type == '') return false;
-    if(this.edit_question_options == null || this.edit_question_options.length==0) return false;
-    for(let option of this.edit_question_options) 
-      if(option['content'] == '') return false;
-    if(this.edit_question_answer == null || this.edit_question_answer.length==0) return false;
+    if(this.edit_question_type != 'subjective') {
+      if(this.edit_question_content == null || this.edit_question_content == '') return false;
+      if(this.edit_question_options == null || this.edit_question_options.length==0) return false;
+      for(let option of this.edit_question_options) 
+        if(option['content'] == '') return false;
+      if(this.edit_question_answer == null || this.edit_question_answer.length==0) return false;
+    }
+    else {
+      if(this.edit_question_content == null || this.edit_question_content == '') return false;
+      if(this.edit_question_answer[0]['content'] == null || this.edit_question_answer[0]['content']=='') return false;
+    }
     return true;
   }
 
