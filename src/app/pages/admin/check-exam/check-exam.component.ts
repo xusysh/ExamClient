@@ -40,12 +40,12 @@ export class CheckExamComponent implements OnInit {
   public edit_exam_paper_info: PaperBaseInfo = null;
   public edit_exam_student: Array<any> = null;
   public edit_exam_group: Array<GroupInfo> = null;
-  public edit_exam_start_time: Date = null;
-  public edit_exam_end_time: Date = null;
+  public edit_exam_start_time: Date = new Date(Date.now());
+  public edit_exam_end_time: Date = new Date(Date.now());
   public edit_exam_duration: number = 0;
-  public edit_exam_hour: number = 0;
-  public edit_exam_minute: number = 0;
-  public edit_exam_second: number = 0;
+  public edit_exam_hour: string = '0';
+  public edit_exam_minute: string = '0';
+  public edit_exam_second: string = '0';
 
   public all_paper_info: Array<PaperBaseInfo> = [];
   public all_paper_info_loading: boolean = false;
@@ -71,7 +71,12 @@ export class CheckExamComponent implements OnInit {
   compareFn_paper = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
-  status_filter: { text: string; value: string; }[];
+  status_filter = [
+    { text: '未开始', value: '未开始' }, 
+    { text: '进行中', value: '进行中' },
+    { text: '判卷中', value: '判卷中' },
+    { text: '已结束', value: '已结束' }
+  ];
   status_selected_filter_val: any;
   search_exam_name_value: any;
   begin_time_sort_value: any;
@@ -191,9 +196,9 @@ export class CheckExamComponent implements OnInit {
   }
 
   ParseDuration() {
-    this.edit_exam_hour = Math.floor(this.edit_exam_duration / 3600000);
-    this.edit_exam_minute = Math.floor((this.edit_exam_duration / 60000) % 60);
-    this.edit_exam_second = Math.floor((this.edit_exam_duration / 1000) % 60);
+    this.edit_exam_hour = Math.floor(this.edit_exam_duration / 3600000).toString();
+    this.edit_exam_minute = Math.floor((this.edit_exam_duration / 60000) % 60).toString();
+    this.edit_exam_second = Math.floor((this.edit_exam_duration / 1000) % 60).toString();
   }
 
   ParseDurationNum(duration: number): ShowTime {
@@ -207,9 +212,10 @@ export class CheckExamComponent implements OnInit {
 
   GetDuration() {
     this.edit_exam_duration = 0;
-    this.edit_exam_duration += this.edit_exam_hour * 3600000;
-    this.edit_exam_duration += this.edit_exam_minute * 60000;
-    this.edit_exam_duration += this.edit_exam_second * 1000;
+    this.edit_exam_duration += parseInt(this.edit_exam_hour) * 3600000;
+    this.edit_exam_duration += parseInt(this.edit_exam_minute) * 60000;
+    this.edit_exam_duration += parseInt(this.edit_exam_second) * 1000;
+    return this.edit_exam_duration;
   }
 
   AddExam() {
@@ -242,6 +248,7 @@ export class CheckExamComponent implements OnInit {
   }
 
   EditExamInfo() {
+    if(!this.Validate()) return;
     this.edit_exam_info_loading = true;
     this.GetDuration();
     let edit_exam_group_ids = [];
@@ -513,6 +520,30 @@ export class CheckExamComponent implements OnInit {
 
   ResetSort() {
     this.begin_time_sort_value = null;
+  }
+
+  ValidateExamTime():boolean {
+    let time_mill_sec:number = this.edit_exam_end_time.getTime() - this.edit_exam_start_time.getTime();
+    if(time_mill_sec <= 0) return false;
+    return true;
+  }
+
+  ValidateExamDuration():boolean {
+    if(this.edit_exam_hour == '' || this.edit_exam_minute == '' || this.edit_exam_second == '') return false;
+    if(parseInt(this.edit_exam_hour)>24 || parseInt(this.edit_exam_minute)>60 || parseInt(this.edit_exam_second)>60) return false;
+    let time_mill_sec:number = this.edit_exam_end_time.getTime() - this.edit_exam_start_time.getTime();
+    this.GetDuration();
+    if(this.edit_exam_duration > time_mill_sec) return false;
+    return true;
+  }
+
+  Validate():boolean {
+    if(this.edit_exam_name == '' || this.edit_exam_name == null) return false;
+    if(this.edit_exam_paper_info == null) return false;
+    if(!this.ValidateExamTime()) return false;
+    if(!this.ValidateExamDuration()) return false;
+    if(this.edit_exam_group == null || this.edit_exam_group.length == 0) return false;
+    return true;
   }
 
 }

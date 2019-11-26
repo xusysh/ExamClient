@@ -19,11 +19,11 @@
                   <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
                 </button>
                 <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-                  (click)="CheckStudentInfo(-1)">
+                  (click)="CheckStudentInfo(-1)" [disabled]="loading">
                   <i nz-icon nzType="user-add"></i>添加考生
                 </button>
                 <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-                  (click)="dialog_visible=true">
+                  (click)="dialog_visible=true" [disabled]="loading">
                   <i nz-icon nzType="usergroup-add"></i>批量导入
                 </button>
                 <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"

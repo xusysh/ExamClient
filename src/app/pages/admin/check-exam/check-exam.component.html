@@ -24,7 +24,7 @@
                 <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
               </button>
               <button style="margin-left: 15px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-                (click)="EditExam(-1)">
+                (click)="EditExam(-1)" [disabled]="loading">
                 <i nz-icon nzType="plus"></i>添加考试
               </button>
               <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
@@ -118,14 +118,18 @@
 
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考试名称</nz-form-label>
-              <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="考试名称不能为空!">
+              <nz-form-control [nzSm]="15" [nzXs]="24" 
+                [nzValidateStatus]="edit_exam_name=='' || edit_exam_name==null? 'error':'validating'"
+                nzErrorTip="考试名称不能为空!">
                 <input nz-input nzSize="large" name="exam_name" [(ngModel)]="edit_exam_name" />
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24">试卷</nz-form-label>
-              <nz-form-control [nzSm]="15" [nzXs]="24">
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试卷</nz-form-label>
+              <nz-form-control [nzSm]="15" [nzXs]="24"
+                [nzValidateStatus]="edit_exam_paper_info==null ? 'error':'validating'"
+                nzErrorTip="试卷不能为空!">
                 <nz-select [(ngModel)]="edit_exam_paper_info" name="exam_paper" nzSize="large" nzPlaceHolder="请选择试卷"
                   (nzOpenChange)="UpdatePaperInfo($event)" [nzLoading]="all_paper_info_loading"
                   (ngModelChange)="test2($event)" [compareWith]="compareFn_paper">
@@ -139,16 +143,20 @@
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24">开始时间</nz-form-label>
-              <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="开始时间不能为空!">
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>开始时间</nz-form-label>
+              <nz-form-control [nzSm]="15" [nzXs]="24" 
+                [nzValidateStatus]="ValidateExamTime() ? 'validating':'error'"
+                nzErrorTip="考试时间不合法!">
                 <nz-date-picker name="exam_start_time" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss"
                   nzPlaceHolder="请选择日期与时刻" [(ngModel)]="edit_exam_start_time"></nz-date-picker>
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24">结束时间</nz-form-label>
-              <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="结束时间不能为空!">
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>结束时间</nz-form-label>
+              <nz-form-control [nzSm]="15" [nzXs]="24" 
+                [nzValidateStatus]="ValidateExamTime() ? 'validating':'error'"
+                nzErrorTip="考试时间不合法!">
                 <nz-date-picker name="exam_end_time" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="请选择日期与时刻"
                   [(ngModel)]="edit_exam_end_time"></nz-date-picker>
               </nz-form-control>
@@ -156,17 +164,23 @@
 
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考试时长</nz-form-label>
-              <nz-form-control [nzSm]="5" [nzXs]="24" nzErrorTip="考试时长不能为空!">
+              <nz-form-control [nzSm]="5" [nzXs]="24" 
+                [nzValidateStatus]="ValidateExamDuration() ? 'validating':'error'"
+                nzErrorTip="">
                 <nz-input-group nzSize="large" nzAddOnAfter="时">
                   <input type="text" name="exam_hour" nz-input [(ngModel)]="edit_exam_hour" />
                 </nz-input-group>
               </nz-form-control>
-              <nz-form-control [nzSm]="5" [nzXs]="24" nzErrorTip="考试时长不能为空!">
+              <nz-form-control [nzSm]="5" [nzXs]="24" 
+                [nzValidateStatus]="ValidateExamDuration() ? 'validating':'error'"
+                nzErrorTip="考试时长不合法!">
                 <nz-input-group nzSize="large" nzAddOnAfter="分">
                   <input name="exam_minute" type="text" nz-input [(ngModel)]="edit_exam_minute" />
                 </nz-input-group>
               </nz-form-control>
-              <nz-form-control [nzSm]="5" [nzXs]="24" nzErrorTip="考试时长不能为空!">
+              <nz-form-control [nzSm]="5" [nzXs]="24" 
+                [nzValidateStatus]="ValidateExamDuration() ? 'validating':'error'"  
+                nzErrorTip="">
                 <nz-input-group nzSize="large" nzAddOnAfter="秒">
                   <input name="exam_second" type="text" nz-input [(ngModel)]="edit_exam_second" />
                 </nz-input-group>
@@ -174,8 +188,10 @@
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24">考生组</nz-form-label>
-              <nz-form-control [nzSm]="15" [nzXs]="24">
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>考生组</nz-form-label>
+              <nz-form-control [nzSm]="15" [nzXs]="24"
+                [nzValidateStatus]="edit_exam_group==null || edit_exam_group.length==0 ? 'error':'validating'"
+                nzErrorTip="考生组不能为空!">
                 <nz-select [(ngModel)]="edit_exam_group" name="exam_group" (nzOpenChange)="UpdateGroupInfo($event)"
                   nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组" [compareWith]="compareFn">
                   <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
@@ -197,6 +213,7 @@
         </nz-drawer>
 
         <nz-drawer [nzVisible]="exam_administration_drawer_visible" nzPlacement="right"
+          *ngIf="exam_info_list != undefined && exam_info_list.length!=0"
           [nzTitle]="exam_info_list[current_select_exam].examName+ ' （' + exam_info_list[current_select_exam].status + '） 考生答题情况'"
           (nzOnClose)="exam_administration_drawer_visible = false;" [nzWidth]="900">
           <div class="exam-administration-table-div">

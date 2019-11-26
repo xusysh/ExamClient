@@ -22,7 +22,7 @@
             <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
           </button>
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-            (click)="CheckQuestionInfo(-1)">
+            (click)="CheckQuestionInfo(-1)" [disabled]="loading">
             <i nz-icon nzType="user-add"></i>添加试题
           </button>
           <!--button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
@@ -35,7 +35,7 @@
           </button>
           <!--知识点管理（拖拽?树）-->
           <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-            (click)="UpdateKnowledgeInfo();knowledge_dialog_visible=true;">
+            (click)="UpdateKnowledgeInfo();knowledge_dialog_visible=true;" [disabled]="loading">
             <i nz-icon nzType="usergroup-add"></i>知识点管理
           </button>
         </div>
