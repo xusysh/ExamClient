@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       user_name: this.user_name,
       password: this.password,
     };
-    let server_url = this.base_url + '/upi/user/login';
+    let server_url = this.base_url + 'upi/user/login';
     this.http_client.post<MyServerResponse>(server_url, user_check_info).
       subscribe(response => {
         if(response.status!=200) {
