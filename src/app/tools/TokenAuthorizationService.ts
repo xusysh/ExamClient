@@ -7,4 +7,8 @@ export class TokenAuthrizationService {
     constructor(private httpClient: HttpClient) {
     }
     
+    GetToken() {
+        
+    }
+
 }
