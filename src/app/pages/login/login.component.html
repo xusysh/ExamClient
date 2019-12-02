@@ -6,6 +6,17 @@
             <div class="form-group">
                 <form nz-form>
                     <nz-form-item>
+                        <nz-input-group [nzSuffix]="suffixTemplate_uname" [nzPrefix]="prefixTemplate_uname"
+                            nzSize="large">
+                            <input type="text" nz-input [(ngModel)]="server_ip" name="serverip" placeholder="请输入服务器地址" />
+                        </nz-input-group>
+                        <ng-template #prefixTemplate_serverip><i nz-icon nzType="cloud-server"></i></ng-template>
+                        <ng-template #suffixTemplate_serverip><i nz-icon nz-tooltip nzTitle="考试系统后台服务器的ip地址"
+                                nzType="info-circle"></i>
+                        </ng-template>
+                    </nz-form-item>
+
+                    <nz-form-item>
                         <nz-form-control [nzValidateStatus]="user_name=='' ? 'error':'validating'" nzErrorTip="用户名不能为空">
                             <nz-input-group [nzSuffix]="suffixTemplate_uname" [nzPrefix]="prefixTemplate_uname"
                                 nzSize="large">
@@ -28,8 +39,8 @@
                             <ng-template #prefixTemplate_pwd><i nz-icon nzType="profile"></i></ng-template>
                             <ng-template #suffixTemplate_pwd>
                                 <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                                    (click)="passwordVisible = !passwordVisible"  
-                                    nz-tooltip [nzTitle]="passwordVisible ? '密码已显示':'密码已隐藏'">
+                                    (click)="passwordVisible = !passwordVisible" nz-tooltip
+                                    [nzTitle]="passwordVisible ? '密码已显示':'密码已隐藏'">
                                 </i>
                             </ng-template>
                         </nz-form-control>

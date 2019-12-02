@@ -84,6 +84,7 @@ export class CheckExamPaperComponent implements OnInit {
 
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
+    console.log(this.elem_height_str);
     this.exam_id = parseInt(sessionStorage.getItem('student_check_exam_id'));
     this.exam_name = sessionStorage.getItem('student_check_exam_name');
     this.student_score = sessionStorage.getItem('student_check_exam_student_score');
