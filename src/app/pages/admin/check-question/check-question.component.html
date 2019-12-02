@@ -130,23 +130,6 @@
         </nz-table>
       </div>
     </div>
-    <nz-modal [(nzVisible)]="dialog_visible" nzTitle="批量导入试题" (nzOnCancel)="DialogCancelHandle()"
-      (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
-      <nz-upload nzType="drag" nzAction="http://localhost:8080/question/excel" [nzCustomRequest]="customReq">
-        <p class="ant-upload-drag-icon">
-          <i nz-icon nzType="cloud-upload"></i>
-        </p>
-        <p class="ant-upload-text">点击或拖动模板至此处</p>
-        <p class="ant-upload-hint">
-          批量导入试题模板从本系统下载
-        </p>
-      </nz-upload>
-      <div style="text-align: center;margin-top: 20px">
-        <button nz-button nzSize="large" (click)="DownloadTemplate()" [nzLoading]="is_downloading_template">
-          <i nz-icon nzType="cloud-download"></i>点击下载Excel模板
-        </button>
-      </div>
-    </nz-modal>
     <nz-modal [(nzVisible)]="knowledge_dialog_visible" nzTitle="知识点管理" [nzFooter]="null"
       (nzOnCancel)="knowledge_dialog_visible = false" [nzWidth]="400">
       <div>

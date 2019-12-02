@@ -96,7 +96,7 @@
           </div>
           <nz-modal [(nzVisible)]="dialog_visible" nzTitle="批量导入考生用户" (nzOnCancel)="DialogCancelHandle()"
             (nzOnOk)="DialogOKHandle()" [nzOkLoading]="dialog_ok_loading">
-            <nz-upload nzType="drag" nzAction="http://localhost:8080/upi/user/batch/" [nzCustomRequest]="customReq">
+            <nz-upload nzType="drag" nzAction="upload_url" [nzCustomRequest]="customReq">
               <p class="ant-upload-drag-icon">
                 <i nz-icon nzType="cloud-upload"></i>
               </p>

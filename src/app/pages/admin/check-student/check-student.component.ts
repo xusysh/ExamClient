@@ -54,6 +54,8 @@ export class CheckStudentComponent implements OnInit {
   edit_group_name_flags: Array<boolean> = [];
   edit_group_name: string = '';
 
+  upload_url:string = '';
+
   current_select_user: number = 0;
   user_group_loading: boolean;
   all_group_info: Array<GroupInfo> = [];
@@ -64,7 +66,7 @@ export class CheckStudentComponent implements OnInit {
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
     @Inject('BASE_URL') private base_url: string, private message: NzMessageService,
     private filter_sort_service: FilterSortService) {
-
+      this.upload_url = sessionStorage.getItem('server_base_url') + 'upi/user/batch/'
     }
 
   ngOnInit(): void {
