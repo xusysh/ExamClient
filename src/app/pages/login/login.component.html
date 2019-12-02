@@ -5,13 +5,13 @@
             <h1 style="margin-top:30px;">在线考试系统 V0.1</h1>
             <div class="form-group">
                 <form nz-form>
-                    <nz-form-item>
-                        <nz-input-group [nzSuffix]="suffixTemplate_uname" [nzPrefix]="prefixTemplate_uname"
+                    <nz-form-item *ngIf="is_electron">
+                        <nz-input-group [nzSuffix]="suffixTemplate_serverurl" [nzPrefix]="prefixTemplate_serverurl"
                             nzSize="large">
-                            <input type="text" nz-input [(ngModel)]="server_ip" name="serverip" placeholder="请输入服务器地址" />
+                            <input type="text" nz-input [(ngModel)]="server_url" name="serverurl" placeholder="请输入服务器地址" />
                         </nz-input-group>
-                        <ng-template #prefixTemplate_serverip><i nz-icon nzType="cloud-server"></i></ng-template>
-                        <ng-template #suffixTemplate_serverip><i nz-icon nz-tooltip nzTitle="考试系统后台服务器的ip地址"
+                        <ng-template #prefixTemplate_serverurl><i nz-icon nzType="cloud-server"></i></ng-template>
+                        <ng-template #suffixTemplate_serverurl><i nz-icon nz-tooltip nzTitle="考试系统后台服务器的ip地址"
                                 nzType="info-circle"></i>
                         </ng-template>
                     </nz-form-item>

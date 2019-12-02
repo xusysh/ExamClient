@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit {
   public user_name: string = null;
   public password: string = null;
   public is_checking: boolean = false;
+  public is_electron:boolean = false;
+  public server_url:string = '';
 
   constructor(private router: Router, private message: NzMessageService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
@@ -23,7 +25,7 @@ export class LoginComponent implements OnInit {
       var userAgent = navigator.userAgent.toLowerCase();
       if (userAgent.indexOf(' electron/') > -1) {
         // Electron-specific code
-        
+        this.is_electron = true;
       }
   }
 
@@ -45,8 +47,8 @@ export class LoginComponent implements OnInit {
       user_name: this.user_name,
       password: this.password,
     };
-    let server_url = this.base_url + 'upi/user/login';
-    this.http_client.post<MyServerResponse>(server_url, user_check_info).
+    sessionStorage.setItem('server_url',this.server_url);
+    this.http_client.post<MyServerResponse>(this.base_url + 'upi/user/login', user_check_info).
       subscribe(response => {
         if (response.status != 200) {
           this.message.create('error', '登陆失败:' + response.msg);
