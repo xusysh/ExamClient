@@ -5,6 +5,8 @@ const {app, BrowserWindow} = require('electron')
     let mainWindow
 
     function createWindow () {
+      // 隐藏菜单栏
+      Menu.setApplicationMenu(null)
       mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
@@ -21,7 +23,7 @@ const {app, BrowserWindow} = require('electron')
         })
       );
       // Open the DevTools.
-      mainWindow.webContents.openDevTools()
+    //  mainWindow.webContents.openDevTools({mode:'detach'})
 
       mainWindow.on('closed', function () {
         mainWindow = null
