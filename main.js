@@ -6,8 +6,8 @@ const {app, BrowserWindow} = require('electron')
 
     function createWindow () {
       mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1920,
+        height: 1080,
         webPreferences: {
           nodeIntegration: true
         }
@@ -15,7 +15,7 @@ const {app, BrowserWindow} = require('electron')
 
       mainWindow.loadURL(
         url.format({
-          pathname: path.join(__dirname, `/dist/index.html`),
+          pathname: path.join(__dirname, `/dist/static/index.html`),
           protocol: "file:",
           slashes: true
         })
