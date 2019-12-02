@@ -15,6 +15,7 @@ import { LoginModule } from './pages/login/login.module';
 import { TestModule } from './pages/test/test.module';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { FilterSortService } from './tools/FilterSortService.component';
+import { AuthService } from './tools/AuthService.component';
 
 
 registerLocaleData(zh);
@@ -49,7 +50,8 @@ registerLocaleData(zh);
       useValue:'http://localhost:4200/src/dbg_data/'
     },
     TableUpdateService,
-    FilterSortService
+    FilterSortService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

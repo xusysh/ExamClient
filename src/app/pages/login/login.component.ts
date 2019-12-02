@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       this.base_url = this.server_base_url;
     }
     let server_url = this.base_url + 'upi/user/login';
-    this.auth_service.CheckAuth(server_url).then( () => {
+    this.auth_service.CheckAuth(server_url).then(() => {
       this.http_client.post<MyServerResponse>(server_url, user_check_info).
         subscribe(response => {
           if (response.status != 200) {
