@@ -73,11 +73,10 @@ export class GeneratePaperComponent implements OnInit {
 
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
-  public elem_height_str: string = '500px';
+  public elem_height_str: string = Math.ceil(document.documentElement.clientHeight * 0.68).toString() + 'px';
 
   ngAfterViewInit(): void {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
-    this.elem_height_str = Math.ceil(this.canvas_height * 0.85).toString() + 'px';
   }
 
   constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
