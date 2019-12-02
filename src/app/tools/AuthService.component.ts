@@ -8,11 +8,11 @@ export class AuthService {
     }
 
     CheckAuth(server_url: string) {
-        return new Promise(() => {
+        return new Promise(resolve => {
             setTimeout(() => {
-                alert('promise done');
+              resolve("I promise to return after one second!");
             }, 1000);
-        });
+          });
     }
 
 }

@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
     }
     let server_url = this.base_url + 'upi/user/login';
     this.auth_service.CheckAuth(server_url).then(() => {
+      alert('start ajax')
       this.http_client.post<MyServerResponse>(server_url, user_check_info).
         subscribe(response => {
           if (response.status != 200) {
