@@ -28,7 +28,9 @@
                             <ng-template #prefixTemplate_pwd><i nz-icon nzType="profile"></i></ng-template>
                             <ng-template #suffixTemplate_pwd>
                                 <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                                    (click)="passwordVisible = !passwordVisible"></i>
+                                    (click)="passwordVisible = !passwordVisible"  
+                                    nz-tooltip [nzTitle]="passwordVisible ? '密码已显示':'密码已隐藏'">
+                                </i>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
