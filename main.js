@@ -3,7 +3,8 @@ const {app, BrowserWindow} = require('electron')
     const path = require("path");
 
     let mainWindow
-
+    const Menu = electron.Menu
+    
     function createWindow () {
       // 隐藏菜单栏
       Menu.setApplicationMenu(null)
