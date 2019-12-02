@@ -9,10 +9,13 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
+    frame: false
 /*    webPreferences: {
       nodeIntegration: true
     } */
   })
+
+  mainWindow.setMenu(null)
 
   mainWindow.loadURL(
     url.format({
@@ -22,10 +25,10 @@ function createWindow() {
     })
   );
   // Open the DevTools.
-  //  mainWindow.webContents.openDevTools({mode:'detach'})
+  mainWindow.webContents.openDevTools({mode:'detach'})
 
   mainWindow.setFullScreen(true)
-  mainWindow.removeMenu()
+
 
   mainWindow.on('closed', function () {
     mainWindow = null
