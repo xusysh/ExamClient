@@ -56,6 +56,7 @@ export class GeneratePaperComponent implements OnInit {
   ques_knowledge_filter: Array<string> = [];
   new_ques_name_filter_item_str: string = '';
   paper_info_loading: boolean = false;
+  base_url: string;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -79,9 +80,9 @@ export class GeneratePaperComponent implements OnInit {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
   }
 
-  constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
+  constructor(private http_client: HttpClient,
     private message: NzMessageService, private modal: NzModalService, private router: Router) {
-      
+
     this.base_url = sessionStorage.getItem('server_base_url');
 
     this.GetKnowledge();

@@ -80,8 +80,9 @@ export class CheckExamComponent implements OnInit {
   status_selected_filter_val: any;
   search_exam_name_value: any;
   begin_time_sort_value: any;
+  base_url: string;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    private base_url: string, private message: NzMessageService, private router: Router,
+    private message: NzMessageService, private router: Router,
     private filter_sort_service:FilterSortService) { 
       this.base_url = sessionStorage.getItem('server_base_url');
     }

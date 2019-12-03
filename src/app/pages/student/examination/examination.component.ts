@@ -76,13 +76,14 @@ export class ExaminationComponent implements OnInit {
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
   public elem_height_str: string = Math.ceil(document.documentElement.clientHeight * 0.68).toString() + 'px';
+  base_url: string;
 
   ngAfterViewInit(): void {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
   }
 
   constructor(private router: Router, private message: NzMessageService,
-    private http_client: HttpClient,private base_url: string, private modal: NzModalService) {
+    private http_client: HttpClient,private modal: NzModalService) {
       this.base_url = sessionStorage.getItem('server_base_url');
     this.GetPaperInfo();
   }

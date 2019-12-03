@@ -54,8 +54,9 @@ export class CheckPaperComponent implements OnInit {
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.group_id === o2.group_id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
+  base_url: string;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    private base_url: string, private message: NzMessageService, private router: Router,
+    private message: NzMessageService, private router: Router,
     private filter_sort_service: FilterSortService) {
       this.base_url = sessionStorage.getItem('server_base_url');
     }

@@ -34,9 +34,10 @@ export class CheckExamComponent implements OnInit {
 
   public student_exam_info_list:Array<StudentExamInfo> = []
   public student_exam_info_list_backup:Array<StudentExamInfo> = []
+  base_url: string;
 
   constructor(private filter_sort_service: FilterSortService, private http_client: HttpClient,
-    private base_url: string, private message: NzMessageService, private router: Router) { 
+    private message: NzMessageService, private router: Router) { 
       this.base_url = sessionStorage.getItem('server_base_url');
     }
 

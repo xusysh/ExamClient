@@ -76,6 +76,7 @@ export class CheckExamPaperComponent implements OnInit {
   @ViewChild('content_canvas', { static: false }) content_canvas_element_view: ElementRef;
   public canvas_height: number = 0;
   public elem_height_str: string = Math.ceil(document.documentElement.clientHeight * 0.68).toString() + 'px';
+  base_url: string;
 
 
   ngAfterViewInit(): void {
@@ -83,7 +84,7 @@ export class CheckExamPaperComponent implements OnInit {
   }
 
   constructor(private router: Router, private message: NzMessageService,
-    private http_client: HttpClient,private base_url: string, private modal: NzModalService) {
+    private http_client: HttpClient,private modal: NzModalService) {
       this.base_url = sessionStorage.getItem('server_base_url');
     console.log(this.elem_height_str);
     this.exam_id = parseInt(sessionStorage.getItem('student_check_exam_id'));

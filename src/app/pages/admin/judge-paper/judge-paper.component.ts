@@ -28,6 +28,7 @@ export class JudgePaperComponent implements OnInit {
   judge_student_id: string;
 
   all_student_judge_info: Array<StudentPaperJudgeInfo> = [];
+  base_url: string;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -41,7 +42,7 @@ export class JudgePaperComponent implements OnInit {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
   }
 
-  constructor(private http_client: HttpClient, private base_url: string,
+  constructor(private http_client: HttpClient,
     private message: NzMessageService,private sanitizer: DomSanitizer) {
       this.base_url = sessionStorage.getItem('server_base_url');
   }

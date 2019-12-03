@@ -63,8 +63,9 @@ export class CheckStudentComponent implements OnInit {
   compareFn_stu = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
+  base_url: string;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    private base_url: string, private message: NzMessageService,
+    private message: NzMessageService,
     private filter_sort_service: FilterSortService) {
       this.upload_url = sessionStorage.getItem('server_base_url') + 'upi/user/batch/'
       this.base_url = sessionStorage.getItem('server_base_url');

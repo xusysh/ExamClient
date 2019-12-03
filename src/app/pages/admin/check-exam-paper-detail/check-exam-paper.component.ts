@@ -36,6 +36,7 @@ export class CheckExamPaperComponent implements OnInit {
   right_color: string = "rgba(160, 255, 160, 0.3)";
   wrong_color: string = "rgba(255, 160, 160, 0.3)";
   not_completely_right_or_wrong_color: string = "rgba(160, 160, 255, 0.3)";
+  base_url: string;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -49,7 +50,7 @@ export class CheckExamPaperComponent implements OnInit {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
   }
 
-  constructor(private http_client: HttpClient, private base_url: string,
+  constructor(private http_client: HttpClient,
     private message: NzMessageService, private sanitizer: DomSanitizer) {
       this.base_url = sessionStorage.getItem('server_base_url');
   }
