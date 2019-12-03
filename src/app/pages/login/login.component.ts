@@ -68,14 +68,14 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('auth_token',response.data.auth_token);
           if (response.data.user_info.role == "student") {
             sessionStorage.setItem('username', this.user_name);
-            sessionStorage.setItem('userid', response.data.id);
+            sessionStorage.setItem('userid', response.data.user_info.id);
             this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
             this.router.navigateByUrl("/student");
             this.is_checking = false;
           }
           else if (response.data.user_info.role == "admin") {
             sessionStorage.setItem('username', this.user_name);
-            sessionStorage.setItem('userid', response.data.id);
+            sessionStorage.setItem('userid', response.data.user_info.id);
             this.message.create('success', "管理员用户 " + this.user_name + ' 登陆成功');
             this.router.navigate(['/admin']);
             this.is_checking = false;
