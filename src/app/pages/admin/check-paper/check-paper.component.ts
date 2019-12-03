@@ -55,8 +55,10 @@ export class CheckPaperComponent implements OnInit {
 
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router,
-    private filter_sort_service: FilterSortService) { }
+    private base_url: string, private message: NzMessageService, private router: Router,
+    private filter_sort_service: FilterSortService) {
+      this.base_url = sessionStorage.getItem('server_base_url');
+    }
 
   ngOnInit(): void {
     this.UpdateTableData();

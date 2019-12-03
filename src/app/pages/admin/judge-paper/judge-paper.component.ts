@@ -24,8 +24,8 @@ export class JudgePaperComponent implements OnInit {
 
   public current_student_index: number = 0;
 
-  judge_exam_id: number;
-  judge_student_id: number;
+  judge_exam_id: string;
+  judge_student_id: string;
 
   all_student_judge_info: Array<StudentPaperJudgeInfo> = [];
 
@@ -41,13 +41,14 @@ export class JudgePaperComponent implements OnInit {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
   }
 
-  constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
+  constructor(private http_client: HttpClient, private base_url: string,
     private message: NzMessageService,private sanitizer: DomSanitizer) {
+      this.base_url = sessionStorage.getItem('server_base_url');
   }
 
   ngOnInit() {
-    this.judge_exam_id = parseInt(sessionStorage.getItem('judge_exam_id'));
-    this.judge_student_id = parseInt(sessionStorage.getItem('judge_student_id'));
+    this.judge_exam_id = sessionStorage.getItem('judge_exam_id');
+    this.judge_student_id = sessionStorage.getItem('judge_student_id');
     this.GetStudentJudgePapers();
   }
 
@@ -65,7 +66,7 @@ export class JudgePaperComponent implements OnInit {
           this.all_student_judge_info = response.data;
           var i = 0;
           for(var student_answers_detail of this.all_student_judge_info[0].student_answers_detail) {
-            if(student_answers_detail.student_id == this.judge_student_id)
+            if(student_answers_detail.student_id.toString() == this.judge_student_id)
               this.current_student_index = i;
             for(var subjective_answers of student_answers_detail.paper_status.subjective_answers) {
               subjective_answers.answer = JSON.parse(subjective_answers.answer);

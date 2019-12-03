@@ -38,7 +38,7 @@ export class GeneratePaperComponent implements OnInit {
 
   category_to_questions = new Map<string, Array<PaperQuestionInfo>>();
   paper_question_scores: Array<string> = [];
-  edit_category_name:string = '';
+  edit_category_name: string = '';
 
   selected_questions = []
   confirm_modal: NzModalRef;
@@ -55,7 +55,7 @@ export class GeneratePaperComponent implements OnInit {
   ques_type_filter: Array<string> = [];
   ques_knowledge_filter: Array<string> = [];
   new_ques_name_filter_item_str: string = '';
-  paper_info_loading:boolean = false;
+  paper_info_loading: boolean = false;
 
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
@@ -80,7 +80,10 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
-    private message: NzMessageService, private modal: NzModalService,private router:Router) {
+    private message: NzMessageService, private modal: NzModalService, private router: Router) {
+      
+    this.base_url = sessionStorage.getItem('server_base_url');
+
     this.GetKnowledge();
     this.GetAllQuestions();
 
@@ -266,7 +269,7 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   EditCateGoryDone(index: number) {
-    if(this.categorys.indexOf(this.edit_category_name) != -1 && this.categorys[index] != this.edit_category_name) {
+    if (this.categorys.indexOf(this.edit_category_name) != -1 && this.categorys[index] != this.edit_category_name) {
       this.message.warning('与其他大题名重复');
       return;
     }
@@ -274,7 +277,7 @@ export class GeneratePaperComponent implements OnInit {
       this.category_to_questions.set(this.edit_category_name, this.category_to_questions.get(this.categorys[index]));
       this.category_to_questions.delete(this.categorys[index]);
     }
-    this.categorys[index] = this.edit_category_name;     
+    this.categorys[index] = this.edit_category_name;
     this.edit_category_flags[index] = false;
   }
 
@@ -326,15 +329,15 @@ export class GeneratePaperComponent implements OnInit {
             */
         let all_question_list: Array<PaperQuestionInfo> = []
         for (let i = 0; i < this.categorys.length; i++) {
-          let question_list:Array<PaperQuestionInfo> = this.category_to_questions.get(this.categorys[i]);
-          for (let j = 0;  j<question_list.length;j++)
+          let question_list: Array<PaperQuestionInfo> = this.category_to_questions.get(this.categorys[i]);
+          for (let j = 0; j < question_list.length; j++)
             question_list[j].category_content = this.categorys[i];
           all_question_list.push(...question_list);
         }
         let new_paper_info: PaperInfo = {
           title: this.exam_name,
           description: '',
-          paper_code: this.paper_info==null?'':this.paper_info.paperCode,
+          paper_code: this.paper_info == null ? '' : this.paper_info.paperCode,
           user_id: 9,
           question_list: all_question_list
         }

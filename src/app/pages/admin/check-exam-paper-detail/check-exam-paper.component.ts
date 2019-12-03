@@ -25,8 +25,8 @@ export class CheckExamPaperComponent implements OnInit {
 
   public current_student_index: number = 0;
 
-  judge_exam_id: number;
-  judge_student_id: number;
+  judge_exam_id: string;
+  judge_student_id: string;
 
   all_student_judge_info: Array<StudentPaperBaseInfo> = [];
   student_paper_judge_detail_loading: boolean = false
@@ -49,13 +49,14 @@ export class CheckExamPaperComponent implements OnInit {
     this.canvas_height = this.content_canvas_element_view.nativeElement.offsetHeight;
   }
 
-  constructor(private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
+  constructor(private http_client: HttpClient, private base_url: string,
     private message: NzMessageService, private sanitizer: DomSanitizer) {
+      this.base_url = sessionStorage.getItem('server_base_url');
   }
 
   ngOnInit() {
-    this.judge_exam_id = parseInt(sessionStorage.getItem('judge_exam_id'));
-    this.judge_student_id = parseInt(sessionStorage.getItem('judge_student_id'));
+    this.judge_exam_id = sessionStorage.getItem('judge_exam_id');
+    this.judge_student_id = sessionStorage.getItem('judge_student_id');
     this.all_student_judge_info = JSON.parse(sessionStorage.getItem('all_student_judge_info'));
     this.GetStudentJudgePapers();
   }

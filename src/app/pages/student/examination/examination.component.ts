@@ -82,7 +82,8 @@ export class ExaminationComponent implements OnInit {
   }
 
   constructor(private router: Router, private message: NzMessageService,
-    private http_client: HttpClient, @Inject('BASE_URL') private base_url: string, private modal: NzModalService) {
+    private http_client: HttpClient,private base_url: string, private modal: NzModalService) {
+      this.base_url = sessionStorage.getItem('server_base_url');
     this.GetPaperInfo();
   }
 

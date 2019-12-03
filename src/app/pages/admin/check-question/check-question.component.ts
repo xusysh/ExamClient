@@ -85,8 +85,9 @@ export class CheckQuestionComponent implements OnInit {
   @ViewChild('inputElement', { static: false }) inputElement: ElementRef;
   @ViewChild('knowledge_tree', { static: false }) treeElement: NzTreeComponent;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private sanitizer: DomSanitizer,
+    private base_url: string, private message: NzMessageService, private sanitizer: DomSanitizer,
     private filter_sort_service: FilterSortService) {
+      this.base_url = sessionStorage.getItem('server_base_url');
   }
 
   ngOnInit(): void {
