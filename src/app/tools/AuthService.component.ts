@@ -4,15 +4,13 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class AuthService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private http_client: HttpClient) {
   }
 
   CheckAuth(server_url: string) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve("I promise to return after one second!");
-      }, 1000);
-    });
+    let auth_token = sessionStorage.getItem("auth_token");
+    let auth_info = {"auth_token":auth_token};
+    return this.http_client.post(server_url,auth_info);
   }
 
 }

@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   public user_name: string = null;
   public password: string = null;
   public is_checking: boolean = false;
+  //electron桌面版标志
   public is_electron: boolean = false;
   public server_base_url: string = '';
 
@@ -56,15 +57,16 @@ export class LoginComponent implements OnInit {
       this.base_url = this.server_base_url;
     }
     let server_url = this.base_url + 'upi/user/login';
-    this.auth_service.CheckAuth(server_url).then(() => {
-      alert('start ajax')
-      this.http_client.post<MyServerResponse>(server_url, user_check_info).
-        subscribe(response => {
-          if (response.status != 200) {
-            this.message.create('error', '登陆失败:' + response.msg);
-            this.is_checking = false;
-          }
-          else if (response.data.role == "student") {
+
+    this.http_client.post<MyServerResponse>(server_url, user_check_info).
+      subscribe(response => {
+        if (response.status != 200) {
+          this.message.create('error', '登陆失败:' + response.msg);
+          this.is_checking = false;
+        }
+        else {
+          sessionStorage.setItem('auth_token',response.data.token);
+          if (response.data.role == "student") {
             sessionStorage.setItem('username', this.user_name);
             sessionStorage.setItem('userid', response.data.id);
             this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
@@ -78,13 +80,11 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/admin']);
             this.is_checking = false;
           }
-        }, error => {
-          this.message.create('error', '登陆失败：连接服务器失败');
-          this.is_checking = false;
-        });
-    }).catch((error)=>{
-      console.log("promise error");
-    });
+        }
+      }, error => {
+        this.message.create('error', '登陆失败：连接服务器失败');
+        this.is_checking = false;
+      });
   }
 
 }
@@ -100,6 +100,7 @@ interface UserInfo {
   name: string;
   password: string;
   role: string;
+  token: string;
 }
 
 interface UserCheckInfo {
