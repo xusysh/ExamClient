@@ -65,15 +65,15 @@ export class LoginComponent implements OnInit {
           this.is_checking = false;
         }
         else {
-          sessionStorage.setItem('auth_token',response.data.token);
-          if (response.data.role == "student") {
+          sessionStorage.setItem('auth_token',response.data.auth_token);
+          if (response.data.user_info.role == "student") {
             sessionStorage.setItem('username', this.user_name);
             sessionStorage.setItem('userid', response.data.id);
             this.message.create('success', "考生用户 " + this.user_name + ' 登陆成功');
             this.router.navigateByUrl("/student");
             this.is_checking = false;
           }
-          else if (response.data.role == "admin") {
+          else if (response.data.user_info.role == "admin") {
             sessionStorage.setItem('username', this.user_name);
             sessionStorage.setItem('userid', response.data.id);
             this.message.create('success', "管理员用户 " + this.user_name + ' 登陆成功');
@@ -100,7 +100,6 @@ interface UserInfo {
   name: string;
   password: string;
   role: string;
-  token: string;
 }
 
 interface UserCheckInfo {
