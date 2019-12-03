@@ -81,8 +81,10 @@ export class CheckExamComponent implements OnInit {
   search_exam_name_value: any;
   begin_time_sort_value: any;
   constructor(private table_update_service: TableUpdateService, private http_client: HttpClient,
-    @Inject('BASE_URL') private base_url: string, private message: NzMessageService, private router: Router,
-    private filter_sort_service:FilterSortService) { }
+    private base_url: string, private message: NzMessageService, private router: Router,
+    private filter_sort_service:FilterSortService) { 
+      this.base_url = sessionStorage.getItem('server_base_url');
+    }
 
   ngOnInit(): void {
     this.UpdateTableData();
