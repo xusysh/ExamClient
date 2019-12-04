@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
       // Electron-specific code
       this.is_electron = true;
     }
+  //  sessionStorage.setItem('is_electron',this.is_electron ? 'true':'false');
   }
 
 

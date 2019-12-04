@@ -16,14 +16,14 @@ export class AppComponent {
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    let base_url = sessionStorage.getItem("server_base_url");
+  /*  let base_url = sessionStorage.getItem("server_base_url");
     let userid = sessionStorage.getItem("userid");
     if (base_url == null || base_url == undefined || base_url == '' ||
     userid == null || userid == undefined || userid == '') {
       alert('请登录')
       this.router.navigateByUrl("/login");
       return;
-    }
+    }  */
     //auth token check with server
   }
 

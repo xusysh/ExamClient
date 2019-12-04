@@ -45,4 +45,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-ExamClientElectron-win32-x64
+ExamClientElectron*
+*.zip

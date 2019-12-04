@@ -21,11 +21,14 @@ export class StudentComponent implements OnInit {
 
     this.user_id=sessionStorage.getItem('userid')
     this.user_name=sessionStorage.getItem('username')
-    //判断是否已经登录，未登录则进行跳转
-    if (!this.user_id) {
-      alert("请登录");
+    let base_url = sessionStorage.getItem("server_base_url");
+    if (base_url == null || base_url == undefined || base_url == '' ||
+    this.user_id == null || this.user_id == undefined || this.user_id == '') {
+      alert('请登录')
       this.router.navigateByUrl("/login");
-    }  
+      return;
+    } 
+    
   }
 
   Logout():void{
