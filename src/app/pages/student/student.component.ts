@@ -33,9 +33,12 @@ export class StudentComponent implements OnInit {
     let user_info = {
       user_id: userid
     };
-    this.http_client.post(base_url + 'upi/user/logout', user_info);
-    sessionStorage.clear();
-    this.router.navigateByUrl("/login");
+    this.http_client.post(base_url + 'upi/user/logout', user_info).toPromise().then(
+      ()=>{
+        sessionStorage.clear();
+        this.router.navigateByUrl("/login");
+      }
+    );
   }
 
 }
