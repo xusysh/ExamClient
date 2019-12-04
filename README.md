@@ -1,5 +1,5 @@
 # ExamClient
-uses [TypeScript](https://www.tslang.cn/), [Angular](https://github.com/angular/angular) and [NgZorro](https://github.com/NG-ZORRO/ng-zorro-antd)    
+uses [TypeScript](https://typescriptlang.org/), [Angular](https://angular.io/) and [NgZorro](https://ng.ant.design/)    
 you could also deloy the project on desktop via [Electron](https://electron.atom.io/)
 ## Development
 * install [node.js](https://nodejs.org/en/)
