@@ -284,7 +284,7 @@ export class CheckStudentComponent implements OnInit {
     this.dialog_visible = false;
   }
 
-  RefreshDeleteCheckStatus(checked:boolean): void {
+  RefreshDeleteCheckStatus(): void {
     this.delete_student_ids = []
     for(let student of this.student_info_list) {
       if(student['delete_flag'] == true ) {

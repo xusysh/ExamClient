@@ -176,7 +176,7 @@ export class CheckExamComponent implements OnInit {
       });
   }
 
-  RefreshDeleteCheckStatus(checked: boolean): void {
+  RefreshDeleteCheckStatus(): void {
     this.delete_exam_ids = []
     for (let exam of this.exam_info_list) {
       if (exam['delete_flag'] == true) {

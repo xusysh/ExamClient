@@ -194,7 +194,7 @@
                 nzErrorTip="考生组不能为空!">
                 <nz-select [(ngModel)]="edit_exam_group" name="exam_group" (nzOpenChange)="UpdateGroupInfo($event)"
                   nzSize="large" nzMode="tags" nzPlaceHolder="请选择考生组" [compareWith]="compareFn">
-                  <nz-option *ngIf="exam_group_loading" nzDisabled nzCustomContent>
+                  <nz-option *ngIf="group_loading" nzDisabled nzCustomContent>
                     <i nz-icon nzType="loading" class="loading-icon"></i> 加载数据中...
                   </nz-option>
                   <nz-option *ngFor="let group of all_group_info" [nzLabel]="group.group_name" [nzValue]="group">

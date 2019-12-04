@@ -166,7 +166,7 @@ export class ExaminationComponent implements OnInit {
         }
         else {
           this.student_paper_info = response.data;
-          this.exam_name = this.student_paper_info.title;
+          this.exam_name = sessionStorage.getItem('exam_name');
           this.remain_seconds = Math.round(this.student_paper_info.leftTime / 1000);
           for (let i = 0; i < this.student_paper_info.categoryList.length; i++) {
             for (let j = 0; j < this.student_paper_info.categoryList[i].questionList.length; j++) {
@@ -394,7 +394,13 @@ interface QuestionInfo {
   type: string,
   content: string,
   mustOrNot: 0,
-  stamp: number
+  stamp: number,
+  //ui element(for ts compile)
+  option_bdcolor:Array<string>,
+  option_bgcolor:Array<string>,
+  radio_value:string,
+  checkbox_values:Array<any>,
+  editor_value:string
 }
 
 interface QuestionUpdateInfo {

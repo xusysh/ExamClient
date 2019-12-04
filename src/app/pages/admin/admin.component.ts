@@ -12,6 +12,9 @@ export class AdminComponent implements OnInit {
   public user_name: string = null;
   public user_id:string = null;
 
+  isCollapsed:boolean = false;
+  side_fix:boolean = false;
+
   constructor(private router:Router,private http_client:HttpClient) { 
 
   }

@@ -104,7 +104,7 @@ export class CheckPaperComponent implements OnInit {
   }
 
 
-  RefreshDeleteCheckStatus(checked: boolean): void {
+  RefreshDeleteCheckStatus(): void {
     this.delete_paper_papercodes = []
     for (let paper of this.paper_info_list) {
       if (paper['delete_flag'] == true) {

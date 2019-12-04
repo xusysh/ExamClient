@@ -58,6 +58,12 @@ export class GeneratePaperComponent implements OnInit {
   paper_info_loading: boolean = false;
   base_url: string;
 
+  isCollapsed:boolean = false;
+
+  linefeed:boolean = false;
+
+  edit_exam_name:boolean = false;
+
   nzEvent(event: NzFormatEmitEvent): void {
     //  console.log(event);
   }

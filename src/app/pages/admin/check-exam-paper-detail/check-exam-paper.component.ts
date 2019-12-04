@@ -180,7 +180,7 @@ export interface CategoryInfo {
 }
 
 export interface QuestionInfo {
-  ques_id: 29,
+  ques_id: number,
   content: string,
   description: string,
   type: string,
@@ -189,6 +189,12 @@ export interface QuestionInfo {
   student_answer: any,
   def_ans: any,
   student_point: number,
+  //ui element(for ts compile)
+  option_bdcolor:Array<string>,
+  option_bgcolor:Array<string>,
+  radio_value:string,
+  checkbox_values:Array<any>,
+  editor_value:string
 }
 
 //old

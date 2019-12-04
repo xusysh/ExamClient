@@ -12,6 +12,9 @@ export class StudentComponent implements OnInit {
   public user_id: string = null;
   public user_name:string = null;
 
+  isCollapsed:boolean = false;
+  side_fix:boolean = false;
+
   constructor(private router:Router,private http_client:HttpClient) { }
 
   ngOnInit() {

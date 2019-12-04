@@ -21,6 +21,8 @@ export class LoginComponent implements OnInit {
   public is_electron: boolean = false;
   public server_base_url: string = '';
 
+  passwordVisible = false;
+
   constructor(private router: Router, private message: NzMessageService, private auth_service: AuthService,
     private http_client: HttpClient, @Inject('BASE_URL') private base_url: string,
     @Inject('DBG_BASE_URL') private dbg_base_url: string) {

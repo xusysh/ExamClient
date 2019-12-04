@@ -80,6 +80,7 @@ export class CheckExamComponent implements OnInit {
     this.current_select_exam =  (this.page_index - 1) * this.page_size + index;
     let current_exam = this.student_exam_info_list[this.current_select_exam];
     sessionStorage.setItem('exam_id',current_exam.id.toString())
+    sessionStorage.setItem('exam_name',current_exam.examName.toString())
     sessionStorage.setItem('paper_code',current_exam.paperCode)
     this.router.navigateByUrl("/student/examination");
   }

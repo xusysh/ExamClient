@@ -2,7 +2,7 @@
 
     <div class="login-bg">
         <div class="login-box">
-            <h1 style="margin-top:30px;">在线考试系统 V0.1</h1>
+            <h1 style="margin-top:30px;">在线考试系统 V0.1{{is_electron?'桌面版':'网页版'}}</h1>
             <div class="form-group">
                 <form nz-form>
                     <nz-form-item *ngIf="is_electron">
@@ -11,7 +11,7 @@
                             <input type="text" nz-input [(ngModel)]="server_base_url" name="serverurl" placeholder="请输入服务器地址" />
                         </nz-input-group>
                         <ng-template #prefixTemplate_serverurl><i nz-icon nzType="cloud-server"></i></ng-template>
-                        <ng-template #suffixTemplate_serverurl><i nz-icon nz-tooltip nzTitle="后台服务器的地址，形如http://x.x.x.x:8080"
+                        <ng-template #suffixTemplate_serverurl><i nz-icon nz-tooltip nzTitle="后台服务器的地址，形如http://x.x.x.x:8080/"
                                 nzType="info-circle"></i>
                         </ng-template>
                     </nz-form-item>

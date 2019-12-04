@@ -149,7 +149,7 @@
             <i nz-icon *ngIf="edit_knowledge_flag_dic[node.key]" style="cursor: pointer;margin-left: 10px;"
               nzType="check" (click)="EditKnowledgeInfo(node.key,edit_knowledge_dic[node.key])">
             </i>
-            <span *ngIf="!edit_knowledge_flag_dic[node.key]">{{ node.title }}{{i}}</span>
+            <span *ngIf="!edit_knowledge_flag_dic[node.key]">{{ node.title }}</span>
             <span *ngIf="!edit_knowledge_flag_dic[node.key]">
               <i nz-icon nzType="edit" (click)="edit_knowledge_flag_dic[node.key] = true" style="cursor: pointer"></i>
             </span>

@@ -70,6 +70,8 @@ export class CheckQuestionComponent implements OnInit {
 
   question_content_search_val = "";
 
+  knowledge_dialog_visible:boolean = false;
+
   public current_select_question: number = 0;
   public all_knowledge_info: Array<any> = [];
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
@@ -502,7 +504,7 @@ export class CheckQuestionComponent implements OnInit {
     this.edit_knowledge_name = '';
   }
 
-  RefreshDeleteCheckStatus(checked: boolean): void {
+  RefreshDeleteCheckStatus(): void {
     this.delete_question_ids = []
     for (let question of this.question_info_list) {
       if (question['delete_flag'] == true) {

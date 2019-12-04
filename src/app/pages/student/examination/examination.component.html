@@ -143,7 +143,7 @@
 
           <nz-layout *ngIf="!get_paper_loading" style="margin-top: 15px">
             <nz-content style="background-color:#FFFFFF;">
-              <button nz-button nzType="primary" [nzSize]="size" style="margin-left: 15px"
+              <button nz-button nzType="primary" style="margin-left: 15px"
                 (click)="student_paper_info.categoryList[current_category].questionList[current_question].stamp==0?
                 student_paper_info.categoryList[current_category].questionList[current_question].stamp=1:
                 student_paper_info.categoryList[current_category].questionList[current_question].stamp=0">
