@@ -11,4 +11,4 @@ you could also deloy the project on desktop via [Electron](https://electron.atom
 * run `npm run start electron` to debug the electron desktop version
 ## Deployment
 * run `npm run packWeb` to build web app
-* run `npm run packWin64 or buildPackWin64` to build desktop app
+* run `npm run packWin64` or `npm run buildPackWin64` to build desktop app
