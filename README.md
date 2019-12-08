@@ -1,4 +1,5 @@
 # ExamClient
+![build_status](https://travis-ci.org/xusysh/ExamClient.svg?branch=master)  
 uses [TypeScript](https://typescriptlang.org/), [Angular](https://angular.io/) and [NgZorro](https://ng.ant.design/)    
 you could also deloy the project on desktop via [Electron](https://electron.atom.io/)
 ## Development
