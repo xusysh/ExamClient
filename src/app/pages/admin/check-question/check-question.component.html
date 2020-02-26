@@ -2,8 +2,7 @@
   <nz-breadcrumb nz-page-header-breadcrumb>
     <nz-breadcrumb-item>
       <a routerLink="/admin">
-        <i nz-icon nzType="home">
-        </i>
+        <i nz-icon nzType="home"> </i>
       </a>
     </nz-breadcrumb-item>
     <nz-breadcrumb-item>
@@ -17,42 +16,96 @@
     <div class="question-table-div">
       <div>
         <div style="margin-bottom: 15px;margin-left: 15px">
-          <button style="margin-left: 5px" nz-button nzType="primary" nzSize="defalut" nzShape="round"
-            (click)="UpdateTableData()">
-            <i nz-icon [nzType]="loading?'loading' : 'reload'"></i>刷新
+          <button
+            style="margin-left: 5px"
+            nz-button
+            nzType="primary"
+            nzSize="defalut"
+            nzShape="round"
+            (click)="UpdateTableData()"
+          >
+            <i nz-icon [nzType]="loading ? 'loading' : 'reload'"></i>刷新
           </button>
-          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-            (click)="CheckQuestionInfo(-1)" [disabled]="loading">
+          <button
+            style="margin-left: 15px"
+            nz-button
+            nzType="primary"
+            nzSize="default"
+            nzShape="round"
+            (click)="CheckQuestionInfo(-1)"
+            [disabled]="loading"
+          >
             <i nz-icon nzType="user-add"></i>添加试题
           </button>
           <!--button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
             (click)="dialog_visible=true">
             <i nz-icon nzType="usergroup-add"></i>批量导入
           </button-->
-          <button style="margin-left: 15px" nz-button nzType="danger" nzSize="default" nzShape="round"
-            *ngIf="delete_question_ids.length > 0" (click)="DeleteQuestions()" [nzLoading]="delete_loading">
+          <button
+            style="margin-left: 15px"
+            nz-button
+            nzType="danger"
+            nzSize="default"
+            nzShape="round"
+            *ngIf="delete_question_ids.length > 0"
+            (click)="DeleteQuestions()"
+            [nzLoading]="delete_loading"
+          >
             <i nz-icon nzType="user-delete"></i>批量删除试题
           </button>
           <!--知识点管理（拖拽?树）-->
-          <button style="margin-left: 15px" nz-button nzType="primary" nzSize="default" nzShape="round"
-            (click)="UpdateKnowledgeInfo();knowledge_dialog_visible=true;" [disabled]="loading">
+          <button
+            style="margin-left: 15px"
+            nz-button
+            nzType="primary"
+            nzSize="default"
+            nzShape="round"
+            (click)="UpdateKnowledgeInfo(); knowledge_dialog_visible = true"
+            [disabled]="loading"
+          >
             <i nz-icon nzType="usergroup-add"></i>知识点管理
           </button>
         </div>
-        <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="true" [nzData]="question_info_list"
-          [nzLoading]="loading" [(nzPageIndex)]="page_index" [(nzPageSize)]="page_size" [nzScroll]="{y:'350px'}">
+        <nz-table
+          #ajaxTable
+          nzShowSizeChanger
+          [nzFrontPagination]="true"
+          [nzData]="question_info_list"
+          [nzLoading]="loading"
+          [(nzPageIndex)]="page_index"
+          [(nzPageSize)]="page_size"
+          [nzScroll]="{ y: '350px' }"
+        >
           <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>
               <th></th>
               <th nzWidth="200px" nzCustomFilter>
-                <b>题干
-                  <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
-                    [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
-                    nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                <b
+                  >题干
+                  <i
+                    class="ant-table-filter-icon"
+                    nz-icon
+                    nz-dropdown
+                    #dropdown="nzDropdown"
+                    nzType="search"
+                    [nzDropdownMenu]="menu"
+                    [class.ant-table-filter-open]="dropdown.nzVisible"
+                    nzTrigger="click"
+                    nzPlacement="bottomRight"
+                    [nzClickHide]="false"
+                    nzTableFilter
+                  ></i>
                 </b>
               </th>
-              <th nzWidth="160px" nzShowFilter [nzFilterMultiple]="true" [nzFilters]="question_type_filter"
-                (nzFilterChange)="QuestionTypeFilterChange($event)"><b>试题类型</b></th>
+              <th
+                nzWidth="160px"
+                nzShowFilter
+                [nzFilterMultiple]="true"
+                [nzFilters]="question_type_filter"
+                (nzFilterChange)="QuestionTypeFilterChange($event)"
+              >
+                <b>试题类型</b>
+              </th>
               <th nzWidth="300px"><b>追加描述</b></th>
               <th nzWidth="200px"><b>选项</b></th>
               <th nzWidth="150px"><b>参考答案</b></th>
@@ -60,28 +113,47 @@
             </tr>
             <nz-dropdown-menu #menu="nzDropdownMenu">
               <div class="search-box">
-                <input type="text" nz-input placeholder="请输入搜索的题干" [(ngModel)]="question_content_search_val" />
-                <button nz-button nzSize="small" nzType="primary" (click)="SearchQuestionContent()"
-                  class="search-button">
+                <input
+                  type="text"
+                  nz-input
+                  placeholder="请输入搜索的题干"
+                  [(ngModel)]="question_content_search_val"
+                />
+                <button
+                  nz-button
+                  nzSize="small"
+                  nzType="primary"
+                  (click)="SearchQuestionContent()"
+                  class="search-button"
+                >
                   搜索
                 </button>
-                <button nz-button nzSize="small" (click)="ResetArrayData()">重置</button>
+                <button nz-button nzSize="small" (click)="ResetArrayData()">
+                  重置
+                </button>
               </div>
             </nz-dropdown-menu>
           </thead>
           <tbody>
-            <tr *ngFor="let data of ajaxTable.data;let i=index">
-              <td nzShowCheckbox [(nzChecked)]="data.delete_flag" (nzCheckedChange)="RefreshDeleteCheckStatus()">
-              </td>
+            <tr *ngFor="let data of ajaxTable.data; let i = index">
+              <td
+                nzShowCheckbox
+                [(nzChecked)]="data.delete_flag"
+                (nzCheckedChange)="RefreshDeleteCheckStatus()"
+              ></td>
               <td>
                 <p nz-paragraph nzCopyable [nzContent]="data.content"></p>
               </td>
               <td>
-                {{GetTypeStr(i)}}
+                {{ GetTypeStr(i) }}
               </td>
               <td>
-                <div *ngIf="data.description != null && data.description != ''" nz-popover [nzTitle]="'描述详情'"
-                  [nzContent]="popoverContentTemplateDesc">
+                <div
+                  *ngIf="data.description != null && data.description != ''"
+                  nz-popover
+                  [nzTitle]="'描述详情'"
+                  [nzContent]="popoverContentTemplateDesc"
+                >
                   <ng-template #popoverContentTemplateDesc>
                     <div [innerHtml]="GetRichHtml(data.description)"></div>
                   </ng-template>
@@ -92,36 +164,67 @@
                   </nz-badge>
                 </div>
               </td>
-              <td nz-popover [nzTitle]="'选项详情'" [nzContent]="popoverContentTemplateOpts">
+              <td
+                nz-popover
+                [nzTitle]="'选项详情'"
+                [nzContent]="popoverContentTemplateOpts"
+              >
                 <ng-template #popoverContentTemplateOpts>
-                  <div *ngFor="let option of data.options;let i=index;">{{GetOptionLabel(i)+option.content}}</div>
+                  <div *ngFor="let option of data.options; let i = index">
+                    {{ GetOptionLabel(i) + option.content }}
+                  </div>
                 </ng-template>
                 <nz-badge [nzCount]="data.options.length">
-                  <span>{{data.options==0 ? '无':'A. '+data.options[0].content+'...'}}</span>
+                  <span>{{
+                    data.options == 0
+                      ? "无"
+                      : "A. " + data.options[0].content + "..."
+                  }}</span>
                   <span>&nbsp;&nbsp;&nbsp;</span>
                 </nz-badge>
               </td>
               <td>
-                <div *ngIf="data.type!='subjective'">{{GetAnswer(i)}}</div>
-                <div *ngIf="data.type=='subjective'" nz-popover [nzTitle]="'答案详情'" [nzContent]="popoverContentTemplate">
+                <div *ngIf="data.type != 'subjective'">{{ GetAnswer(i) }}</div>
+                <div
+                  *ngIf="data.type == 'subjective'"
+                  nz-popover
+                  [nzTitle]="'答案详情'"
+                  [nzContent]="popoverContentTemplate"
+                >
                   <ng-template #popoverContentTemplate>
-                    <div [innerHtml]="GetRichHtml(data.answer[0].content)"></div>
+                    <div
+                      [innerHtml]="GetRichHtml(data.answer[0].content)"
+                    ></div>
                   </ng-template>
                   <nz-badge nzDot>
-                    <span>
-                      {{GetAnswer(i)}}&nbsp;
-                    </span>
+                    <span> {{ GetAnswer(i) }}&nbsp; </span>
                   </nz-badge>
                 </div>
               </td>
               <td>
-                <button nz-button nzSize="small" nzType="primary" (click)="CheckQuestionInfo(i)" nzShape="circle"
-                  nz-tooltip nzTitle="编辑">
+                <button
+                  nz-button
+                  nzSize="small"
+                  nzType="primary"
+                  (click)="CheckQuestionInfo(i)"
+                  nzShape="circle"
+                  nz-tooltip
+                  nzTitle="编辑"
+                >
                   <i nz-icon nzType="edit"></i>
                 </button>
                 <nz-divider nzType="vertical"></nz-divider>
-                <button nz-button nzSize="small" nzType="danger" nzShape="circle" nz-popconfirm
-                  nzPopconfirmTitle="是否删除？" (nzOnConfirm)="DeleteQuestion(i)" nz-tooltip nzTitle="删除">
+                <button
+                  nz-button
+                  nzSize="small"
+                  nzType="danger"
+                  nzShape="circle"
+                  nz-popconfirm
+                  nzPopconfirmTitle="是否删除？"
+                  (nzOnConfirm)="DeleteQuestion(i)"
+                  nz-tooltip
+                  nzTitle="删除"
+                >
                   <i nz-icon nzType="delete"></i>
                 </button>
               </td>
@@ -130,59 +233,146 @@
         </nz-table>
       </div>
     </div>
-    <nz-modal [(nzVisible)]="knowledge_dialog_visible" nzTitle="知识点管理" [nzFooter]="null"
-      (nzOnCancel)="knowledge_dialog_visible = false" [nzWidth]="400">
+    <nz-modal
+      [(nzVisible)]="knowledge_dialog_visible"
+      nzTitle="知识点管理"
+      [nzFooter]="null"
+      (nzOnCancel)="knowledge_dialog_visible = false"
+      [nzWidth]="400"
+    >
       <div>
         <nz-skeleton [nzLoading]="knowledge_loading" [nzActive]="true">
-          <button nz-button style="margin-left: 20px;margin-right: 10px;margin-bottom:8px"
-            (click)="add_new_knowledge = true">
+          <button
+            nz-button
+            style="margin-left: 20px;margin-right: 10px;margin-bottom:8px"
+            (click)="add_new_knowledge = true"
+          >
             添加知识点
           </button>
-          <button *ngIf="checked_knowledge_id.length > 0" nz-button nzType="danger" [nzLoading]="delete_knowledge_loading"
-            (click)="DeleteKnowledge()">删除</button>
-          <nz-tree #knowledge_tree [nzData]="all_knowledge_info" nzCheckable [nzTreeTemplate]="nzTreeTemplate"
-            (nzCheckBoxChange)="KnowledgeCheckChanged($event)">
+          <button
+            *ngIf="checked_knowledge_id.length > 0"
+            nz-button
+            nzType="danger"
+            [nzLoading]="delete_knowledge_loading"
+            (click)="DeleteKnowledge()"
+          >
+            删除
+          </button>
+          <nz-tree
+            #knowledge_tree
+            *ngIf="all_knowledge_info != null"
+            [nzData]="all_knowledge_info"
+            nzCheckable
+            [nzTreeTemplate]="nzTreeTemplate"
+            (nzCheckBoxChange)="KnowledgeCheckChanged($event)"
+          >
           </nz-tree>
           <ng-template #nzTreeTemplate let-node>
-            <input *ngIf="edit_knowledge_flag_dic[node.key]" nz-input [(ngModel)]="edit_knowledge_dic[node.key]"
-              placeholder="输入知识点名称" style="width:150px">
-            <i nz-icon *ngIf="edit_knowledge_flag_dic[node.key]" style="cursor: pointer;margin-left: 10px;"
-              nzType="check" (click)="EditKnowledgeInfo(node.key,edit_knowledge_dic[node.key])">
+            <input
+              *ngIf="edit_knowledge_flag_dic[node.key]"
+              nz-input
+              [(ngModel)]="edit_knowledge_dic[node.key]"
+              placeholder="输入知识点名称"
+              style="width:150px"
+            />
+            <i
+              nz-icon
+              *ngIf="edit_knowledge_flag_dic[node.key]"
+              style="cursor: pointer;margin-left: 10px;"
+              nzType="check"
+              (click)="
+                EditKnowledgeInfo(node.key, edit_knowledge_dic[node.key])
+              "
+            >
             </i>
-            <span *ngIf="!edit_knowledge_flag_dic[node.key]">{{ node.title }}</span>
+            <span *ngIf="!edit_knowledge_flag_dic[node.key]">{{
+              node.title
+            }}</span>
             <span *ngIf="!edit_knowledge_flag_dic[node.key]">
-              <i nz-icon nzType="edit" (click)="edit_knowledge_flag_dic[node.key] = true" style="cursor: pointer"></i>
+              <i
+                nz-icon
+                nzType="edit"
+                (click)="edit_knowledge_flag_dic[node.key] = true"
+                style="cursor: pointer"
+              ></i>
             </span>
           </ng-template>
           <div *ngIf="add_new_knowledge">
-            <input nz-input [(ngModel)]="edit_knowledge_name" placeholder="输入知识点名称" style="width:150px">
-            <i nz-icon style="cursor: pointer;margin-left: 10px;" nzType="check" (click)="EditKnowledgeInfo('')">
+            <input
+              nz-input
+              [(ngModel)]="edit_knowledge_name"
+              placeholder="输入知识点名称"
+              style="width:150px"
+            />
+            <i
+              nz-icon
+              style="cursor: pointer;margin-left: 10px;"
+              nzType="check"
+              (click)="EditKnowledgeInfo('')"
+            >
             </i>
           </div>
         </nz-skeleton>
       </div>
     </nz-modal>
-    <nz-drawer [nzVisible]="drawer_visible" nzPlacement="right" nzTitle="详细信息" (nzOnClose)="DrawerClose()"
-      [nzWidth]="700">
+    <nz-drawer
+      [nzVisible]="drawer_visible"
+      nzPlacement="right"
+      nzTitle="详细信息"
+      (nzOnClose)="DrawerClose()"
+      [nzWidth]="700"
+    >
       <form nz-form>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>题干</nz-form-label>
-          <nz-form-control [nzSm]="15" [nzXs]="24" [nzValidateStatus]="edit_question_content=='' ? 'error':'validating'"
-            nzErrorTip="用户名不能为空!" nzErrorTip="题干不能为空!">
-            <input nz-input nzSize="large" name="question_content" [(ngModel)]="edit_question_content" />
+          <nz-form-control
+            [nzSm]="15"
+            [nzXs]="24"
+            [nzValidateStatus]="
+              edit_question_content == '' ? 'error' : 'validating'
+            "
+            nzErrorTip="用户名不能为空!"
+            nzErrorTip="题干不能为空!"
+          >
+            <input
+              nz-input
+              nzSize="large"
+              name="question_content"
+              [(ngModel)]="edit_question_content"
+            />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>试题类型</nz-form-label>
-          <nz-form-control [nzSm]="15" [nzXs]="24" [nzValidateStatus]="edit_question_type=='' || edit_question_type==null ? 'error':'validating'"
-            nzErrorTip="试题类型不能为空!">
-            <nz-select [(ngModel)]="edit_question_type" name="question_type" nzSize="large" nzAllowClear
-              nzPlaceHolder="选择题目类型" (ngModelChange)="TypeSelectChanged($event)">
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >试题类型</nz-form-label
+          >
+          <nz-form-control
+            [nzSm]="15"
+            [nzXs]="24"
+            [nzValidateStatus]="
+              edit_question_type == '' || edit_question_type == null
+                ? 'error'
+                : 'validating'
+            "
+            nzErrorTip="试题类型不能为空!"
+          >
+            <nz-select
+              [(ngModel)]="edit_question_type"
+              name="question_type"
+              nzSize="large"
+              nzAllowClear
+              nzPlaceHolder="选择题目类型"
+              (ngModelChange)="TypeSelectChanged($event)"
+            >
               <nz-option-group nzLabel="客观题">
                 <nz-option nzValue="single" nzLabel="单选题"></nz-option>
                 <nz-option nzValue="multi" nzLabel="不定项选择题"></nz-option>
                 <nz-option nzValue="judge" nzLabel="判断题"></nz-option>
-                <nz-option nzValue="code" nzLabel="编程题" nzDisabled></nz-option>
+                <nz-option
+                  nzValue="code"
+                  nzLabel="编程题"
+                  nzDisabled
+                ></nz-option>
               </nz-option-group>
               <nz-option-group nzLabel="主观题">
                 <nz-option nzValue="subjective" nzLabel="简答题"></nz-option>
@@ -193,46 +383,104 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24">试题描述</nz-form-label>
           <nz-form-control [nzPush]="2" [nzSm]="20">
-            <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="edit_question_description"
-              name="question_description" (ngModelChange)="limit()">
+            <ckeditor
+              [editor]="editor"
+              [config]="editor_config"
+              [(ngModel)]="edit_question_description"
+              name="question_description"
+              (ngModelChange)="limit()"
+            >
             </ckeditor>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24">知识点</nz-form-label>
           <nz-form-control [nzSm]="15" [nzXs]="24">
-            <nz-select [(ngModel)]="edit_question_knowledge" name="question_knowledge" nzSize="large" nzMode="tags"
-              nzPlaceHolder="请选择知识点" (nzOpenChange)="UpdateKnowledgeInfo($event)" [nzLoading]="knowledge_loading">
-              <nz-option *ngFor="let knowledge of all_knowledge_info" [nzLabel]="knowledge.title"
-                [nzValue]="knowledge.title">
+            <nz-select
+              [(ngModel)]="edit_question_knowledge"
+              name="question_knowledge"
+              nzSize="large"
+              nzMode="tags"
+              nzPlaceHolder="请选择知识点"
+              (nzOpenChange)="UpdateKnowledgeInfo($event)"
+              [nzLoading]="knowledge_loading"
+            >
+              <nz-option
+                *ngFor="let knowledge of all_knowledge_info"
+                [nzLabel]="knowledge.title"
+                [nzValue]="knowledge.title"
+              >
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
         <!--选择题-->
-        <div *ngIf="edit_question_type!='subjective'">
-          <nz-form-item *ngFor="let option of edit_question_options;let i = index">
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选项{{i+1}}</nz-form-label>
-            <nz-form-control [nzSm]="15" [nzXs]="24" 
-            [nzValidateStatus]="option.content==null || option.content==''? 'error':'validating'"
-              nzErrorTip="选项不能为空！">
-              <input nz-input nzSize="large" [name]="'question_option'+i" [(ngModel)]="option.content" />
+        <div *ngIf="edit_question_type != 'subjective'">
+          <nz-form-item
+            *ngFor="let option of edit_question_options; let i = index"
+          >
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+              >选项{{ i + 1 }}</nz-form-label
+            >
+            <nz-form-control
+              [nzSm]="15"
+              [nzXs]="24"
+              [nzValidateStatus]="
+                option.content == null || option.content == ''
+                  ? 'error'
+                  : 'validating'
+              "
+              nzErrorTip="选项不能为空！"
+            >
+              <input
+                nz-input
+                nzSize="large"
+                [name]="'question_option' + i"
+                [(ngModel)]="option.content"
+              />
             </nz-form-control>
           </nz-form-item>
 
-          <button nz-button style="margin-left: 65%;margin-bottom: 20px;" (click)="AddEditOption()">
+          <button
+            nz-button
+            style="margin-left: 65%;margin-bottom: 20px;"
+            (click)="AddEditOption()"
+          >
             <i nz-icon [nzType]="'plus'"></i>添加选项
           </button>
 
           <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>参考答案</nz-form-label>
-            <nz-form-control [nzSm]="15" [nzXs]="24" 
-              [nzValidateStatus]="edit_question_answer==null || edit_question_answer.length==0? 'error':'validating'"
-              nzErrorTip="参考答案不能为空">
-              <nz-select [(ngModel)]="edit_question_answer" name="question_answer"
-                nzSize="large" nzMode="tags" nzPlaceHolder="请选择答案" [compareWith]="compareFn"
-                [nzMaxMultipleCount]="edit_question_type=='multi'?edit_question_options.length:1">
-                <nz-option *ngFor="let option of edit_question_options" [nzLabel]="option.content" [nzValue]="option">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+              >参考答案</nz-form-label
+            >
+            <nz-form-control
+              [nzSm]="15"
+              [nzXs]="24"
+              [nzValidateStatus]="
+                edit_question_answer == null || edit_question_answer.length == 0
+                  ? 'error'
+                  : 'validating'
+              "
+              nzErrorTip="参考答案不能为空"
+            >
+              <nz-select
+                [(ngModel)]="edit_question_answer"
+                name="question_answer"
+                nzSize="large"
+                nzMode="tags"
+                nzPlaceHolder="请选择答案"
+                [compareWith]="compareFn"
+                [nzMaxMultipleCount]="
+                  edit_question_type == 'multi'
+                    ? edit_question_options.length
+                    : 1
+                "
+              >
+                <nz-option
+                  *ngFor="let option of edit_question_options"
+                  [nzLabel]="option.content"
+                  [nzValue]="option"
+                >
                 </nz-option>
               </nz-select>
             </nz-form-control>
@@ -240,26 +488,54 @@
         </div>
         <!--简答题显示富文本格式-->
         <!--todo:ckeditor高度失效-->
-        <div *ngIf="edit_question_type=='subjective'">
+        <div *ngIf="edit_question_type == 'subjective'">
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>
               参考答案
             </nz-form-label>
-            <nz-form-control [nzPush]="2" [nzSm]="20" [nzXs]="24"
-              [nzValidateStatus]="edit_question_answer[0].content==null || edit_question_answer[0].content==''? 'error':'validating'"
-              nzErrorTip="参考答案不能为空！">
-              <ckeditor [editor]="editor" [config]="editor_config" [(ngModel)]="edit_question_answer[0].content"
-                name="subjective_editor" (ngModelChange)="limit()">
+            <nz-form-control
+              [nzPush]="2"
+              [nzSm]="20"
+              [nzXs]="24"
+              [nzValidateStatus]="
+                edit_question_answer[0].content == null ||
+                edit_question_answer[0].content == ''
+                  ? 'error'
+                  : 'validating'
+              "
+              nzErrorTip="参考答案不能为空！"
+            >
+              <ckeditor
+                [editor]="editor"
+                [config]="editor_config"
+                [(ngModel)]="edit_question_answer[0].content"
+                name="subjective_editor"
+                (ngModelChange)="limit()"
+              >
               </ckeditor>
             </nz-form-control>
           </nz-form-item>
         </div>
 
         <div class="drawer-footer">
-          <button nz-button type="button" (click)="DrawerClose()" class="ant-btn"
-            style="margin-right: 15px;"><span>取消</span></button>
-          <button nz-button type="button" (click)="EditQuestionInfo()" class="ant-btn ant-btn-primary"
-            [nzLoading]="edit_question_info_loading"><span>提交</span></button>
+          <button
+            nz-button
+            type="button"
+            (click)="DrawerClose()"
+            class="ant-btn"
+            style="margin-right: 15px;"
+          >
+            <span>取消</span>
+          </button>
+          <button
+            nz-button
+            type="button"
+            (click)="EditQuestionInfo()"
+            class="ant-btn ant-btn-primary"
+            [nzLoading]="edit_question_info_loading"
+          >
+            <span>提交</span>
+          </button>
         </div>
       </form>
     </nz-drawer>
