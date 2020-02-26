@@ -1,92 +1,91 @@
 :host {
-    display: flex;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  .check-question-page{
-    width:100%;
-    height: 100%;
-    border: 1px solid rgb(235, 237, 240);
-  }
-  
+  display: flex;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  .question-table-div{
-    width:100%;
-    height: 100%;
-    justify-content:center;
-    align-items:center;
-    display:-webkit-flex;
-  }
+.check-question-page {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgb(235, 237, 240);
+}
 
-  .table-operations {
-    margin-bottom: 16px;
-  }
+.question-table-div {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: -webkit-flex;
+}
 
-  .table-operations > button {
-    margin-right: 8px;
-  }
+.table-operations {
+  margin-bottom: 16px;
+}
 
-  .drawer-footer {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    border-top: 1px solid rgb(232, 232, 232);
-    padding: 10px 16px;
-    text-align: right;
-    left: 0px;
-    background: #fff;
-  }
+.table-operations > button {
+  margin-right: 8px;
+}
 
-  .display-tag {
-    margin-top: 15px;
-    height:30px;
-    font-size: 120%;
-  }
+.drawer-footer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  border-top: 1px solid rgb(232, 232, 232);
+  padding: 10px 16px;
+  text-align: right;
+  left: 0px;
+  background: #fff;
+}
 
-  .editable-tag {
-    background: rgb(255, 255, 255);
-    border-style: dashed;
-    margin-top: 15px;
-    height:30px;
-  }
+.display-tag {
+  margin-top: 15px;
+  height: 30px;
+  font-size: 120%;
+}
 
-  .input-tag {
-    height: 25px;
-    width: 80px;
-    margin-top: 10px;
-  }
+.editable-tag {
+  background: rgb(255, 255, 255);
+  border-style: dashed;
+  margin-top: 15px;
+  height: 30px;
+}
 
-  .tag-content{
-    line-height: 1.5;
-    font-weight: 700;
-  }
+.input-tag {
+  height: 25px;
+  width: 80px;
+  margin-top: 10px;
+}
 
-  .edit-tag-content{
-    line-height: 1.8;
-    font-size: 120%;
-  }
+.tag-content {
+  line-height: 1.5;
+  font-weight: 700;
+}
 
-  .search-box {
-    padding: 8px;
-  }
+.edit-tag-content {
+  line-height: 1.8;
+  font-size: 120%;
+}
 
-  .search-box input {
-    width: 188px;
-    margin-bottom: 8px;
-    display: block;
-  }
+.search-box {
+  padding: 8px;
+}
 
-  .search-box button {
-    width: 90px;
-  }
+.search-box input {
+  width: 188px;
+  margin-bottom: 8px;
+  display: block;
+}
 
-  .search-button {
-    margin-right: 8px;
-  }
+.search-box button {
+  width: 90px;
+}
 
-  :host ::ng-deep .ck-editor__editable_inline {
-    min-height: 220px;
-    max-height: 220px;
-  }
+.search-button {
+  margin-right: 8px;
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 220px;
+  max-height: 220px;
+}

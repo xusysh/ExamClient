@@ -434,6 +434,7 @@
             >
               <input
                 nz-input
+                [id]="'option' + (i + 1)"
                 nzSize="large"
                 [name]="'question_option' + i"
                 [(ngModel)]="option.content"

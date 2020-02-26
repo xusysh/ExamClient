@@ -4,7 +4,9 @@ import {
   Injectable,
   Inject,
   ViewChild,
-  ElementRef
+  ElementRef,
+  ViewChildren,
+  QueryList
 } from "@angular/core";
 import { TableUpdateService } from "../../../tools/TableUpdateService.component";
 import {
@@ -24,6 +26,7 @@ import { NzTreeNode, NzTreeComponent } from "ng-zorro-antd";
 import * as ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { FilterSortService } from "src/app/tools/FilterSortService.component";
+import { NextTabDirective } from "src/app/directive/nextTab.directive";
 
 @Component({
   selector: "app-check-question",
@@ -117,9 +120,15 @@ export class CheckQuestionComponent implements OnInit {
     private http_client: HttpClient,
     private message: NzMessageService,
     private sanitizer: DomSanitizer,
-    private filter_sort_service: FilterSortService
+    private filter_sort_service: FilterSortService,
+    private element_ref: ElementRef
   ) {
     this.base_url = sessionStorage.getItem("server_base_url");
+  }
+
+  FocusLastFormInput() {
+    let input = document.getElementById("option1");
+    console.log("sss");
   }
 
   ngOnInit(): void {
@@ -321,6 +330,7 @@ export class CheckQuestionComponent implements OnInit {
       content: ""
     };
     this.edit_question_options.push(option);
+    this.FocusLastFormInput();
   }
 
   EditQuestionInfo(): void {
