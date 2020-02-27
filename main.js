@@ -24,7 +24,7 @@ function createWindow() {
     })
   );
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools({mode:'detach'})
+  mainWindow.webContents.openDevTools({ mode: "detach" });
 
   mainWindow.setMenu(null);
   //  mainWindow.setFullScreen(true)

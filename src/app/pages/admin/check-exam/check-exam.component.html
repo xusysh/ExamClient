@@ -582,7 +582,7 @@
                       nzTitle="进入判题"
                       [disabled]="
                         exam_student_paper_info_list[i].objectiveStatus != 1 ||
-                        exam_info_list[current_select_exam].status != '判卷中'
+                        exam_student_paper_info_list[i].subjectiveStatus == 1
                       "
                     >
                       <i nz-icon nzType="edit"></i>
