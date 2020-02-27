@@ -26,7 +26,6 @@ import { NzTreeNode, NzTreeComponent } from "ng-zorro-antd";
 import * as ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { FilterSortService } from "src/app/tools/FilterSortService.component";
-import { NextTabDirective } from "src/app/directive/nextTab.directive";
 
 @Component({
   selector: "app-check-question",
