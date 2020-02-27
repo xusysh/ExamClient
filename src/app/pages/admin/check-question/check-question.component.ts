@@ -126,8 +126,12 @@ export class CheckQuestionComponent implements OnInit {
   }
 
   FocusLastFormInput() {
-    let input = document.getElementById("option1");
-    console.log("sss");
+    setTimeout(() => {
+      let input = document.getElementById(
+        "option" + this.edit_question_options.length
+      );
+      input.focus();
+    }, 100);
   }
 
   ngOnInit(): void {
